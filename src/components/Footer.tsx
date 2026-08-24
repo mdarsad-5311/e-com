@@ -1,10 +1,31 @@
 "use client";
 
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 import { Share2, ThumbsUp, Mail } from "lucide-react";
 import "@/styles/footer.css";
 
 export default function Footer() {
+  const pathname = usePathname();
+
+  if (pathname === "/cart" || pathname === "/checkout") {
+    return (
+      <footer className="al-cart-secure-footer">
+        <div className="header-container al-cart-footer-inner">
+          <p className="al-cart-copy-text">
+            © 2026 Al-Umaima Internet Private Limited. All rights reserved.
+          </p>
+          <div className="al-cart-payment-methods">
+            <span>VISA</span>
+            <span>MASTERCARD</span>
+            <span>APPLE PAY</span>
+            <span>PAYPAL</span>
+          </div>
+        </div>
+      </footer>
+    );
+  }
+
   return (
     <footer className="al-footer">
       <div className="header-container">
@@ -67,7 +88,7 @@ export default function Footer() {
           </Link>
 
           <div className="al-footer-copy">
-            © 2024 Al-Umaima Retail. All rights reserved.
+            © 2026 Al-Umaima Internet Private Limited. All rights reserved.
           </div>
         </div>
       </div>

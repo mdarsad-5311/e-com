@@ -710,3 +710,42 @@
     font-size: 0.825rem;
   }
 }
+
+/* Dedicated Secure Cart & Checkout Header matching attachment */
+.al-cart-secure-header {
+  background: #ffffff;
+  border-bottom: 1px solid #e2e8f0;
+  padding: 1rem 0;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.02);
+}
+
+.al-cart-header-flex {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.al-cart-brand-title {
+  font-size: 1.5rem;
+  font-weight: 800;
+  color: #0b172a;
+  text-decoration: none;
+  letter-spacing: -0.02em;
+}
+
+.al-secure-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: #475569;
+}
+
+.al-lock-icon {
+  color: #334155;
+}
+

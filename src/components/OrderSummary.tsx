@@ -1,138 +1,79 @@
 "use client";
 
-import { useState, FormEvent } from "react";
 import { useRouter } from "next/navigation";
-import { ArrowRight, Tag, ShieldCheck, Check, AlertCircle, Lock } from "lucide-react";
+import { Shield, RotateCcw, ArrowRight } from "lucide-react";
 import { useCart } from "@/context/CartContext";
 import "@/styles/order-summary.css";
 
 export default function OrderSummary() {
   const router = useRouter();
-  const { subtotal, totalItemsCount } = useCart();
-  const [promoCode, setPromoCode] = useState<string>("");
-  const [appliedPromo, setAppliedPromo] = useState<{ code: string; discountAmount: number } | null>(null);
-  const [promoError, setPromoError] = useState<string>("");
+  const { totalItemsCount, subtotal, totalOriginalPrice, totalSavings } = useCart();
 
-  const shippingCost = subtotal >= 100 || subtotal === 0 ? 0 : 15;
-  const estimatedTax = subtotal * 0.08;
-  const discountAmount = appliedPromo ? appliedPromo.discountAmount : 0;
-  const grandTotal = Math.max(0, subtotal - discountAmount + shippingCost + estimatedTax);
-
-  const handleApplyPromo = (e: FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    setPromoError("");
-
-    const code = promoCode.trim().toUpperCase();
-    if (code === "AURA2026" || code === "AURA15") {
-      const discount = subtotal * 0.15;
-      setAppliedPromo({ code, discountAmount: discount });
-    } else if (code === "WELCOME10") {
-      setAppliedPromo({ code, discountAmount: 10 });
-    } else {
-      setPromoError("Invalid promo code. Try AURA2026 or WELCOME10.");
-    }
-  };
-
-  const handleRemovePromo = () => {
-    setAppliedPromo(null);
-    setPromoCode("");
-    setPromoError("");
-  };
-
-  const handleProceedCheckout = () => {
+  const handlePlaceOrder = () => {
     router.push("/checkout");
   };
 
   return (
-    <aside className="order-summary-card">
-      <h2 className="summary-title">Order Summary</h2>
-      <div className="summary-items-count">{totalItemsCount} item{totalItemsCount === 1 ? "" : "s"} selected</div>
+    <aside className="al-price-details-card">
+      <h2 className="al-price-title">PRICE DETAILS</h2>
 
       {/* Breakdown Rows */}
-      <div className="summary-breakdown">
-        <div className="summary-row">
-          <span className="row-label">Subtotal</span>
-          <span className="row-val">${subtotal.toFixed(2)}</span>
+      <div className="al-price-breakdown">
+        <div className="al-price-row">
+          <span className="al-row-label">Price ({totalItemsCount} {totalItemsCount === 1 ? "item" : "items"})</span>
+          <span className="al-row-val">${totalOriginalPrice.toFixed(2)}</span>
         </div>
 
-        {appliedPromo && (
-          <div className="summary-row promo-row">
-            <span className="row-label flex-align">
-              <Tag size={14} /> Coupon ({appliedPromo.code})
-            </span>
-            <span className="row-val promo-val">-${discountAmount.toFixed(2)}</span>
-          </div>
-        )}
-
-        <div className="summary-row">
-          <span className="row-label">Estimated Shipping</span>
-          <span className="row-val">
-            {shippingCost === 0 ? (
-              <span className="free-shipping-tag">FREE</span>
-            ) : (
-              `$${shippingCost.toFixed(2)}`
-            )}
-          </span>
+        <div className="al-price-row">
+          <span className="al-row-label">Discount</span>
+          <span className="al-row-val al-val-green">-${totalSavings.toFixed(2)}</span>
         </div>
 
-        <div className="summary-row">
-          <span className="row-label">Estimated Tax (8%)</span>
-          <span className="row-val">${estimatedTax.toFixed(2)}</span>
+        <div className="al-price-row">
+          <span className="al-row-label">Delivery Charges</span>
+          <span className="al-row-val al-val-green">Free</span>
         </div>
       </div>
 
-      {/* Coupon Code Section */}
-      <div className="promo-box">
-        {appliedPromo ? (
-          <div className="promo-applied">
-            <span>Code <strong>{appliedPromo.code}</strong> applied!</span>
-            <button onClick={handleRemovePromo} className="remove-promo-btn">Remove</button>
-          </div>
-        ) : (
-          <form onSubmit={handleApplyPromo} className="promo-form">
-            <div className="promo-input-group">
-              <Tag size={16} className="promo-icon" />
-              <input
-                type="text"
-                placeholder="Coupon Code (AURA2026)"
-                value={promoCode}
-                onChange={(e) => setPromoCode(e.target.value)}
-              />
-              <button type="submit" className="apply-btn">Apply</button>
-            </div>
-            {promoError && (
-              <div className="promo-error flex-align">
-                <AlertCircle size={14} /> {promoError}
-              </div>
-            )}
-          </form>
-        )}
+      {/* Dotted Divider & Total Amount */}
+      <div className="al-total-row">
+        <span className="al-total-label">Total Amount</span>
+        <span className="al-total-val">${subtotal.toFixed(2)}</span>
       </div>
 
-      {/* Total Row */}
-      <div className="summary-total-row">
-        <span>Total</span>
-        <span className="total-val">${grandTotal.toFixed(2)}</span>
-      </div>
+      {/* Savings Highlight Banner */}
+      {totalSavings > 0 && (
+        <div className="al-savings-banner">
+          You will save ${totalSavings.toFixed(2)} on this order
+        </div>
+      )}
 
-      {/* Checkout Button */}
+      {/* Place Order CTA Button */}
       <button
-        className="btn btn-primary checkout-btn"
-        onClick={handleProceedCheckout}
+        type="button"
+        className="al-place-order-btn"
+        onClick={handlePlaceOrder}
         disabled={totalItemsCount === 0}
       >
-        <Lock size={16} /> Proceed to Checkout <ArrowRight size={18} />
+        Place Order <ArrowRight size={18} />
       </button>
 
-      {/* Trust Badges */}
-      <div className="summary-trust-perks">
-        <div className="trust-item">
-          <ShieldCheck size={16} className="trust-icon" />
-          <span>256-Bit SSL Encrypted Checkout</span>
+      {/* Security & Return Trust Perks */}
+      <div className="al-trust-perks-section">
+        <div className="al-trust-item">
+          <Shield size={20} className="al-trust-icon" />
+          <div className="al-trust-texts">
+            <span className="al-trust-heading">Safe and Secure Payments</span>
+            <span className="al-trust-sub">256-Bit SSL Encryption applied to all transactions.</span>
+          </div>
         </div>
-        <div className="trust-item">
-          <Check size={16} className="trust-icon" />
-          <span>Free Returns & 30-Day Money Back</span>
+
+        <div className="al-trust-item">
+          <RotateCcw size={20} className="al-trust-icon" />
+          <div className="al-trust-texts">
+            <span className="al-trust-heading">Easy Returns</span>
+            <span className="al-trust-sub">30-Day Hassle-free return policy.</span>
+          </div>
         </div>
       </div>
     </aside>

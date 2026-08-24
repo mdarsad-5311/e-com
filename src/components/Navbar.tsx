@@ -16,7 +16,8 @@ import {
   TrendingUp, 
   Heart,
   HelpCircle,
-  Truck
+  Truck,
+  Lock
 } from "lucide-react";
 import SearchBar from "./SearchBar";
 import { useCart } from "@/context/CartContext";
@@ -83,6 +84,22 @@ export default function Navbar() {
     { name: "Home", href: "/" },
     { name: "Deals", href: "/products?featured=true" },
   ];
+
+  if (pathname === "/cart" || pathname === "/checkout") {
+    return (
+      <header className="al-cart-secure-header">
+        <div className="header-container al-cart-header-flex">
+          <Link href="/" className="al-cart-brand-title">
+            Al-Umaima
+          </Link>
+          <div className="al-secure-badge">
+            <Lock size={15} className="al-lock-icon" />
+            <span>100% Secure Checkout</span>
+          </div>
+        </div>
+      </header>
+    );
+  }
 
   return (
     <header className="al-umaima-header">
