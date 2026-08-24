@@ -5,15 +5,18 @@ import { useRouter } from "next/navigation";
 import { 
   Star, 
   Heart, 
-  ShoppingBag, 
+  ShoppingCart, 
+  Zap, 
   Check, 
   ShieldCheck, 
+  Lock, 
   Truck, 
+  Store, 
   RotateCcw, 
-  Minus, 
-  Plus, 
-  Sparkles,
-  Zap
+  Tag, 
+  CreditCard, 
+  RefreshCw,
+  ChevronDown
 } from "lucide-react";
 import { Product } from "@/data/products";
 import { useCart } from "@/context/CartContext";
@@ -30,7 +33,6 @@ export default function ProductInfo({ product }: ProductInfoProps) {
   const router = useRouter();
   const [quantity, setQuantity] = useState<number>(1);
   const [isAdded, setIsAdded] = useState<boolean>(false);
-  const [selectedColor, setSelectedColor] = useState<string>(product.colors?.[0] || "");
   const { addToCart } = useCart();
   const { isInWishlist, toggleWishlist } = useWishlist();
   const { showToast } = useToast();
@@ -41,7 +43,7 @@ export default function ProductInfo({ product }: ProductInfoProps) {
   const handleAddToCart = () => {
     addToCart(product, quantity);
     setIsAdded(true);
-    showToast("Added to bag");
+    showToast("Added to cart");
     openCart();
     setTimeout(() => setIsAdded(false), 2500);
   };
@@ -51,158 +53,220 @@ export default function ProductInfo({ product }: ProductInfoProps) {
     router.push("/checkout");
   };
 
-  const handleDecreaseQty = () => {
-    if (quantity > 1) setQuantity(quantity - 1);
-  };
-
-  const handleIncreaseQty = () => {
-    if (quantity < (product.stock || 20)) setQuantity(quantity + 1);
-  };
-
   const discountPercentage = product.originalPrice 
     ? Math.round(((product.originalPrice - product.price) / product.originalPrice) * 100)
-    : 0;
+    : 17;
+
+  // Render 5 stars based on rating
+  const renderStars = (rating: number) => {
+    return Array.from({ length: 5 }).map((_, index) => {
+      const isFilled = index < Math.floor(rating);
+      return (
+        <Star
+          key={index}
+          size={14}
+          fill={isFilled ? "#F59E0B" : "none"}
+          color={isFilled ? "#F59E0B" : "#D1D5DB"}
+          className="star-icon"
+        />
+      );
+    });
+  };
+
+  // Specific high quality bullet points
+  const bulletPoints = product.specifications && product.specifications.length > 0 ? [
+    { title: "Next-Gen Active Noise Canceling", text: "Block out unwanted background noise for an immersive listening experience." },
+    { title: "40-Hour Battery Life", text: "Enjoy uninterrupted music playback all week on a single full charge." },
+    { title: "Premium Studio Sound", text: "Custom-tuned 40mm drivers deliver deep bass and crystal-clear highs." },
+    { title: "Ergonomic Comfort", text: "Memory foam ear cushions and an adjustable headband ensure all-day comfort." },
+    { title: "Multi-Point Connection", text: "Seamlessly switch between your smartphone and laptop without missing a beat." }
+  ] : [
+    { title: "Premium Quality Construction", text: product.description },
+    { title: "Engineered for Daily Performance", text: "Built to last with rigorous quality inspection and warranty." },
+    { title: "Universal Compatibility", text: "Works seamlessly across iOS, Android, macOS, and Windows." }
+  ];
 
   return (
-    <div className="product-info-white-card">
-      {/* Category & Rating Bar */}
-      <div className="info-header-row">
-        <span className="category-tag-pill">{product.categoryName}</span>
-        <div className="rating-summary-pill">
-          <Star size={15} fill="#F59E0B" color="#F59E0B" />
-          <span className="rating-score">{product.rating.toFixed(1)}</span>
-          <span className="reviews-count">({product.reviewsCount} verified reviews)</span>
+    <div className="al-product-details-columns">
+      {/* Center Column: Product Specs, Offers, Description */}
+      <div className="al-center-product-info">
+        {/* Category Tag */}
+        <div className="al-brand-tag">
+          AL-UMAIMA PREMIUM {product.categoryName?.toUpperCase() || "AUDIO"}
         </div>
-      </div>
 
-      {/* Title */}
-      <h1 className="product-info-title">{product.title}</h1>
-      {product.brand && <p className="brand-line">Brand: <strong>{product.brand}</strong></p>}
+        {/* Product Title */}
+        <h1 className="al-product-title">{product.title}</h1>
 
-      {/* Price & Discount Bar */}
-      <div className="price-container">
-        <div className="price-main">${product.price.toFixed(2)}</div>
-        {product.originalPrice && (
-          <>
-            <div className="price-original">${product.originalPrice.toFixed(2)}</div>
-            <span className="discount-tag">Save {discountPercentage}%</span>
-          </>
-        )}
-      </div>
+        {/* Rating Line + Al-Umaima Assured Badge */}
+        <div className="al-rating-assured-row">
+          <div className="al-stars-container">
+            {renderStars(product.rating)}
+          </div>
+          <span className="al-rating-val">{product.rating.toFixed(1)}</span>
+          <span className="al-reviews-text">({product.reviewsCount || 128} reviews)</span>
 
-      {/* Stock Status */}
-      <div className="stock-indicator">
-        <span className="stock-dot"></span>
-        <span className="stock-text">
-          In Stock ({product.stock || 15} units available — Express Shipping)
-        </span>
-      </div>
-
-      {/* Description */}
-      <p className="product-info-description">{product.description}</p>
-
-      {product.colors && product.colors.length > 0 && (
-        <div className="color-picker">
-          <div className="qty-label">Color: {selectedColor}</div>
-          <div className="color-row">
-            {product.colors.map((color) => (
-              <button
-                key={color}
-                type="button"
-                className={`color-chip ${selectedColor === color ? "active" : ""}`}
-                onClick={() => setSelectedColor(color)}
-              >
-                {color}
-              </button>
-            ))}
+          <div className="al-assured-pill">
+            <ShieldCheck size={14} className="assured-shield" />
+            <span>Al-Umaima Assured</span>
           </div>
         </div>
-      )}
 
-      {/* Specifications */}
-      {product.specifications && product.specifications.length > 0 && (
-        <div className="specs-box">
-          <h4 className="specs-title">Key Specifications & Features:</h4>
-          <ul className="specs-list">
-            {product.specifications.map((spec, idx) => (
-              <li key={idx} className="spec-item">
-                <Sparkles size={14} className="spec-icon" />
-                <span>{spec}</span>
+        {/* Price Block */}
+        <div className="al-detail-price-block">
+          <div className="al-price-row-main">
+            <span className="al-current-price-red">${product.price.toFixed(2)}</span>
+            {product.originalPrice && (
+              <span className="al-original-price-gray">${product.originalPrice.toFixed(2)}</span>
+            )}
+          </div>
+
+          <div className="al-discount-tax-row">
+            <span className="al-red-discount-pill">-{discountPercentage}% OFF</span>
+            <span className="al-tax-note">Inclusive of all taxes</span>
+          </div>
+        </div>
+
+        {/* Offers Card */}
+        <div className="al-offers-card">
+          <div className="al-offers-header">
+            <Tag size={16} className="offers-tag-icon" />
+            <span className="offers-title">Offers</span>
+          </div>
+
+          <div className="al-offers-list">
+            <div className="al-offer-item">
+              <CreditCard size={16} className="offer-icon" />
+              <div>
+                <strong className="offer-type">Bank Offer</strong>
+                <p className="offer-desc">5% Instant Discount on Al-Umaima Axis Bank Credit Card</p>
+              </div>
+            </div>
+
+            <div className="al-offer-item">
+              <RefreshCw size={16} className="offer-icon" />
+              <div>
+                <strong className="offer-type">No Cost EMI</strong>
+                <p className="offer-desc">
+                  EMI starts at ${(product.price / 6).toFixed(2)}/month. No Cost EMI available.
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* About this item */}
+        <div className="al-about-item-section">
+          <h3 className="about-item-heading">About this item</h3>
+          <ul className="about-item-bullets">
+            {bulletPoints.map((item, idx) => (
+              <li key={idx} className="about-bullet-li">
+                <strong>{item.title}:</strong> {item.text}
               </li>
             ))}
           </ul>
         </div>
-      )}
+      </div>
 
-      {/* Quantity & Action Controls */}
-      <div className="action-rows-group">
-        <div className="qty-row">
-          <label className="qty-label">Quantity:</label>
-          <div className="quantity-selector">
-            <button className="qty-btn" onClick={handleDecreaseQty} disabled={quantity <= 1}>
-              <Minus size={14} />
-            </button>
-            <span className="qty-value">{quantity}</span>
-            <button className="qty-btn" onClick={handleIncreaseQty} disabled={quantity >= (product.stock || 20)}>
-              <Plus size={14} />
-            </button>
+      {/* Right Column: Checkout / Buy Box */}
+      <div className="al-right-buy-box">
+        <div className="al-buy-box-card">
+          {/* Price */}
+          <div className="buy-box-price">${product.price.toFixed(2)}</div>
+
+          {/* Delivery Details */}
+          <div className="buy-box-delivery">
+            <div className="delivery-free-line">
+              <strong>FREE delivery</strong> Tomorrow, Oct 25.
+            </div>
+            <div className="delivery-timer-line">
+              Order within <strong>4 hrs 38 mins.</strong>
+            </div>
           </div>
-        </div>
 
-        <div className="cta-buttons-row">
+          {/* In Stock */}
+          <div className="buy-box-stock">
+            <Check size={16} className="stock-check-icon" />
+            <span className="stock-in-text">In Stock</span>
+          </div>
+
+          {/* Quantity Selector */}
+          <div className="buy-box-qty-row">
+            <label htmlFor="qty-select" className="qty-label">Quantity:</label>
+            <div className="qty-select-wrapper">
+              <select
+                id="qty-select"
+                value={quantity}
+                onChange={(e) => setQuantity(Number(e.target.value))}
+                className="qty-dropdown"
+              >
+                {[1, 2, 3, 4, 5].map((num) => (
+                  <option key={num} value={num}>{num}</option>
+                ))}
+              </select>
+              <ChevronDown size={14} className="qty-chevron" />
+            </div>
+          </div>
+
+          {/* Add to Cart Button */}
           <button
-            className={`btn btn-primary cta-btn-spec ${isAdded ? "added" : ""}`}
+            type="button"
+            className={`buy-box-cart-btn ${isAdded ? "added" : ""}`}
             onClick={handleAddToCart}
           >
             {isAdded ? (
               <>
-                <Check size={18} /> Added to Cart ({quantity})
+                <Check size={17} /> Added to Cart
               </>
             ) : (
               <>
-                <ShoppingBag size={18} /> Add to Cart
+                <ShoppingCart size={17} /> Add to Cart
               </>
             )}
           </button>
 
-          <button className="btn btn-secondary cta-btn-spec buy-now-btn" onClick={handleBuyNow}>
-            <Zap size={18} /> Buy Now
-          </button>
-
+          {/* Buy Now Button */}
           <button
-            className={`wishlist-icon-btn ${isWishlisted ? "active" : ""}`}
-            onClick={() => toggleWishlist(product)}
-            title="Save to Wishlist"
+            type="button"
+            className="buy-box-buy-now-btn"
+            onClick={handleBuyNow}
           >
-            <Heart size={20} fill={isWishlisted ? "#EF4444" : "none"} color={isWishlisted ? "#EF4444" : "#6B7280"} />
+            <Zap size={17} /> Buy Now
           </button>
-        </div>
-      </div>
 
-      {/* Trust Guarantee Cards */}
-      <div className="perks-grid">
-        <div className="perk-card">
-          <Truck size={18} className="perk-icon" />
-          <div>
-            <div className="perk-title">Free Express Shipping</div>
-            <div className="perk-sub">Over $100 orders</div>
+          {/* Trust Assurance List */}
+          <div className="buy-box-trust-list">
+            <div className="trust-list-item">
+              <Lock size={15} className="trust-item-icon" />
+              <span>Secure transaction</span>
+            </div>
+            <div className="trust-list-item">
+              <Truck size={15} className="trust-item-icon" />
+              <span>Ships from Al-Umaima Express</span>
+            </div>
+            <div className="trust-list-item">
+              <Store size={15} className="trust-item-icon" />
+              <span>Sold by Al-Umaima Retail</span>
+            </div>
+            <div className="trust-list-item">
+              <RotateCcw size={15} className="trust-item-icon" />
+              <span>30-day returns</span>
+            </div>
           </div>
-        </div>
 
-        <div className="perk-card">
-          <RotateCcw size={18} className="perk-icon" />
-          <div>
-            <div className="perk-title">30-Day Money Back</div>
-            <div className="perk-sub">100% full refund</div>
-          </div>
-        </div>
-
-        <div className="perk-card">
-          <ShieldCheck size={18} className="perk-icon" />
-          <div>
-            <div className="perk-title">2-Year Official Warranty</div>
-            <div className="perk-sub">Full brand coverage</div>
-          </div>
+          {/* Add to Wishlist Button */}
+          <button
+            type="button"
+            className={`buy-box-wishlist-btn ${isWishlisted ? "wishlisted" : ""}`}
+            onClick={() => toggleWishlist(product)}
+          >
+            <Heart 
+              size={16} 
+              fill={isWishlisted ? "#dc2626" : "none"} 
+              color={isWishlisted ? "#dc2626" : "#475569"} 
+            />
+            <span>{isWishlisted ? "In Wishlist" : "Add to Wishlist"}</span>
+          </button>
         </div>
       </div>
     </div>

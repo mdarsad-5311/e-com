@@ -5,24 +5,24 @@ import { ReactNode } from "react";
 
 export const metadata: Metadata = {
   title: {
-    default: "AuraStore | Premium E-Commerce Experience",
-    template: "%s | AuraStore",
+    default: "Al-Umaima | Premium Tech & Fashion",
+    template: "%s | Al-Umaima",
   },
   description: "Experience cutting-edge technology, ANC audio gear, minimalist fashion, and smart home innovations with express global shipping.",
   keywords: ["e-commerce", "Next.js", "TypeScript", "online shop", "electronics", "fashion", "smart home", "noise canceling headphones"],
-  authors: [{ name: "AuraStore Inc." }],
-  creator: "AuraStore Team",
+  authors: [{ name: "Al-Umaima Retail" }],
+  creator: "Al-Umaima Team",
   openGraph: {
-    title: "AuraStore | Premium E-Commerce Experience",
-    description: "Discover precision-engineered tech gadgets, studio audio, and minimalist urban wear.",
-    url: "https://aurastore.example.com",
-    siteName: "AuraStore",
+    title: "Al-Umaima | Premium Tech & Fashion",
+    description: "Discover ANC headphones, smartwatch gadgets, minimalist jackets, and smart home lighting.",
+    url: "https://al-umaima.example.com",
+    siteName: "Al-Umaima",
     images: [
       {
         url: "https://images.unsplash.com/photo-1505740420928-5e560c06d30e?auto=format&fit=crop&w=1200&q=80",
         width: 1200,
         height: 630,
-        alt: "AuraStore Premium Products Spotlight",
+        alt: "Al-Umaima Spotlight",
       },
     ],
     locale: "en_US",
@@ -30,7 +30,7 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "AuraStore | Modern E-Commerce Platform",
+    title: "Al-Umaima | Premium Tech & Fashion",
     description: "Shop precision audio, minimalist fashion, and smart home gadgets.",
     images: ["https://images.unsplash.com/photo-1505740420928-5e560c06d30e?auto=format&fit=crop&w=1200&q=80"],
   },

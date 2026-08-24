@@ -51,7 +51,7 @@ export const categories: Category[] = [
     icon: "Headphones",
     description: "Gadgets, ANC audio gear, and cutting-edge tech.",
     itemCount: 24,
-    image: "https://images.unsplash.com/photo-1505740420928-5e560c06d30e?auto=format&fit=crop&w=600&q=80",
+    image: "https://images.unsplash.com/photo-1590658268037-6bf12165a8df?auto=format&fit=crop&w=600&q=80",
   },
   {
     id: "fashion",
@@ -60,7 +60,7 @@ export const categories: Category[] = [
     icon: "Shirt",
     description: "Trending fashionwear, shoes, and minimalist style.",
     itemCount: 38,
-    image: "https://images.unsplash.com/photo-1445205170230-053b83016050?auto=format&fit=crop&w=600&q=80",
+    image: "https://images.unsplash.com/photo-1489987707025-afc232f7ea0f?auto=format&fit=crop&w=600&q=80",
   },
   {
     id: "home-living",
@@ -69,7 +69,7 @@ export const categories: Category[] = [
     icon: "Home",
     description: "Modern decor, ergonomic furniture, and lighting.",
     itemCount: 19,
-    image: "https://images.unsplash.com/photo-1513694203232-719a280e022f?auto=format&fit=crop&w=600&q=80",
+    image: "https://images.unsplash.com/photo-1586023492125-27b2c045efd7?auto=format&fit=crop&w=600&q=80",
   },
   {
     id: "accessories",
@@ -78,7 +78,7 @@ export const categories: Category[] = [
     icon: "Watch",
     description: "Premium smartwatches, leather goods, and bags.",
     itemCount: 15,
-    image: "https://images.unsplash.com/photo-1523275335684-37898b6baf30?auto=format&fit=crop&w=600&q=80",
+    image: "https://images.unsplash.com/photo-1627123424574-724758594e93?auto=format&fit=crop&w=600&q=80",
   },
 ];
 

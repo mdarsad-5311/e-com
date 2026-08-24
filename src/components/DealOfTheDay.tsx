@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react";
 import Link from "next/link";
-import { Zap, Clock, Check, Flame, Star } from "lucide-react";
+import { Star, Check } from "lucide-react";
 import { products, Product } from "@/data/products";
 import { useCart } from "@/context/CartContext";
 import { motion } from "framer-motion";
@@ -35,7 +35,12 @@ export default function DealOfTheDay() {
     return () => clearInterval(timer);
   }, []);
 
-  const dealProducts = products.filter((p) => p.originalPrice).slice(0, 4);
+  // Pick the 3 specific deal products featured in the reference design
+  const dealProducts = [
+    products.find((p) => p.id === "prod-1") || products[0],
+    products.find((p) => p.id === "prod-2") || products[1],
+    products.find((p) => p.id === "prod-4") || products[3],
+  ];
 
   const handleAddToCart = (product: Product) => {
     addToCart(product, 1);
@@ -48,49 +53,47 @@ export default function DealOfTheDay() {
   const formatDigit = (num: number) => num.toString().padStart(2, "0");
 
   return (
-    <section className="section flash-sale-section">
-      <div className="container">
-        {/* Flash Sale Header Banner with Orange Theme */}
-        <div className="flash-header-banner">
-          <div className="flash-header-left">
-            <div className="flash-badge-pill">
-              <Flame size={16} className="flame-icon animate-pulse-glow" />
-              <span>LIGHTNING DEALS</span>
+    <section className="al-deal-section">
+      <div className="header-container">
+        {/* Header Row: Deal of the Day + Up to 50% OFF + Countdown */}
+        <div className="al-deal-header">
+          <div className="al-deal-title-wrap">
+            <div className="al-deal-title-row">
+              <h2 className="al-deal-heading">Deal of the Day</h2>
+              <span className="al-deal-badge">Up to 50% OFF</span>
             </div>
-            <h2 className="flash-title">Deal of the Day — Up to 50% OFF</h2>
-            <p className="flash-subtitle">Grab high-demand products before the countdown timer expires!</p>
+            <p className="al-deal-subheading">
+              Grab high-demand products before the countdown timer expires!
+            </p>
           </div>
 
-          {/* Countdown Clock Component */}
-          <div className="timer-wrapper">
-            <div className="timer-label">
-              <Clock size={16} /> Offers expire in:
-            </div>
-            <div className="digits-group">
-              <div className="digit-box">
-                <span className="num-val">{formatDigit(timeLeft.hours)}</span>
-                <span className="lbl-val">HRS</span>
-              </div>
-              <span className="colon-sep">:</span>
-              <div className="digit-box">
-                <span className="num-val">{formatDigit(timeLeft.minutes)}</span>
-                <span className="lbl-val">MIN</span>
-              </div>
-              <span className="colon-sep">:</span>
-              <div className="digit-box pulse-second">
-                <span className="num-val">{formatDigit(timeLeft.seconds)}</span>
-                <span className="lbl-val">SEC</span>
-              </div>
+          {/* Countdown Clock (ENDS IN: 04 : 38 : 12) */}
+          <div className="al-deal-countdown">
+            <span className="ends-in-label">ENDS IN:</span>
+            <div className="countdown-boxes">
+              <div className="time-digit-box">{formatDigit(timeLeft.hours)}</div>
+              <span className="time-colon">:</span>
+              <div className="time-digit-box">{formatDigit(timeLeft.minutes)}</div>
+              <span className="time-colon">:</span>
+              <div className="time-digit-box highlight-sec">{formatDigit(timeLeft.seconds)}</div>
             </div>
           </div>
         </div>
 
-        {/* Dynamic Flash Sale Product Grid */}
-        <div className="flash-grid">
+        {/* 3-Column Deals Grid */}
+        <div className="al-deal-grid">
           {dealProducts.map((product, idx) => {
             const discountPct = product.originalPrice
               ? Math.round(((product.originalPrice - product.price) / product.originalPrice) * 100)
-              : 0;
+              : 17;
+
+            // Custom stock message matching reference
+            let stockText = `Limited Stock • Only ${product.stock || 14} left`;
+            let isSellingFast = false;
+            if (idx === 2) {
+              stockText = `Selling Fast • 22 left`;
+              isSellingFast = true;
+            }
 
             return (
               <motion.div
@@ -98,57 +101,71 @@ export default function DealOfTheDay() {
                 initial={{ opacity: 0, y: 15 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
-                transition={{ duration: 0.3, delay: idx * 0.08 }}
-                className="flash-card-item"
+                transition={{ duration: 0.35, delay: idx * 0.1 }}
+                className="al-deal-card"
               >
-                <div className="discount-tag-badge">-{discountPct}% OFF</div>
+                {/* Discount Badge Top Left */}
+                <div className="card-discount-tag">-{discountPct}% OFF</div>
 
-                <div className="flash-img-wrapper">
-                  <img src={product.image} alt={product.title} className="flash-img" />
-                </div>
+                {/* Product Image */}
+                <Link href={`/products/${product.id}`} className="deal-img-link">
+                  <div className="deal-img-frame">
+                    <img 
+                      src={product.image} 
+                      alt={product.title} 
+                      className="deal-product-img" 
+                    />
+                  </div>
+                </Link>
 
-                <div className="flash-card-info">
-                  <div className="flash-category-row">
-                    <span className="flash-cat-name">{product.categoryName}</span>
-                    <span className="rating-tag">
-                      <Star size={11} fill="#FFFFFF" color="#FFFFFF" /> {product.rating}
-                    </span>
+                {/* Card Content Details */}
+                <div className="deal-card-body">
+                  {/* Category & Rating */}
+                  <div className="deal-meta-row">
+                    <span className="deal-cat-name">{product.categoryName}</span>
+                    <div className="deal-rating">
+                      <Star size={12} fill="#F59E0B" color="#F59E0B" />
+                      <span>{product.rating}</span>
+                    </div>
                   </div>
 
+                  {/* Product Title */}
                   <Link href={`/products/${product.id}`}>
-                    <h3 className="flash-item-title">{product.title}</h3>
+                    <h3 className="deal-item-title">{product.title}</h3>
                   </Link>
 
-                  <div className="flash-price-row">
-                    <span className="flash-price">${product.price.toFixed(2)}</span>
+                  {/* Price Row */}
+                  <div className="deal-price-row">
+                    <span className="deal-current-price">${product.price.toFixed(2)}</span>
                     {product.originalPrice && (
-                      <span className="flash-original">${product.originalPrice.toFixed(2)}</span>
+                      <span className="deal-original-price">${product.originalPrice.toFixed(2)}</span>
                     )}
                   </div>
 
                   {/* Stock Bar */}
-                  <div className="stock-meter">
-                    <div className="stock-meter-label">
-                      <span>Limited Stock</span>
-                      <span className="stock-highlight">Only {product.stock || 4} left</span>
+                  <div className="deal-stock-bar">
+                    <div className={`stock-progress-track ${isSellingFast ? "amber-track" : ""}`}>
+                      <div 
+                        className={`stock-progress-fill ${isSellingFast ? "amber-fill" : "red-fill"}`}
+                        style={{ width: `${isSellingFast ? 65 : 40}%` }}
+                      />
                     </div>
-                    <div className="stock-meter-track">
-                      <div className="stock-meter-fill" style={{ width: `${Math.min(100, (product.stock || 4) * 15)}%` }} />
-                    </div>
+                    <span className={`stock-note ${isSellingFast ? "amber-note" : ""}`}>
+                      {stockText}
+                    </span>
                   </div>
 
+                  {/* Full Width Orange CTA Button */}
                   <button
-                    className={`btn btn-secondary flash-claim-btn ${addedIds[product.id] ? "claimed" : ""}`}
+                    className={`deal-claim-btn ${addedIds[product.id] ? "claimed" : ""}`}
                     onClick={() => handleAddToCart(product)}
                   >
                     {addedIds[product.id] ? (
                       <>
-                        <Check size={16} /> Claimed & Added
+                        <Check size={16} /> Claimed!
                       </>
                     ) : (
-                      <>
-                        <Zap size={16} /> Claim Deal
-                      </>
+                      "Claim Deal"
                     )}
                   </button>
                 </div>

@@ -1,155 +1,155 @@
-/* HeroBanner Component Styles */
-.hero-section {
-  padding: 1.5rem 0 3rem;
+/* Al-Umaima Hero Banner Section Styles */
+
+.al-hero-section {
+  width: 100%;
+  background-color: #0b172a;
+  overflow: hidden;
 }
 
-.hero-card-1400 {
-  background: linear-gradient(135deg, #EBF3FE 0%, #F5F3FF 50%, #EEF2FF 100%);
-  border-radius: var(--radius-card);
-  border: 1px solid var(--borders);
-  padding: 3.5rem;
-  box-shadow: 0 4px 20px rgba(40, 116, 240, 0.08);
+.al-hero-bg-container {
+  width: 100%;
 }
 
-.hero-grid-2 {
-  display: grid;
-  grid-template-columns: 1.15fr 0.85fr;
-  gap: 3rem;
+.al-hero-image-bg {
+  width: 100%;
+  min-height: 480px;
+  background-size: cover;
+  background-position: center right;
+  background-repeat: no-repeat;
+  display: flex;
   align-items: center;
+  position: relative;
 }
 
-.offer-tag-badge {
+.al-hero-content-wrap {
+  width: 100%;
+  padding-top: 4.5rem;
+  padding-bottom: 4.5rem;
+}
+
+.al-hero-content {
+  max-width: 620px;
+}
+
+/* Exclusive Deals Pill */
+.al-hero-badge {
+  display: inline-block;
+  background: #f97316;
+  color: #ffffff;
+  font-size: 0.72rem;
+  font-weight: 800;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  padding: 0.35rem 0.85rem;
+  border-radius: 4px;
+  margin-bottom: 1.25rem;
+  box-shadow: 0 2px 8px rgba(249, 115, 22, 0.3);
+}
+
+/* Headline */
+.al-hero-title {
+  font-size: 3rem;
+  font-weight: 800;
+  line-height: 1.15;
+  color: #ffffff;
+  letter-spacing: -0.025em;
+  margin-bottom: 1.1rem;
+}
+
+/* Subheading */
+.al-hero-subtitle {
+  font-size: 1.05rem;
+  line-height: 1.6;
+  color: #cbd5e1;
+  margin-bottom: 2rem;
+  font-weight: 400;
+}
+
+/* CTA Buttons */
+.al-hero-cta-group {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.al-hero-btn-primary {
   display: inline-flex;
   align-items: center;
-  gap: 0.4rem;
-  background: #FFFFFF;
-  border: 1px solid var(--borders);
-  color: var(--primary);
-  font-size: 0.75rem;
-  font-weight: 800;
-  padding: 0.35rem 0.85rem;
-  border-radius: var(--radius-pill);
-  letter-spacing: 0.04em;
-  margin-bottom: 1.25rem;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+  gap: 0.5rem;
+  background-color: #f97316;
+  color: #ffffff;
+  font-size: 0.95rem;
+  font-weight: 700;
+  padding: 0.85rem 1.75rem;
+  border-radius: 6px;
+  text-decoration: none;
+  transition: background-color 0.2s ease, transform 0.15s ease, box-shadow 0.2s ease;
+  box-shadow: 0 4px 14px rgba(249, 115, 22, 0.35);
 }
 
-.hero-main-title {
-  font-size: 3.2rem;
-  font-weight: 900;
-  color: var(--text);
-  line-height: 1.15;
-  letter-spacing: -0.03em;
-  margin-bottom: 1.2rem;
+.al-hero-btn-primary:hover {
+  background-color: #ea580c;
+  transform: translateY(-1px);
+  box-shadow: 0 6px 20px rgba(249, 115, 22, 0.45);
 }
 
-.blue-gradient-text {
-  color: var(--primary);
+.btn-arrow {
+  transition: transform 0.2s ease;
 }
 
-.hero-description-text {
-  font-size: 1.05rem;
-  color: var(--text-muted);
-  line-height: 1.6;
-  margin-bottom: 2rem;
-  max-width: 540px;
+.al-hero-btn-primary:hover .btn-arrow {
+  transform: translateX(3px);
 }
 
-.hero-cta-buttons {
-  display: flex;
+.al-hero-btn-secondary {
+  display: inline-flex;
   align-items: center;
-  gap: 1rem;
-  margin-bottom: 2.75rem;
+  justify-content: center;
+  background: rgba(15, 23, 42, 0.6);
+  backdrop-filter: blur(8px);
+  color: #ffffff;
+  font-size: 0.95rem;
+  font-weight: 600;
+  padding: 0.85rem 1.75rem;
+  border-radius: 6px;
+  border: 1px solid rgba(255, 255, 255, 0.4);
+  text-decoration: none;
+  transition: all 0.2s ease;
 }
 
-.hero-cta-btn {
-  height: 50px;
-  border-radius: 12px;
-  padding: 0 1.75rem;
+.al-hero-btn-secondary:hover {
+  background: rgba(255, 255, 255, 0.15);
+  border-color: #ffffff;
+  transform: translateY(-1px);
 }
 
-.trust-features-grid {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 1rem;
-  border-top: 1px solid rgba(0, 0, 0, 0.08);
-  padding-top: 1.75rem;
+/* Responsive */
+@media (max-width: 900px) {
+  .al-hero-image-bg {
+    min-height: 400px;
+    background-position: center;
+  }
+  .al-hero-title {
+    font-size: 2.25rem;
+  }
+  .al-hero-content-wrap {
+    padding-top: 3rem;
+    padding-bottom: 3rem;
+  }
 }
 
-.trust-feature-chip {
-  display: flex;
-  align-items: center;
-  gap: 0.65rem;
-}
-
-.chip-icon { color: var(--primary); flex-shrink: 0; }
-.chip-title { font-size: 0.85rem; font-weight: 800; color: var(--text); }
-.chip-sub { font-size: 0.725rem; color: var(--text-muted); }
-
-.spotlight-card {
-  background: #FFFFFF;
-  border-radius: 16px;
-  border: 1px solid var(--borders);
-  padding: 1.25rem;
-  box-shadow: var(--shadow-card-hover);
-}
-
-.spotlight-top-tags {
-  display: flex;
-  justify-content: space-between;
-  margin-bottom: 0.75rem;
-}
-
-.badge-chip {
-  font-size: 0.7rem;
-  font-weight: 800;
-  padding: 0.25rem 0.65rem;
-  border-radius: var(--radius-pill);
-}
-.badge-chip.blue { background: var(--primary-light); color: var(--primary); }
-.badge-chip.orange { background: var(--secondary-light); color: var(--secondary); }
-
-.spotlight-img-frame {
-  width: 100%;
-  height: 260px;
-  border-radius: 12px;
-  overflow: hidden;
-  background: #F8FAFC;
-}
-
-.spotlight-img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-}
-
-.spotlight-body { margin-top: 1rem; }
-
-.spotlight-cat-row {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 0.35rem;
-}
-
-.spotlight-cat { font-size: 0.7rem; font-weight: 800; color: var(--primary); }
-.spotlight-rating { display: flex; align-items: center; gap: 0.25rem; font-size: 0.75rem; font-weight: 800; }
-.spotlight-title { font-size: 1.1rem; font-weight: 800; color: var(--text); margin-bottom: 0.75rem; }
-
-.spotlight-price-row {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
-
-.price-now { font-size: 1.4rem; font-weight: 900; color: var(--primary); }
-.price-before { font-size: 0.875rem; color: var(--text-muted); text-decoration: line-through; margin-left: 0.4rem; }
-
-.btn-sm { height: 38px; padding: 0 1rem; font-size: 0.825rem; }
-
-@media (max-width: 1024px) {
-  .hero-card-1400 { padding: 2.25rem 1.5rem; }
-  .hero-grid-2 { grid-template-columns: 1fr; gap: 2rem; }
-  .hero-main-title { font-size: 2.4rem; }
-  .trust-features-grid { grid-template-columns: 1fr; }
+@media (max-width: 600px) {
+  .al-hero-title {
+    font-size: 1.85rem;
+  }
+  .al-hero-subtitle {
+    font-size: 0.95rem;
+  }
+  .al-hero-cta-group {
+    flex-direction: column;
+    align-items: stretch;
+  }
+  .al-hero-btn-primary, .al-hero-btn-secondary {
+    justify-content: center;
+  }
 }

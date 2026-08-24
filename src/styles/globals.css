@@ -2,15 +2,15 @@
 @import './auth.css';
 
 :root {
-  /* Flipkart / Amazon / Shopify Production Design Tokens */
-  --primary: #2874F0;
-  --primary-hover: #1E62D0;
-  --primary-light: rgba(40, 116, 240, 0.08);
-  --primary-glow: rgba(40, 116, 240, 0.25);
+  /* Al-Umaima Design Tokens */
+  --primary: #f97316;
+  --primary-hover: #ea580c;
+  --primary-light: rgba(249, 115, 22, 0.1);
+  --primary-glow: rgba(249, 115, 22, 0.25);
 
-  --secondary: #FB641B;
-  --secondary-hover: #E5530B;
-  --secondary-light: rgba(251, 100, 27, 0.1);
+  --secondary: #0b172a;
+  --secondary-hover: #1e293b;
+  --secondary-light: rgba(11, 23, 42, 0.08);
 
   --success: #10B981;
   --success-hover: #059669;
@@ -20,49 +20,42 @@
   --danger: #EF4444;
   --danger-light: rgba(239, 68, 68, 0.1);
 
-  --text: #212121;
-  --text-muted: #878787;
-  --text-light: #9CA3AF;
+  --text: #0f172a;
+  --text-muted: #64748b;
+  --text-light: #94a3b8;
   --text-inverse: #FFFFFF;
 
-  --background: #F1F3F6;
+  --background: #f8fafc;
   --cards: #FFFFFF;
-  --borders: #E0E0E0;
-  --borders-hover: #BDBDBD;
+  --borders: #E2E8F0;
+  --borders-hover: #CBD5E1;
   --offwhite: #FAF9F6;
   --offwhite-card: #FAFAFA;
   --offwhite-border: #E8E6E1;
 
   /* Dark Theme Section Accents */
-  --dark-bg: #172337;
-  --dark-card: #21314C;
+  --dark-bg: #081225;
+  --dark-card: #0b172a;
 
-  /* Standardized 12px Radius Tokens Prompt Specs */
+  /* Standardized Radius Tokens */
   --radius-hero: 12px;
-  --radius-card: 12px;
-  --radius-button: 12px;
+  --radius-card: 10px;
+  --radius-button: 6px;
   --radius-pill: 9999px;
-  --radius-sm: 8px;
+  --radius-sm: 6px;
 
   /* Shadows */
-  --shadow-card: 0 4px 16px rgba(0, 0, 0, 0.06);
-  --shadow-card-hover: 0 8px 24px rgba(0, 0, 0, 0.1);
-  --shadow-lg: 0 12px 32px rgba(0, 0, 0, 0.12);
+  --shadow-card: 0 2px 8px rgba(0, 0, 0, 0.04);
+  --shadow-card-hover: 0 12px 24px rgba(0, 0, 0, 0.08);
+  --shadow-lg: 0 16px 36px rgba(0, 0, 0, 0.12);
 
   /* Typography */
   --font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
   --line-height: 1.6;
 
-  /* Navigation Heights */
-  --banner-height: 34px;
-  --nav-height-desktop: 76px;
-  --nav-height-mobile: 70px;
-  --header-desktop: calc(var(--banner-height) + var(--nav-height-desktop));
-  --header-mobile: calc(var(--banner-height) + var(--nav-height-mobile));
+  /* Layout */
   --max-width: 1400px;
-
-  /* Transitions */
-  --transition-normal: all 300ms cubic-bezier(0.4, 0, 0.2, 1);
+  --transition-normal: all 250ms cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 /* Global Reset & Typography */
@@ -112,7 +105,7 @@ input, select, textarea {
   font-family: inherit;
 }
 
-/* Container Width System - Prompt Specs: max-width: 1400px; margin: auto; */
+/* Container Width System */
 .container {
   width: 100%;
   max-width: var(--max-width);
@@ -127,8 +120,8 @@ input, select, textarea {
 }
 
 .main-content {
-  min-height: calc(100vh - var(--header-desktop) - 300px);
-  padding-top: var(--header-desktop);
+  min-height: calc(100vh - 400px);
+  padding-top: 0;
 }
 
 @media (max-width: 768px) {

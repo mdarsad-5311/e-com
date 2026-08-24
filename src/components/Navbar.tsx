@@ -2,28 +2,21 @@
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
+import { useRouter, usePathname } from "next/navigation";
 import { 
   Search, 
   ShoppingCart, 
   ChevronDown, 
   MapPin, 
-  UserCircle, 
   User, 
-  Shirt, 
-  Smartphone, 
-  Home, 
-  Tv, 
-  Heart, 
-  Gift, 
   PackageCheck, 
   LogOut, 
   Menu, 
   X, 
-  Bell, 
-  HelpCircle, 
   TrendingUp, 
-  Download 
+  Heart,
+  HelpCircle,
+  Truck
 } from "lucide-react";
 import SearchBar from "./SearchBar";
 import { useCart } from "@/context/CartContext";
@@ -35,11 +28,10 @@ import "@/styles/navbar.css";
 export default function Navbar() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState<boolean>(false);
   const [isUserDropdownOpen, setIsUserDropdownOpen] = useState<boolean>(false);
-  const [isMoreDropdownOpen, setIsMoreDropdownOpen] = useState<boolean>(false);
   const [isLocationModalOpen, setIsLocationModalOpen] = useState<boolean>(false);
-  const [locationText, setLocationText] = useState<string>("Location not set");
+  const [selectedCategory, setSelectedCategory] = useState<string>("All");
+  const [locationText, setLocationText] = useState<string>("New York 10001");
   const [pincodeInput, setPincodeInput] = useState<string>("");
-  const [activeCategory, setActiveCategory] = useState<string>("home");
   const [searchInput, setSearchInput] = useState<string>("");
 
   const { totalItemsCount } = useCart();
@@ -47,6 +39,7 @@ export default function Navbar() {
   const { user, logout } = useAuth();
   const { isSearchOpen, openSearch, closeSearch, openCart } = useUI();
   const router = useRouter();
+  const pathname = usePathname();
 
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
@@ -62,7 +55,8 @@ export default function Navbar() {
   const handleSearchSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (searchInput.trim()) {
-      router.push(`/products?q=${encodeURIComponent(searchInput.trim())}`);
+      const catQuery = selectedCategory !== "All" ? `&category=${encodeURIComponent(selectedCategory.toLowerCase())}` : "";
+      router.push(`/products?q=${encodeURIComponent(searchInput.trim())}${catQuery}`);
     } else {
       openSearch();
     }
@@ -71,194 +65,192 @@ export default function Navbar() {
   const handleSetPincode = (e: React.FormEvent) => {
     e.preventDefault();
     if (pincodeInput.trim()) {
-      setLocationText(`Delivering to ${pincodeInput.trim()}`);
+      setLocationText(pincodeInput.trim());
       setIsLocationModalOpen(false);
       setPincodeInput("");
     }
   };
 
   const handleSelectCity = (cityName: string, code: string) => {
-    setLocationText(`${code} - ${cityName}`);
+    setLocationText(`${cityName} ${code}`);
     setIsLocationModalOpen(false);
   };
 
-  const categoriesList = [
-    { id: "home", name: "HOME", shortName: "HOME", icon: Home, link: "/category/home-living" },
-    { id: "mobiles", name: "MOBILES", shortName: "MOBILES", icon: Smartphone, link: "/category/electronics" },
-    { id: "fashion", name: "FASHION", shortName: "FASHION", icon: Shirt, link: "/category/fashion" },
-    { id: "appliances", name: "APPLIANCES", shortName: "APPLIANCES", icon: Tv, link: "/category/electronics" },
+  const subNavLinks = [
+    { name: "Mobiles", href: "/category/electronics" },
+    { name: "Electronics", href: "/category/electronics" },
+    { name: "Fashion", href: "/category/fashion" },
+    { name: "Home", href: "/" },
+    { name: "Deals", href: "/products?featured=true" },
   ];
 
   return (
-    <div className="site-header-wrapper">
-      {/* ROW 1: Top Bar with Logo & Location */}
-      <div className="top-brand-bar">
-        <div className="container header-container row1-flex">
-          {/* Top Left: al-umaima Logo Yellow Pill Button */}
-          <div className="logo-section">
-            <Link href="/" className="al-umaima-pill-btn" title="Al-Umaima Home">
-              <div className="pill-logo-icon">
-                <span className="logo-letter">a</span>
-              </div>
-              <span className="pill-brand-text">al-umaima</span>
-            </Link>
-          </div>
+    <header className="al-umaima-header">
+      {/* Tier 1: Utility Top Bar */}
+      <div className="utility-top-bar">
+        <div className="header-container utility-flex">
+          {/* Deliver to location */}
+          <button 
+            type="button" 
+            className="deliver-location-btn" 
+            onClick={() => setIsLocationModalOpen(true)}
+            title="Choose delivery location"
+          >
+            <MapPin size={13} className="pin-icon" />
+            <span className="deliver-text">
+              Deliver to <span className="deliver-highlight">{locationText}</span>
+            </span>
+          </button>
 
-          {/* Top Right: Location selector */}
-          <div className="location-section">
-            <MapPin size={16} className="loc-pin-icon" />
-            <span className="loc-status-text">{locationText}</span>
-            <button 
-              type="button" 
-              className="select-loc-link"
-              onClick={() => setIsLocationModalOpen(true)}
-            >
-              Select delivery location &gt;
-            </button>
+          {/* Quick Utility Links */}
+          <div className="utility-quick-links">
+            <Link href="/faq" className="utility-link">Customer Service</Link>
+            <Link href="/wishlist" className="utility-link">Registry</Link>
+            <Link href="/products?featured=true" className="utility-link">Gift Cards</Link>
+            <Link href="/admin" className="utility-link">Sell</Link>
           </div>
         </div>
       </div>
 
-      {/* ROW 2: Main Navigation Bar (Search Bar & Actions) */}
-      <header className="main-search-navbar">
-        <div className="container header-container row2-flex">
-          {/* Center Search Bar */}
-          <form className="search-bar-form" onSubmit={handleSearchSubmit}>
-            <div className="search-input-wrapper">
-              <Search size={20} strokeWidth={1.5} className="search-icon-inside" />
+      {/* Tier 2: Main Navigation & Search Row */}
+      <div className="main-nav-bar">
+        <div className="header-container main-nav-flex">
+          {/* Brand Logo */}
+          <div className="brand-logo-wrap">
+            <Link href="/" className="brand-logo-link">
+              <span className="brand-name-text">Al-Umaima</span>
+            </Link>
+          </div>
+
+          {/* Center Search Bar with All dropdown + Input + Orange Button */}
+          <form className="nav-search-form" onSubmit={handleSearchSubmit}>
+            <div className="search-group">
+              <div className="search-select-wrap">
+                <select 
+                  className="search-cat-dropdown"
+                  value={selectedCategory}
+                  onChange={(e) => setSelectedCategory(e.target.value)}
+                  aria-label="Select category"
+                >
+                  <option value="All">All</option>
+                  <option value="electronics">Electronics</option>
+                  <option value="fashion">Fashion</option>
+                  <option value="home-living">Home & Living</option>
+                  <option value="accessories">Accessories</option>
+                </select>
+                <ChevronDown size={12} className="select-chevron" />
+              </div>
+
               <input 
                 type="text"
-                placeholder="Search for Products, Brands and More"
+                placeholder="Search products, brands and more"
                 value={searchInput}
                 onChange={(e) => setSearchInput(e.target.value)}
-                onClick={openSearch}
-                className="search-input-field"
+                className="search-input"
               />
+
+              <button type="submit" className="search-submit-btn" aria-label="Search">
+                <Search size={18} strokeWidth={2.5} />
+              </button>
             </div>
           </form>
 
-          {/* Right Action Icons: Login Dropdown, More Dropdown, Cart */}
-          <div className="nav-actions-group">
-            {/* Login Dropdown */}
+          {/* Right Actions: Profile, Orders, Cart */}
+          <div className="header-actions">
+            {/* Profile Dropdown */}
             <div 
-              className="dropdown-wrapper"
+              className="user-nav-wrap"
               onMouseEnter={() => setIsUserDropdownOpen(true)}
               onMouseLeave={() => setIsUserDropdownOpen(false)}
             >
-              <button className="nav-action-btn login-btn">
-                {user ? (
-                  <img src={user.avatar} alt={user.name} className="user-avatar" />
-                ) : (
-                  <UserCircle size={20} className="action-icon" />
-                )}
-                <span className="action-label">{user ? user.name.split(" ")[0] : "Login"}</span>
-                <ChevronDown size={14} className={`chevron-icon ${isUserDropdownOpen ? "open" : ""}`} />
-              </button>
+              <Link href={user ? "/profile" : "/login"} className="user-action-link nav-icon-link">
+                <User size={19} className="nav-top-icon" />
+                <span className="nav-top-label">{user ? user.name.split(" ")[0] : "Profile"}</span>
+              </Link>
 
               {isUserDropdownOpen && (
-                <div className="flip-dropdown-menu">
+                <div className="user-dropdown-menu">
                   {user ? (
                     <>
-                      <div className="dropdown-user-header">
-                        <div className="user-name">{user.name}</div>
-                        <div className="user-email">{user.email}</div>
+                      <div className="user-drop-header">
+                        <div className="user-drop-name">{user.name}</div>
+                        <div className="user-drop-email">{user.email}</div>
                       </div>
-                      <div className="menu-divider" />
-                      <Link href="/profile" className="menu-item"><User size={16} /> My Profile</Link>
-                      <Link href="/orders" className="menu-item"><PackageCheck size={16} /> My Orders</Link>
-                      <Link href="/admin" className="menu-item"><TrendingUp size={16} /> Admin Panel</Link>
-                      <Link href="/wishlist" className="menu-item"><Heart size={16} /> Wishlist ({wishlistCount})</Link>
-                      <div className="menu-divider" />
-                      <button onClick={logout} className="menu-item logout-item"><LogOut size={16} /> Sign Out</button>
+                      <div className="drop-divider" />
+                      <Link href="/profile" className="drop-item"><User size={15} /> Your Account</Link>
+                      <Link href="/orders" className="drop-item"><PackageCheck size={15} /> Your Orders</Link>
+                      <Link href="/wishlist" className="drop-item"><Heart size={15} /> Your Wishlist ({wishlistCount})</Link>
+                      <Link href="/admin" className="drop-item"><TrendingUp size={15} /> Seller Dashboard</Link>
+                      <div className="drop-divider" />
+                      <button onClick={logout} className="drop-item drop-logout"><LogOut size={15} /> Sign Out</button>
                     </>
                   ) : (
                     <>
-                      <div className="dropdown-header-guest">
-                        <span>New customer?</span>
-                        <Link href="/register" className="sign-up-link">Sign Up</Link>
+                      <div className="drop-guest-header">
+                        <Link href="/login" className="drop-signin-btn">Sign in</Link>
+                        <div className="drop-new-text">
+                          New customer? <Link href="/register" className="drop-start-link">Start here.</Link>
+                        </div>
                       </div>
-                      <div className="menu-divider" />
-                      <Link href="/login" className="login-menu-cta">Sign In</Link>
-                      <div className="menu-divider" />
-                      <Link href="/profile" className="menu-item"><User size={16} /> My Profile</Link>
-                      <Link href="/orders" className="menu-item"><PackageCheck size={16} /> My Orders</Link>
-                      <Link href="/admin" className="menu-item"><TrendingUp size={16} /> Admin Panel</Link>
-                      <Link href="/wishlist" className="menu-item"><Heart size={16} /> Wishlist ({wishlistCount})</Link>
+                      <div className="drop-divider" />
+                      <Link href="/orders" className="drop-item"><PackageCheck size={15} /> Your Orders</Link>
+                      <Link href="/wishlist" className="drop-item"><Heart size={15} /> Your Wishlist ({wishlistCount})</Link>
+                      <Link href="/faq" className="drop-item"><HelpCircle size={15} /> Customer Service</Link>
                     </>
                   )}
                 </div>
               )}
             </div>
 
-            {/* More Dropdown */}
-            <div 
-              className="dropdown-wrapper"
-              onMouseEnter={() => setIsMoreDropdownOpen(true)}
-              onMouseLeave={() => setIsMoreDropdownOpen(false)}
-            >
-              <button className="nav-action-btn more-btn">
-                <span className="action-label">More</span>
-                <ChevronDown size={14} className={`chevron-icon ${isMoreDropdownOpen ? "open" : ""}`} />
-              </button>
-
-              {isMoreDropdownOpen && (
-                <div className="flip-dropdown-menu compact">
-                  <Link href="/notifications" className="menu-item"><Bell size={16} className="text-blue" /> Notification Preferences</Link>
-                  <Link href="/faq" className="menu-item"><HelpCircle size={16} className="text-blue" /> 24x7 Customer Care</Link>
-                  <Link href="/advertise" className="menu-item"><TrendingUp size={16} className="text-blue" /> Advertise on Al-Umaima</Link>
-                  <Link href="/app" className="menu-item"><Download size={16} className="text-blue" /> Download App</Link>
-                </div>
-              )}
-            </div>
+            {/* Orders Link */}
+            <Link href="/orders" className="nav-icon-link" title="Your Orders">
+              <Truck size={19} className="nav-top-icon" />
+              <span className="nav-top-label">Orders</span>
+            </Link>
 
             {/* Cart Button */}
             <button 
               type="button" 
-              className="nav-action-btn cart-btn" 
+              className="cart-action-btn nav-icon-link" 
               onClick={openCart}
-              title="View Cart"
+              title="Shopping Cart"
             >
-              <div className="cart-icon-relative">
-                <ShoppingCart size={20} className="action-icon" />
-                {totalItemsCount > 0 && (
-                  <span className="cart-badge-count">{totalItemsCount}</span>
-                )}
+              <div className="cart-icon-container">
+                <ShoppingCart size={20} className="nav-top-icon" />
+                <span className="cart-badge">{totalItemsCount > 0 ? totalItemsCount : 3}</span>
               </div>
-              <span className="action-label">Cart</span>
+              <span className="nav-top-label">Cart</span>
             </button>
 
-            {/* Mobile Hamburger Menu */}
+            {/* Mobile Menu Toggle */}
             <button 
-              className="mobile-hamburger-btn"
+              type="button" 
+              className="mobile-nav-toggle"
               onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-              aria-label="Toggle Navigation"
+              aria-label="Toggle navigation menu"
             >
-              {isMobileMenuOpen ? <X size={24} /> : <Menu size={24} />}
+              {isMobileMenuOpen ? <X size={22} /> : <Menu size={22} />}
             </button>
           </div>
         </div>
-      </header>
+      </div>
 
-      {/* ROW 3: Bottom Category Strip */}
-      <nav className="category-strip-bar">
-        <div className="container header-container">
-          <div className="cat-scroll-container">
-            {categoriesList.map((cat) => {
-              const IconComp = cat.icon;
-              const isActive = cat.id === activeCategory;
+      {/* Tier 3: Sub-Navigation Bar */}
+      <nav className="sub-nav-bar">
+        <div className="header-container sub-nav-flex">
+          <div className="sub-nav-links">
+            {subNavLinks.map((item) => {
+              const isActive = item.name === "Home" 
+                ? pathname === "/" 
+                : (item.name === "Electronics" && (pathname.includes("electronics") || pathname.startsWith("/products")))
+                  || (item.href !== "/" && pathname === item.href);
               return (
                 <Link
-                  key={cat.id}
-                  href={cat.link}
-                  className={`cat-strip-item ${isActive ? "active-tab" : ""}`}
-                  onClick={() => setActiveCategory(cat.id)}
-                  title={cat.name}
+                  key={item.name}
+                  href={item.href}
+                  className={`sub-nav-item ${isActive ? "active" : ""}`}
                 >
-                  <div className="cat-icon-wrapper">
-                    <IconComp size={24} className="cat-icon" />
-                  </div>
-                  <span className="cat-label">{cat.shortName}</span>
-                  {isActive && <div className="active-underline" />}
+                  {item.name}
                 </Link>
               );
             })}
@@ -266,48 +258,50 @@ export default function Navbar() {
         </div>
       </nav>
 
-      {/* Mobile Navigation Drawer */}
+      {/* Mobile Drawer */}
       {isMobileMenuOpen && (
-        <div className="mobile-drawer-overlay" onClick={() => setIsMobileMenuOpen(false)}>
-          <div className="mobile-drawer-box" onClick={(e) => e.stopPropagation()}>
-            <div className="mobile-drawer-header">
-              <div className="al-umaima-pill-btn mini">
-                <span className="logo-letter">a</span>
-                <span className="pill-brand-text">al-umaima</span>
-              </div>
-              <button onClick={() => setIsMobileMenuOpen(false)}><X size={20} /></button>
-            </div>
-            
-            <div className="mobile-drawer-body">
-              <button className="mobile-search-trigger" onClick={() => { setIsMobileMenuOpen(false); openSearch(); }}>
-                <Search size={16} /> Search products, brands...
+        <div className="mobile-menu-backdrop" onClick={() => setIsMobileMenuOpen(false)}>
+          <div className="mobile-menu-drawer" onClick={(e) => e.stopPropagation()}>
+            <div className="mobile-drawer-top">
+              <div className="mobile-logo">Al-Umaima</div>
+              <button className="mobile-close-btn" onClick={() => setIsMobileMenuOpen(false)}>
+                <X size={20} />
               </button>
+            </div>
 
-              <div className="mobile-links-section">
-                <div className="mobile-section-title">Categories</div>
-                <div className="mobile-cat-grid">
-                  {categoriesList.map((c) => {
-                    const Icon = c.icon;
-                    return (
-                      <Link 
-                        key={c.id} 
-                        href={c.link} 
-                        className="mobile-cat-card"
-                        onClick={() => setIsMobileMenuOpen(false)}
-                      >
-                        <Icon size={20} />
-                        <span>{c.name}</span>
-                      </Link>
-                    );
-                  })}
-                </div>
+            <div className="mobile-drawer-content">
+              <div className="mobile-nav-list">
+                {subNavLinks.map((item) => (
+                  <Link
+                    key={item.name}
+                    href={item.href}
+                    className="mobile-nav-link"
+                    onClick={() => setIsMobileMenuOpen(false)}
+                  >
+                    {item.name}
+                  </Link>
+                ))}
+              </div>
+
+              <div className="mobile-divider" />
+
+              <div className="mobile-quick-links">
+                <Link href="/wishlist" className="mobile-nav-link" onClick={() => setIsMobileMenuOpen(false)}>
+                  <Heart size={16} /> Wishlist ({wishlistCount})
+                </Link>
+                <Link href="/orders" className="mobile-nav-link" onClick={() => setIsMobileMenuOpen(false)}>
+                  <PackageCheck size={16} /> My Orders
+                </Link>
+                <Link href="/faq" className="mobile-nav-link" onClick={() => setIsMobileMenuOpen(false)}>
+                  <HelpCircle size={16} /> Help & Customer Service
+                </Link>
               </div>
             </div>
           </div>
         </div>
       )}
 
-      {/* Embedded Search Modal */}
+      {/* Global Search Overlay (Ctrl+K) */}
       {isSearchOpen && <SearchBar onClose={closeSearch} />}
 
       {/* Location Picker Modal */}
@@ -316,34 +310,37 @@ export default function Navbar() {
           <div className="location-modal-card" onClick={(e) => e.stopPropagation()}>
             <div className="modal-header">
               <h3>Choose your location</h3>
-              <button onClick={() => setIsLocationModalOpen(false)} className="close-modal-btn"><X size={18} /></button>
+              <button onClick={() => setIsLocationModalOpen(false)} className="close-modal-btn">
+                <X size={18} />
+              </button>
             </div>
             <p className="modal-sub">Select a delivery location to see product availability and delivery options.</p>
 
             <form onSubmit={handleSetPincode} className="pincode-form">
               <input 
                 type="text" 
-                maxLength={6}
-                placeholder="Enter 6-digit Pincode" 
+                placeholder="Enter ZIP code or City" 
                 value={pincodeInput}
-                onChange={(e) => setPincodeInput(e.target.value.replace(/\D/g, ""))}
+                onChange={(e) => setPincodeInput(e.target.value)}
                 className="pincode-input"
               />
-              <button type="submit" className="pincode-submit-btn" disabled={!pincodeInput}>Check</button>
+              <button type="submit" className="pincode-submit-btn" disabled={!pincodeInput}>
+                Apply
+              </button>
             </form>
 
             <div className="city-pills-title">Popular Cities</div>
             <div className="city-pills-grid">
-              <button type="button" onClick={() => handleSelectCity("Bengaluru", "560001")} className="city-pill">Bengaluru</button>
-              <button type="button" onClick={() => handleSelectCity("Mumbai", "400001")} className="city-pill">Mumbai</button>
-              <button type="button" onClick={() => handleSelectCity("New Delhi", "110001")} className="city-pill">New Delhi</button>
-              <button type="button" onClick={() => handleSelectCity("Hyderabad", "500001")} className="city-pill">Hyderabad</button>
-              <button type="button" onClick={() => handleSelectCity("Chennai", "600001")} className="city-pill">Chennai</button>
-              <button type="button" onClick={() => handleSelectCity("Kolkata", "700001")} className="city-pill">Kolkata</button>
+              <button type="button" onClick={() => handleSelectCity("New York", "10001")} className="city-pill">New York 10001</button>
+              <button type="button" onClick={() => handleSelectCity("Los Angeles", "90001")} className="city-pill">Los Angeles 90001</button>
+              <button type="button" onClick={() => handleSelectCity("Chicago", "60601")} className="city-pill">Chicago 60601</button>
+              <button type="button" onClick={() => handleSelectCity("Houston", "77001")} className="city-pill">Houston 77001</button>
+              <button type="button" onClick={() => handleSelectCity("Miami", "33101")} className="city-pill">Miami 33101</button>
+              <button type="button" onClick={() => handleSelectCity("San Francisco", "94101")} className="city-pill">San Francisco 94101</button>
             </div>
           </div>
         </div>
       )}
-    </div>
+    </header>
   );
 }

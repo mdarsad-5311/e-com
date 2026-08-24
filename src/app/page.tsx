@@ -1,13 +1,7 @@
 import HeroBanner from "@/components/HeroBanner";
+import BrandTrust from "@/components/BrandTrust";
 import DealOfTheDay from "@/components/DealOfTheDay";
 import Categories from "@/components/Categories";
-import FeaturedProducts from "@/components/FeaturedProducts";
-import PromoBanners from "@/components/PromoBanners";
-import BestSellers from "@/components/BestSellers";
-import VipPerks from "@/components/VipPerks";
-import CustomerTestimonials from "@/components/CustomerTestimonials";
-import BrandTrust from "@/components/BrandTrust";
-import RecentlyViewed from "@/components/RecentlyViewed";
 
 export default function Home() {
   return (
@@ -16,13 +10,6 @@ export default function Home() {
       <BrandTrust />
       <DealOfTheDay />
       <Categories />
-      <PromoBanners />
-      <FeaturedProducts />
-      <BestSellers />
-      <RecentlyViewed />
-      <VipPerks />
-      <CustomerTestimonials />
     </>
   );
 }
-

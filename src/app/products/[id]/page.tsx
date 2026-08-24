@@ -2,11 +2,8 @@ import { notFound } from "next/navigation";
 import { products, Product } from "@/data/products";
 import ProductGallery from "@/components/ProductGallery";
 import ProductInfo from "@/components/ProductInfo";
-import ProductReviews from "@/components/ProductReviews";
-import ProductCard from "@/components/ProductCard";
 import Breadcrumbs from "@/components/Breadcrumbs";
 import ProductViewTracker from "@/components/ProductViewTracker";
-import RecentlyViewed from "@/components/RecentlyViewed";
 
 interface ProductDetailPageProps {
   params: {
@@ -22,62 +19,78 @@ export function generateStaticParams() {
 
 export default function ProductDetailPage({ params }: ProductDetailPageProps) {
   const { id } = params;
-
   const product = products.find((p: Product) => p.id === id);
 
   if (!product) {
     notFound();
   }
 
-  const relatedProducts = products
-    .filter((p: Product) => p.id !== product.id && p.category === product.category)
-    .slice(0, 4);
+  // Breadcrumbs matching reference: Home > Electronics & Audio > Headphones > Aura Noise-Canceling Wireless Headphones
+  const breadcrumbItems = [
+    { label: "Home", href: "/" },
+    { label: product.categoryName || "Electronics & Audio", href: `/category/${product.category}` },
+    { label: product.category === "electronics" ? "Headphones" : product.categoryName, href: `/category/${product.category}` },
+    { label: product.title },
+  ];
 
   return (
-    <div className="container section">
-      <ProductViewTracker product={product} />
-      <Breadcrumbs
-        items={[
-          { label: "Home", href: "/" },
-          { label: "Shop", href: "/products" },
-          { label: product.categoryName, href: `/category/${product.category}` },
-          { label: product.title },
-        ]}
-      />
+    <div className="al-product-detail-page">
+      <div className="container">
+        <ProductViewTracker product={product} />
+        
+        {/* Breadcrumb Navigation */}
+        <div className="al-detail-breadcrumb-wrap">
+          <Breadcrumbs items={breadcrumbItems} />
+        </div>
 
-      <div className="product-detail-layout">
-        <ProductGallery
-          images={product.galleryImages || [product.image]}
-          title={product.title}
-          badge={product.badge}
-        />
-        <ProductInfo product={product} />
+        {/* 3-Column Product Main Layout */}
+        <div className="al-product-main-grid">
+          {/* Column 1: Image Gallery */}
+          <div className="al-detail-gallery-col">
+            <ProductGallery
+              images={product.galleryImages || [product.image]}
+              title={product.title}
+            />
+          </div>
+
+          {/* Columns 2 & 3: Product Info (Center) & Buy Card (Right) */}
+          <div className="al-detail-info-col">
+            <ProductInfo product={product} />
+          </div>
+        </div>
       </div>
 
-      <ProductReviews
-        reviews={product.reviews}
-        rating={product.rating}
-        reviewsCount={product.reviewsCount}
-      />
+      <style>{`
+        .al-product-detail-page {
+          background-color: #ffffff;
+          padding: 1.5rem 0 4rem;
+          min-height: 80vh;
+        }
 
-      {relatedProducts.length > 0 && (
-        <section className="related-products-section section">
-          <div className="section-header">
-            <div>
-              <h2 className="section-title">You may also like</h2>
-              <p className="section-subtitle">More from {product.categoryName}</p>
-            </div>
-          </div>
+        .al-detail-breadcrumb-wrap {
+          margin-bottom: 1.5rem;
+        }
 
-          <div className="products-grid">
-            {relatedProducts.map((relProduct: Product) => (
-              <ProductCard key={relProduct.id} product={relProduct} />
-            ))}
-          </div>
-        </section>
-      )}
+        .al-product-main-grid {
+          display: grid;
+          grid-template-columns: 460px 1fr;
+          gap: 2.5rem;
+          align-items: flex-start;
+        }
 
-      <RecentlyViewed excludeId={product.id} />
+        @media (max-width: 1200px) {
+          .al-product-main-grid {
+            grid-template-columns: 400px 1fr;
+            gap: 1.75rem;
+          }
+        }
+
+        @media (max-width: 990px) {
+          .al-product-main-grid {
+            grid-template-columns: 1fr;
+          }
+        }
+      `}</style>
     </div>
   );
 }

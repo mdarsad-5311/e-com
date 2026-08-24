@@ -1,30 +1,28 @@
 "use client";
 
-import { useState, useMemo, Suspense } from "react";
-import { useSearchParams } from "next/navigation";
+import { useState, useMemo } from "react";
 import { ChevronUp, ChevronDown, ChevronLeft, ChevronRight } from "lucide-react";
-import { products, categories, Product, Category } from "@/data/products";
+import { products, Product, Category } from "@/data/products";
 import ProductCard from "@/components/ProductCard";
 import "@/styles/category-page.css";
 
-function ProductsContent() {
-  const searchParams = useSearchParams();
-  const initialCategory = searchParams.get("category") || "all";
-  const initialQuery = searchParams.get("q") || "";
+interface CategoryViewProps {
+  category: Category;
+  initialProducts: Product[];
+}
 
+export default function CategoryView({ category, initialProducts }: CategoryViewProps) {
   // Filter & Accordion States
   const [openSections, setOpenSections] = useState({
-    category: true,
     brand: true,
     price: true,
     rating: true,
     discount: false,
   });
 
-  const [selectedCategory, setSelectedCategory] = useState<string>(initialCategory);
-  const [selectedBrands, setSelectedBrands] = useState<string[]>([]);
-  const [selectedPriceRange, setSelectedPriceRange] = useState<string>("all");
-  const [selectedRatings, setSelectedRatings] = useState<number[]>([]);
+  const [selectedBrands, setSelectedBrands] = useState<string[]>(["Aura", "Vortex"]);
+  const [selectedPriceRange, setSelectedPriceRange] = useState<string>("100-250");
+  const [selectedRatings, setSelectedRatings] = useState<number[]>([4]);
   const [sortBy, setSortBy] = useState<string>("featured");
 
   const toggleSection = (sectionKey: keyof typeof openSections) => {
@@ -44,7 +42,6 @@ function ProductsContent() {
   };
 
   const handleClearAll = () => {
-    setSelectedCategory("all");
     setSelectedBrands([]);
     setSelectedPriceRange("all");
     setSelectedRatings([]);
@@ -52,22 +49,15 @@ function ProductsContent() {
   };
 
   const filteredProducts = useMemo<Product[]>(() => {
-    return products
+    return initialProducts
       .filter((p: Product) => {
-        if (selectedCategory !== "all" && p.category !== selectedCategory) {
-          return false;
-        }
-        if (initialQuery.trim()) {
-          const q = initialQuery.toLowerCase();
-          const match = p.title.toLowerCase().includes(q) || p.categoryName.toLowerCase().includes(q);
-          if (!match) return false;
-        }
         if (selectedBrands.length > 0) {
           const productBrand = p.brand || (p.title.includes("Aura") ? "Aura" : p.title.includes("Pulse") ? "Pulse" : p.title.includes("Vortex") ? "Vortex" : "Sony");
           if (!selectedBrands.includes(productBrand)) {
             return false;
           }
         }
+
         if (selectedPriceRange === "under-50" && p.price >= 50) return false;
         if (selectedPriceRange === "50-100" && (p.price < 50 || p.price > 100)) return false;
         if (selectedPriceRange === "100-250" && (p.price < 100 || p.price > 250)) return false;
@@ -86,7 +76,7 @@ function ProductsContent() {
         if (sortBy === "rating") return b.rating - a.rating;
         return 0;
       });
-  }, [selectedCategory, initialQuery, selectedBrands, selectedPriceRange, selectedRatings, sortBy]);
+  }, [initialProducts, selectedBrands, selectedPriceRange, selectedRatings, sortBy]);
 
   const availableBrands = [
     { name: "Aura", count: 24 },
@@ -94,11 +84,6 @@ function ProductsContent() {
     { name: "Vortex", count: 12 },
     { name: "Sony", count: 8 },
   ];
-
-  const currentCategoryObj = categories.find((c) => c.slug === selectedCategory);
-  const pageHeading = selectedCategory === "all" 
-    ? (initialQuery ? `Search Results for "${initialQuery}"` : "All Products") 
-    : (currentCategoryObj ? currentCategoryObj.name : "Products");
 
   return (
     <div className="al-catalog-page">
@@ -111,45 +96,6 @@ function ProductsContent() {
               <button onClick={handleClearAll} className="al-clear-all-btn">
                 Clear All
               </button>
-            </div>
-
-            {/* Category Filter */}
-            <div className="al-filter-section">
-              <button
-                type="button"
-                className="al-section-toggle-btn"
-                onClick={() => toggleSection("category")}
-              >
-                <span>Category</span>
-                {openSections.category ? <ChevronUp size={16} className="toggle-chevron" /> : <ChevronDown size={16} className="toggle-chevron" />}
-              </button>
-
-              {openSections.category && (
-                <div className="al-filter-options-list">
-                  <label className="al-radio-label">
-                    <input
-                      type="radio"
-                      name="catalog-cat"
-                      checked={selectedCategory === "all"}
-                      onChange={() => setSelectedCategory("all")}
-                      className="al-custom-radio"
-                    />
-                    <span>All Categories</span>
-                  </label>
-                  {categories.map((cat: Category) => (
-                    <label key={cat.id} className="al-radio-label">
-                      <input
-                        type="radio"
-                        name="catalog-cat"
-                        checked={selectedCategory === cat.slug}
-                        onChange={() => setSelectedCategory(cat.slug)}
-                        className="al-custom-radio"
-                      />
-                      <span>{cat.name}</span>
-                    </label>
-                  ))}
-                </div>
-              )}
             </div>
 
             {/* Brand Filter */}
@@ -310,8 +256,9 @@ function ProductsContent() {
 
           {/* Right Product Grid Area */}
           <main className="al-catalog-main">
+            {/* Header: Title on Left, Sort by on Right */}
             <div className="al-catalog-header-row">
-              <h1 className="al-category-main-title">{pageHeading}</h1>
+              <h1 className="al-category-main-title">{category.name}</h1>
 
               <div className="al-sort-control">
                 <span className="al-sort-label">Sort by:</span>
@@ -328,6 +275,7 @@ function ProductsContent() {
               </div>
             </div>
 
+            {/* 4-Column Product Cards */}
             {filteredProducts.length > 0 ? (
               <div className="al-products-grid-4">
                 {filteredProducts.map((prod: Product) => (
@@ -337,13 +285,14 @@ function ProductsContent() {
             ) : (
               <div className="al-empty-catalog">
                 <h3>No products found</h3>
-                <p>Try resetting your filters or adjusting your criteria.</p>
+                <p>Try clearing some filters to view available items.</p>
                 <button onClick={handleClearAll} className="al-clear-all-btn" style={{ fontSize: "0.95rem" }}>
                   Reset Filters
                 </button>
               </div>
             )}
 
+            {/* Pagination: < [1] 2 3 ... 8 > */}
             <div className="al-pagination-bar">
               <button className="al-page-btn" disabled aria-label="Previous Page">
                 <ChevronLeft size={16} />
@@ -361,13 +310,5 @@ function ProductsContent() {
         </div>
       </div>
     </div>
-  );
-}
-
-export default function ProductsPage() {
-  return (
-    <Suspense fallback={<div className="container" style={{ padding: "4rem 0", textAlign: "center" }}>Loading products catalog...</div>}>
-      <ProductsContent />
-    </Suspense>
   );
 }
