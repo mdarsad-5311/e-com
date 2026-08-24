@@ -1,0 +1,17 @@
+/* Breadcrumbs Component Styles */
+.crumbs {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.35rem;
+  margin-bottom: 1.25rem;
+  font-size: 0.82rem;
+  color: var(--text-muted);
+  font-weight: 600;
+}
+.crumb {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+}
+.crumbs a:hover { color: var(--primary); }

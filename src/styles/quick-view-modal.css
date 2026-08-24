@@ -1,0 +1,55 @@
+/* QuickViewModal Component Styles */
+.qv-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(15, 23, 42, 0.5);
+  z-index: 280;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1rem;
+}
+.qv-modal {
+  position: relative;
+  width: min(860px, 100%);
+  background: #fff;
+  border-radius: 16px;
+  overflow: hidden;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  max-height: 90vh;
+}
+.qv-modal img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  min-height: 280px;
+  background: #f8fafc;
+}
+.qv-close {
+  position: absolute;
+  top: 0.85rem;
+  right: 0.85rem;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: #fff;
+  border: 1px solid var(--borders);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 2;
+}
+.qv-body { padding: 1.75rem; overflow-y: auto; }
+.qv-cat { font-size: 0.72rem; font-weight: 800; color: var(--primary); text-transform: uppercase; }
+.qv-body h3 { font-size: 1.4rem; margin: 0.4rem 0 0.6rem; }
+.qv-rating { font-size: 0.85rem; font-weight: 700; display: flex; align-items: center; gap: 0.3rem; }
+.qv-price { font-size: 1.6rem; font-weight: 900; margin: 0.75rem 0; color: var(--text); display: flex; gap: 0.6rem; align-items: baseline; }
+.qv-price s { font-size: 1rem; color: var(--text-muted); }
+.qv-body p { font-size: 0.9rem; line-height: 1.55; margin-bottom: 1.1rem; }
+.qv-actions { display: flex; gap: 0.6rem; flex-wrap: wrap; }
+.full-link { display: inline-block; margin-top: 1rem; font-weight: 700; color: var(--primary); font-size: 0.9rem; }
+@media (max-width: 720px) {
+  .qv-modal { grid-template-columns: 1fr; }
+  .qv-modal img { height: 220px; }
+}

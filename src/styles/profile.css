@@ -1,0 +1,396 @@
+/* Flipkart Authentic My Account Layout & Styles */
+.flipkart-account-layout {
+  display: grid;
+  grid-template-columns: 280px 1fr;
+  gap: 1rem;
+  padding: 1.5rem 0 3.5rem 0;
+  align-items: start;
+}
+
+/* Sidebar Styling */
+.account-sidebar-stack {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.account-user-card {
+  background: #FFFFFF;
+  padding: 0.85rem 1.25rem;
+  border-radius: 2px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.user-avatar-circle {
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  overflow: hidden;
+  background: #2874F0;
+  color: #FFFFFF;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  font-size: 1.2rem;
+}
+
+.user-avatar-circle img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.user-hello-text {
+  font-size: 0.75rem;
+  color: #878787;
+}
+
+.user-display-name {
+  font-size: 1rem;
+  font-weight: 700;
+  color: #212121;
+}
+
+.account-nav-card {
+  background: #FFFFFF;
+  border-radius: 2px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+  overflow: hidden;
+}
+
+.nav-group {
+  border-bottom: 1px solid #F0F0F0;
+}
+
+.nav-group:last-child {
+  border-bottom: none;
+}
+
+.nav-group-header {
+  padding: 1rem 1.25rem;
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: #878787;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+}
+
+.nav-group-header.clickable {
+  cursor: pointer;
+  color: #212121;
+  transition: background 0.2s;
+}
+
+.nav-group-header.clickable:hover {
+  color: #2874F0;
+  background: #F8FAFC;
+}
+
+.nav-sub-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.75rem 1.25rem 0.75rem 2.75rem;
+  font-size: 0.9rem;
+  color: #212121;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  width: 100%;
+  text-align: left;
+  border: none;
+  background: transparent;
+}
+
+.nav-sub-item:hover {
+  background: #F8FAFC;
+  color: #2874F0;
+}
+
+.nav-sub-item.active {
+  background: #F4F8FF;
+  color: #2874F0;
+  font-weight: 700;
+}
+
+.logout-nav-item {
+  color: #EF4444;
+  font-weight: 700;
+  padding: 1rem 1.25rem;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  cursor: pointer;
+  width: 100%;
+  background: transparent;
+  border: none;
+  font-size: 0.9rem;
+  border-top: 1px solid #F0F0F0;
+}
+
+.logout-nav-item:hover {
+  background: #FEF2F2;
+}
+
+/* Right Content Main Box */
+.account-content-pane {
+  background: #FFFFFF;
+  border-radius: 2px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+  padding: 1.75rem 2rem;
+  min-height: 520px;
+}
+
+.pane-section-header {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 1.25rem;
+}
+
+.pane-section-title {
+  font-size: 1.15rem;
+  font-weight: 700;
+  color: #212121;
+}
+
+.edit-link-btn {
+  font-size: 0.85rem;
+  color: #2874F0;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.personal-info-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1.25rem;
+  max-width: 520px;
+  margin-bottom: 2rem;
+}
+
+.fk-field-box {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+}
+
+.fk-field-label {
+  font-size: 0.8rem;
+  color: #878787;
+  font-weight: 600;
+}
+
+.fk-field-input {
+  height: 42px;
+  border: 1px solid #E0E0E0;
+  border-radius: 2px;
+  padding: 0 0.85rem;
+  font-size: 0.95rem;
+  color: #212121;
+  outline: none;
+  transition: border-color 0.2s;
+}
+
+.fk-field-input:focus {
+  border-color: #2874F0;
+}
+
+.fk-field-input:disabled {
+  background: #F8FAFC;
+  color: #555555;
+}
+
+.gender-radio-group {
+  display: flex;
+  gap: 2rem;
+  align-items: center;
+  margin-top: 0.5rem;
+}
+
+.gender-label {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.9rem;
+  cursor: pointer;
+}
+
+.verified-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+  font-size: 0.75rem;
+  background: #ECFDF5;
+  color: #10B981;
+  font-weight: 700;
+  padding: 0.25rem 0.5rem;
+  border-radius: 12px;
+  margin-left: 0.5rem;
+}
+
+.fk-save-btn {
+  background: #2874F0;
+  color: #FFFFFF;
+  padding: 0.65rem 2rem;
+  font-size: 0.9rem;
+  font-weight: 700;
+  border-radius: 2px;
+  margin-top: 0.5rem;
+  box-shadow: 0 2px 4px rgba(40, 116, 240, 0.2);
+}
+
+/* Address Management Section */
+.add-address-trigger-btn {
+  width: 100%;
+  height: 50px;
+  border: 1px solid #E0E0E0;
+  background: #FFFFFF;
+  color: #2874F0;
+  font-weight: 700;
+  font-size: 0.95rem;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0 1.25rem;
+  border-radius: 2px;
+  margin-bottom: 1.5rem;
+  transition: all 0.2s ease;
+}
+
+.add-address-trigger-btn:hover {
+  background: #F4F8FF;
+  border-color: #2874F0;
+}
+
+.address-form-box {
+  background: #F8FAFC;
+  border: 1px solid #E0E0E0;
+  padding: 1.5rem;
+  border-radius: 2px;
+  margin-bottom: 2rem;
+}
+
+.form-row-2 {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+  margin-bottom: 1rem;
+}
+
+.address-cards-stack {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.flipkart-address-card {
+  border: 1px solid #E0E0E0;
+  padding: 1.25rem;
+  border-radius: 2px;
+  position: relative;
+  transition: border-color 0.2s ease;
+}
+
+.flipkart-address-card:hover {
+  border-color: #2874F0;
+}
+
+.address-type-tag {
+  background: #F1F3F6;
+  color: #878787;
+  font-size: 0.7rem;
+  font-weight: 700;
+  padding: 0.2rem 0.5rem;
+  border-radius: 2px;
+  text-transform: uppercase;
+  margin-left: 0.75rem;
+}
+
+.address-recipient {
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: #212121;
+}
+
+.address-phone {
+  font-weight: 700;
+  margin-left: 1rem;
+}
+
+.address-text-body {
+  font-size: 0.9rem;
+  color: #555555;
+  margin-top: 0.5rem;
+  line-height: 1.5;
+}
+
+.address-actions-bar {
+  display: flex;
+  gap: 1rem;
+  margin-top: 1rem;
+  padding-top: 0.75rem;
+  border-top: 1px dashed #E0E0E0;
+}
+
+.addr-action-btn {
+  font-size: 0.8rem;
+  font-weight: 700;
+  color: #2874F0;
+  cursor: pointer;
+  background: transparent;
+  border: none;
+}
+
+.addr-action-btn.delete {
+  color: #EF4444;
+}
+
+/* Flipkart FAQ Component */
+.flipkart-faq-box {
+  margin-top: 3rem;
+  padding-top: 2rem;
+  border-top: 1px solid #E0E0E0;
+}
+
+.faq-title {
+  font-size: 1rem;
+  font-weight: 700;
+  color: #212121;
+  margin-bottom: 1rem;
+}
+
+.faq-item {
+  margin-bottom: 1.25rem;
+}
+
+.faq-question {
+  font-size: 0.88rem;
+  font-weight: 700;
+  color: #212121;
+  margin-bottom: 0.25rem;
+}
+
+.faq-answer {
+  font-size: 0.825rem;
+  color: #878787;
+  line-height: 1.5;
+}
+
+@media (max-width: 860px) {
+  .flipkart-account-layout {
+    grid-template-columns: 1fr;
+  }
+  .personal-info-grid {
+    grid-template-columns: 1fr;
+  }
+  .form-row-2 {
+    grid-template-columns: 1fr;
+  }
+}

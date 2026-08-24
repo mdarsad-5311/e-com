@@ -1,0 +1,268 @@
+/* DealOfTheDay Component Styles */
+.flash-sale-section {
+  background-color: var(--background);
+}
+
+.flash-header-banner {
+  background: linear-gradient(135deg, #FB641B 0%, #E5530B 100%);
+  border-radius: 12px;
+  padding: 2rem 2.5rem;
+  color: #FFFFFF;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 1.75rem;
+  box-shadow: 0 8px 24px rgba(251, 100, 27, 0.25);
+}
+
+.flash-badge-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  background: rgba(255, 255, 255, 0.2);
+  font-size: 0.75rem;
+  font-weight: 800;
+  padding: 0.3rem 0.8rem;
+  border-radius: 9999px;
+  margin-bottom: 0.4rem;
+}
+
+.flame-icon { color: #FFF; }
+
+.flash-title {
+  font-size: 2rem;
+  font-weight: 900;
+  color: #FFFFFF;
+}
+
+.flash-subtitle {
+  font-size: 0.9rem;
+  color: rgba(255, 255, 255, 0.9);
+  margin-top: 0.2rem;
+}
+
+.timer-wrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 0.4rem;
+}
+
+.timer-label {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: #FFFFFF;
+}
+
+.digits-group {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+
+.digit-box {
+  background: #FFFFFF;
+  color: #E5530B;
+  border-radius: 10px;
+  padding: 0.4rem 0.7rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  min-width: 48px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.pulse-second {
+  animation: pulseGlow 1s ease-in-out infinite;
+}
+
+.num-val {
+  font-size: 1.25rem;
+  font-weight: 900;
+  line-height: 1;
+}
+
+.lbl-val {
+  font-size: 0.58rem;
+  font-weight: 800;
+  color: var(--text-muted);
+  margin-top: 2px;
+}
+
+.colon-sep {
+  font-size: 1.3rem;
+  font-weight: 900;
+  color: #FFFFFF;
+}
+
+.flash-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 1.5rem;
+}
+
+@media (max-width: 1200px) { .flash-grid { grid-template-columns: repeat(2, 1fr); } }
+@media (max-width: 640px) {
+  .flash-header-banner { flex-direction: column; align-items: flex-start; gap: 1.25rem; }
+  .timer-wrapper { align-items: flex-start; }
+  .flash-grid { grid-template-columns: 1fr; }
+}
+
+.flash-card-item {
+  position: relative;
+  background: #FFFFFF;
+  border-radius: 12px;
+  border: 1px solid var(--borders);
+  box-shadow: var(--shadow-card);
+  padding: 1.1rem;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  transition: all 300ms ease;
+}
+
+.flash-card-item:hover {
+  transform: translateY(-6px);
+  box-shadow: var(--shadow-card-hover);
+  border-color: rgba(251, 100, 27, 0.3);
+}
+
+.discount-tag-badge {
+  position: absolute;
+  top: 1.25rem;
+  left: 1.25rem;
+  background: var(--secondary);
+  color: #FFFFFF;
+  font-size: 0.7rem;
+  font-weight: 800;
+  padding: 0.2rem 0.55rem;
+  border-radius: 6px;
+  z-index: 2;
+}
+
+.flash-img-wrapper {
+  width: 100%;
+  height: 190px;
+  border-radius: 10px;
+  overflow: hidden;
+  background: #F8FAFC;
+}
+
+.flash-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 300ms ease;
+}
+
+.flash-card-item:hover .flash-img {
+  transform: scale(1.08);
+}
+
+.flash-card-info {
+  margin-top: 0.85rem;
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+}
+
+.flash-category-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 0.3rem;
+}
+
+.flash-cat-name {
+  font-size: 0.7rem;
+  font-weight: 800;
+  color: var(--secondary);
+  text-transform: uppercase;
+}
+
+.rating-tag {
+  font-size: 0.725rem;
+  font-weight: 800;
+  color: #FFFFFF;
+  background: #388E3C;
+  padding: 0.15rem 0.45rem;
+  border-radius: 4px;
+  display: flex;
+  align-items: center;
+  gap: 0.2rem;
+}
+
+.flash-item-title {
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: var(--text);
+  margin-bottom: 0.5rem;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.flash-price-row {
+  display: flex;
+  align-items: baseline;
+  gap: 0.35rem;
+  margin-bottom: 0.75rem;
+}
+
+.flash-price {
+  font-size: 1.3rem;
+  font-weight: 900;
+  color: var(--secondary);
+}
+
+.flash-original {
+  font-size: 0.825rem;
+  color: var(--text-muted);
+  text-decoration: line-through;
+}
+
+.stock-meter {
+  margin-top: auto;
+  margin-bottom: 0.85rem;
+}
+
+.stock-meter-label {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.72rem;
+  color: var(--text-muted);
+  margin-bottom: 0.25rem;
+}
+
+.stock-highlight {
+  font-weight: 800;
+  color: var(--secondary);
+}
+
+.stock-meter-track {
+  height: 6px;
+  background: #F1F3F6;
+  border-radius: 9999px;
+  overflow: hidden;
+}
+
+.stock-meter-fill {
+  height: 100%;
+  background: linear-gradient(90deg, #F59E0B, #FB641B);
+  border-radius: 9999px;
+}
+
+.flash-claim-btn {
+  width: 100%;
+  height: 42px;
+  border-radius: 10px;
+  font-size: 0.875rem;
+}
+
+.flash-claim-btn.claimed {
+  background: var(--success);
+}

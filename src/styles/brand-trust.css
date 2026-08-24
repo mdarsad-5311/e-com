@@ -1,0 +1,34 @@
+/* BrandTrust Component Styles */
+.trust-strip {
+  background: #fff;
+  border-top: 1px solid var(--borders);
+  border-bottom: 1px solid var(--borders);
+  padding: 1.35rem 0;
+}
+.trust-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 1.25rem;
+}
+.trust-item {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  color: var(--primary);
+}
+.trust-item strong {
+  display: block;
+  color: var(--text);
+  font-size: 0.88rem;
+}
+.trust-item span {
+  display: block;
+  color: var(--text-muted);
+  font-size: 0.75rem;
+}
+@media (max-width: 900px) {
+  .trust-grid { grid-template-columns: 1fr 1fr; }
+}
+@media (max-width: 520px) {
+  .trust-grid { grid-template-columns: 1fr; }
+}

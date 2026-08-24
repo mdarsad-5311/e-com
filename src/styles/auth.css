@@ -1,0 +1,256 @@
+/* Premium Off-White Auth Page Layout & Styling */
+.auth-page-wrapper {
+  background-color: #F1F3F6;
+  width: 100%;
+  min-height: 85vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem 1rem;
+}
+
+.auth-page-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  max-width: 900px;
+}
+
+/* Flipkart Signature 2-Column Auth Card */
+.flipkart-auth-card {
+  width: 100%;
+  max-width: 850px;
+  min-height: 520px;
+  display: grid;
+  grid-template-columns: 2fr 3fr;
+  background-color: #FFFFFF;
+  border-radius: 4px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+  overflow: hidden;
+}
+
+/* Left Blue Banner */
+.flipkart-auth-left {
+  background-color: #2874F0;
+  color: #FFFFFF;
+  padding: 2.5rem 2rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  position: relative;
+  background-image: linear-gradient(180deg, #2874F0 0%, #1E62D0 100%);
+}
+
+.flipkart-left-title {
+  font-size: 1.75rem;
+  font-weight: 700;
+  color: #FFFFFF;
+  margin-bottom: 0.85rem;
+}
+
+.flipkart-left-sub {
+  font-size: 1rem;
+  line-height: 1.5;
+  color: #DBEAFE;
+  font-weight: 400;
+}
+
+.flipkart-left-illustration {
+  margin-top: auto;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding-top: 2rem;
+}
+
+.flipkart-badge-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  background: rgba(255, 255, 255, 0.15);
+  backdrop-filter: blur(4px);
+  padding: 0.4rem 0.85rem;
+  border-radius: 20px;
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  margin-bottom: 1.25rem;
+}
+
+/* Right Content Form */
+.flipkart-auth-right {
+  padding: 2.5rem 2.25rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  background: #FFFFFF;
+}
+
+.flipkart-auth-form {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+
+.flipkart-input-group {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+}
+
+.flipkart-input {
+  width: 100%;
+  height: 44px;
+  border: none;
+  border-bottom: 2px solid #E0E0E0;
+  border-radius: 0;
+  padding: 0 0.5rem;
+  font-size: 0.95rem;
+  color: #212121;
+  outline: none;
+  background: transparent;
+  transition: border-color 0.2s ease;
+}
+
+.flipkart-input:focus {
+  border-bottom-color: #2874F0;
+}
+
+.flipkart-label {
+  font-size: 0.8rem;
+  color: #878787;
+  font-weight: 600;
+  margin-bottom: 0.25rem;
+}
+
+.flipkart-terms-text {
+  font-size: 0.75rem;
+  color: #878787;
+  line-height: 1.4;
+  margin-top: 0.25rem;
+}
+
+.flipkart-terms-text a {
+  color: #2874F0;
+  font-weight: 600;
+}
+
+.flipkart-btn-orange {
+  width: 100%;
+  height: 48px;
+  background-color: #FB641B;
+  color: #FFFFFF;
+  border: none;
+  border-radius: 2px;
+  font-size: 0.95rem;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  transition: background-color 0.2s ease, transform 0.1s ease;
+}
+
+.flipkart-btn-orange:hover {
+  background-color: #E5530B;
+}
+
+.flipkart-btn-blue-outline {
+  width: 100%;
+  height: 48px;
+  background-color: #FFFFFF;
+  color: #2874F0;
+  border: 1px solid #E0E0E0;
+  border-radius: 2px;
+  font-size: 0.9rem;
+  font-weight: 700;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+  transition: all 0.2s ease;
+}
+
+.flipkart-btn-blue-outline:hover {
+  border-color: #2874F0;
+  background-color: #F8FAFC;
+}
+
+.flipkart-quick-logins {
+  display: flex;
+  gap: 0.75rem;
+  margin-top: 0.5rem;
+}
+
+.flipkart-quick-btn {
+  flex: 1;
+  padding: 0.5rem;
+  background: #F1F3F6;
+  border: 1px solid #E0E0E0;
+  border-radius: 4px;
+  font-size: 0.78rem;
+  font-weight: 700;
+  color: #2874F0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.35rem;
+  transition: background 0.2s;
+}
+
+.flipkart-quick-btn:hover {
+  background: #E2E8F0;
+}
+
+.flipkart-create-account-footer {
+  text-align: center;
+  margin-top: 1.5rem;
+  font-size: 0.9rem;
+}
+
+.flipkart-create-link {
+  color: #2874F0;
+  font-weight: 700;
+}
+
+.otp-box-group {
+  display: flex;
+  gap: 0.5rem;
+  justify-content: center;
+  margin: 1rem 0;
+}
+
+.otp-digit-input {
+  width: 44px;
+  height: 50px;
+  text-align: center;
+  font-size: 1.4rem;
+  font-weight: 800;
+  border: 1px solid #E0E0E0;
+  border-radius: 6px;
+  outline: none;
+}
+
+.otp-digit-input:focus {
+  border-color: #2874F0;
+  box-shadow: 0 0 0 2px rgba(40, 116, 240, 0.2);
+}
+
+.otp-timer-text {
+  font-size: 0.8rem;
+  color: #878787;
+  text-align: center;
+}
+
+@media (max-width: 768px) {
+  .flipkart-auth-card {
+    grid-template-columns: 1fr;
+    min-height: auto;
+  }
+  .flipkart-auth-left {
+    padding: 1.75rem 1.5rem;
+  }
+  .flipkart-left-illustration {
+    display: none;
+  }
+  .flipkart-auth-right {
+    padding: 1.75rem 1.5rem;
+  }
+}
+
