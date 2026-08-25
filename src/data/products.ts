@@ -2,10 +2,10 @@ export interface Category {
   id: string;
   name: string;
   slug: string;
-  icon: "Headphones" | "Shirt" | "Home" | "Watch";
+  icon: "Smartphone" | "Monitor" | "Shirt" | "Home" | "Sparkles" | "Headphones" | "Watch";
   description: string;
   itemCount: number;
-  image: string;
+  image?: string;
 }
 
 export interface Review {
@@ -30,8 +30,12 @@ export interface Product {
   rating: number;
   reviewsCount: number;
   badge?: "BESTSELLER" | "HOT" | "NEW" | "SALE" | "";
+  discountPercentage?: number;
   isFeatured: boolean;
   isBestSeller: boolean;
+  isDealOfTheDay?: boolean;
+  deliveryInfo?: string;
+  isAssured?: boolean;
   image: string;
   galleryImages?: string[];
   description: string;
@@ -45,99 +49,447 @@ export interface Product {
 
 export const categories: Category[] = [
   {
+    id: "mobiles",
+    name: "Mobiles",
+    slug: "mobiles",
+    icon: "Smartphone",
+    description: "Flagship smartphones, 5G devices, and mobile gear.",
+    itemCount: 32,
+    image: "https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?auto=format&fit=crop&w=600&q=80",
+  },
+  {
     id: "electronics",
-    name: "Electronics & Audio",
+    name: "Electronics",
     slug: "electronics",
-    icon: "Headphones",
-    description: "Gadgets, ANC audio gear, and cutting-edge tech.",
-    itemCount: 24,
-    image: "https://images.unsplash.com/photo-1590658268037-6bf12165a8df?auto=format&fit=crop&w=600&q=80",
+    icon: "Monitor",
+    description: "Curved ultrawide monitors, laptops, audio gear, and cutting-edge tech.",
+    itemCount: 45,
+    image: "https://images.unsplash.com/photo-1527443224154-c4a3942d3acf?auto=format&fit=crop&w=600&q=80",
   },
   {
     id: "fashion",
-    name: "Fashion & Apparel",
+    name: "Fashion",
     slug: "fashion",
     icon: "Shirt",
-    description: "Trending fashionwear, shoes, and minimalist style.",
-    itemCount: 38,
+    description: "Trending streetwear, sneakers, and designer apparel.",
+    itemCount: 54,
     image: "https://images.unsplash.com/photo-1489987707025-afc232f7ea0f?auto=format&fit=crop&w=600&q=80",
   },
   {
-    id: "home-living",
-    name: "Home & Living",
+    id: "home",
+    name: "Home",
     slug: "home-living",
     icon: "Home",
-    description: "Modern decor, ergonomic furniture, and lighting.",
-    itemCount: 19,
+    description: "Modern home appliances, smart oral care, and decor.",
+    itemCount: 28,
     image: "https://images.unsplash.com/photo-1586023492125-27b2c045efd7?auto=format&fit=crop&w=600&q=80",
   },
   {
-    id: "accessories",
-    name: "Accessories",
-    slug: "accessories",
-    icon: "Watch",
-    description: "Premium smartwatches, leather goods, and bags.",
-    itemCount: 15,
-    image: "https://images.unsplash.com/photo-1627123424574-724758594e93?auto=format&fit=crop&w=600&q=80",
+    id: "beauty",
+    name: "Beauty",
+    slug: "beauty",
+    icon: "Sparkles",
+    description: "Personal care, grooming essentials, and wellness products.",
+    itemCount: 22,
+    image: "https://images.unsplash.com/photo-1596462502278-27bfdc403348?auto=format&fit=crop&w=600&q=80",
   },
 ];
 
-
 export const products: Product[] = [
+  // --- 1. Sony WH-1000XM5 (Matching Reference Screenshot) ---
   {
-    id: "prod-1",
-    title: "Aura Noise-Canceling Wireless Headphones",
-    slug: "aura-wireless-headphones",
+    id: "sony-wh-1000xm5",
+    title: "Sony WH-1000XM5 Wireless Noise Canceling Headphones",
+    slug: "sony-wh-1000xm5-headphones",
+    category: "electronics",
+    categoryName: "Electronics",
+    price: 298.00,
+    originalPrice: 399.99,
+    discountPercentage: 25,
+    rating: 4.5,
+    reviewsCount: 1204,
+    badge: "BESTSELLER",
+    isFeatured: true,
+    isBestSeller: true,
+    isAssured: true,
+    stock: 24,
+    brand: "Sony",
+    colors: ["Black", "Silver"],
+    soldCount: 1204,
+    image: "https://images.unsplash.com/photo-1505740420928-5e560c06d30e?auto=format&fit=crop&w=800&q=80",
+    galleryImages: [
+      "https://images.unsplash.com/photo-1505740420928-5e560c06d30e?auto=format&fit=crop&w=800&q=80",
+      "https://images.unsplash.com/photo-1546435770-a3e426bf472b?auto=format&fit=crop&w=800&q=80"
+    ],
+    description: "Industry-leading noise canceling with two processors and 8 microphones. Magnificent Sound, engineered to perfection with the new Integrated Processor V1.",
+    specifications: [
+      "Auto NC Optimizer automatically optimizes noise canceling based on wearing conditions",
+      "Up to 30-hour battery life with quick charging (3 min charge for 3 hours of playback)",
+      "Ultra-comfortable, lightweight design with soft fit leather",
+      "Crystal clear hands-free calling with 4 beamforming microphones"
+    ],
+    reviews: []
+  },
+  // --- 2. JBL Charge 5 (Matching Reference Screenshot) ---
+  {
+    id: "jbl-charge-5",
+    title: "JBL Charge 5 Portable Waterproof Bluetooth Speaker",
+    slug: "jbl-charge-5-speaker",
+    category: "electronics",
+    categoryName: "Electronics",
+    price: 139.95,
+    originalPrice: 159.95,
+    discountPercentage: 10,
+    rating: 5.0,
+    reviewsCount: 3850,
+    badge: "BESTSELLER",
+    deliveryInfo: "Get it by Tomorrow",
+    isFeatured: true,
+    isBestSeller: true,
+    stock: 35,
+    brand: "JBL",
+    colors: ["Teal Blue", "Black", "Red", "Squad"],
+    soldCount: 3850,
+    image: "https://images.unsplash.com/photo-1545454675-3531b543be5d?auto=format&fit=crop&w=800&q=80",
+    galleryImages: [
+      "https://images.unsplash.com/photo-1545454675-3531b543be5d?auto=format&fit=crop&w=800&q=80"
+    ],
+    description: "Take the amazing power of JBL Pro Sound with you. The JBL Charge 5 has an optimized long excursion driver, a separate tweeter, and dual JBL bass radiators.",
+    specifications: [
+      "JBL Pro Sound with an optimized long excursion driver and separate tweeter",
+      "Long-lasting battery delivers up to 20 hours of playtime",
+      "IP67 waterproof and dustproof rating for pool or park",
+      "PartyBoost feature lets you pair two JBL PartyBoost-compatible speakers together"
+    ],
+    reviews: []
+  },
+  // --- 3. Keychron Q1 Pro (Matching Reference Screenshot) ---
+  {
+    id: "keychron-q1-pro",
+    title: "Keychron Q1 Pro Custom Wireless Mechanical Keyboard",
+    slug: "keychron-q1-pro-keyboard",
+    category: "electronics",
+    categoryName: "Electronics",
+    price: 199.00,
+    rating: 4.0,
+    reviewsCount: 112,
+    badge: "NEW",
+    isAssured: true,
+    isFeatured: true,
+    isBestSeller: false,
+    stock: 18,
+    brand: "Keychron",
+    colors: ["Carbon Black", "Silver Grey", "Shell White"],
+    soldCount: 112,
+    image: "https://images.unsplash.com/photo-1587829741301-dc798b83add3?auto=format&fit=crop&w=800&q=80",
+    galleryImages: [
+      "https://images.unsplash.com/photo-1587829741301-dc798b83add3?auto=format&fit=crop&w=800&q=80"
+    ],
+    description: "A full metal QMK/VIA wireless custom mechanical keyboard equipped with Bluetooth 5.1, double-gasket design, and hot-swappable switches.",
+    specifications: [
+      "Full CNC Machined Aluminum 6063 Body",
+      "QMK & VIA Full Key Remapping Support",
+      "Double-Gasket Design for Acoustic Performance",
+      "K Pro Mechanical Switches (Hot-Swappable)"
+    ],
+    reviews: []
+  },
+  // --- 4. Apple AirPods Pro (2nd Gen) (Matching Reference Screenshot) ---
+  {
+    id: "apple-airpods-pro-2",
+    title: "Apple AirPods Pro (2nd Gen) with MagSafe Case",
+    slug: "apple-airpods-pro-2nd-gen",
+    category: "electronics",
+    categoryName: "Electronics",
+    price: 189.00,
+    originalPrice: 249.00,
+    discountPercentage: 40,
+    rating: 5.0,
+    reviewsCount: 15892,
+    badge: "HOT",
+    deliveryInfo: "Get it by Thursday",
+    isFeatured: true,
+    isBestSeller: true,
+    stock: 42,
+    brand: "Apple",
+    colors: ["White"],
+    soldCount: 15892,
+    image: "https://images.unsplash.com/photo-1600294037681-c80b4cb5b434?auto=format&fit=crop&w=800&q=80",
+    galleryImages: [
+      "https://images.unsplash.com/photo-1600294037681-c80b4cb5b434?auto=format&fit=crop&w=800&q=80"
+    ],
+    description: "AirPods Pro feature up to 2x more Active Noise Cancellation, plus Adaptive Audio and Transparency mode.",
+    specifications: [
+      "H2 Apple Silicon Chip with Computational Audio",
+      "Adaptive Audio dynamically blends Transparency mode and ANC",
+      "MagSafe Charging Case (USB-C) with speaker and lanyard loop",
+      "Up to 6 hours of listening time with ANC enabled"
+    ],
+    reviews: []
+  },
+  // Aura Pro Max Headphones
+  {
+    id: "aura-pro-max-headphones",
+    title: "Aura Pro Max ANC Wireless Headphones - Matte Black",
+    slug: "aura-pro-max-headphones",
     category: "electronics",
     categoryName: "Electronics",
     price: 249.99,
     originalPrice: 299.99,
+    discountPercentage: 16,
     rating: 4.9,
+    reviewsCount: 4821,
+    badge: "BESTSELLER",
+    isFeatured: true,
+    isBestSeller: true,
+    stock: 19,
+    brand: "AURA AUDIO",
+    colors: ["Matte Black", "Silver White", "Midnight Navy"],
+    soldCount: 4821,
+    image: "https://images.unsplash.com/photo-1505740420928-5e560c06d30e?auto=format&fit=crop&w=800&q=80",
+    galleryImages: [
+      "https://images.unsplash.com/photo-1505740420928-5e560c06d30e?auto=format&fit=crop&w=800&q=80",
+      "https://images.unsplash.com/photo-1484704849700-f032a568e944?auto=format&fit=crop&w=800&q=80",
+      "https://images.unsplash.com/photo-1546435770-a3e426bf472b?auto=format&fit=crop&w=800&q=80"
+    ],
+    description: "Industry-leading noise canceling with custom 40mm drivers and 30-hour battery life.",
+    specifications: [
+      "Industry-Leading ANC: Block out distractions with advanced active noise cancellation that adapts to your environment.",
+      "Immersive Audio: Custom 40mm drivers deliver high-fidelity sound with deep bass and crisp highs.",
+      "30-Hour Battery Life: Enjoy uninterrupted listening all day, with a quick 10-minute charge providing 5 hours of playback.",
+      "Multipoint Connectivity: Seamlessly switch between two Bluetooth devices without reconnecting.",
+      "All-Day Comfort: Memory foam earcups and a lightweight headband design ensure maximum comfort during extended wear."
+    ],
+    reviews: []
+  },
+  // Alias for prod-1
+  {
+    id: "prod-1",
+    title: "Aura Pro Max ANC Wireless Headphones - Matte Black",
+    slug: "aura-pro-max-headphones",
+    category: "electronics",
+    categoryName: "Electronics",
+    price: 249.99,
+    originalPrice: 299.99,
+    discountPercentage: 16,
+    rating: 4.9,
+    reviewsCount: 4821,
+    badge: "BESTSELLER",
+    isFeatured: true,
+    isBestSeller: true,
+    stock: 19,
+    brand: "AURA AUDIO",
+    colors: ["Matte Black", "Silver White", "Midnight Navy"],
+    soldCount: 4821,
+    image: "https://images.unsplash.com/photo-1505740420928-5e560c06d30e?auto=format&fit=crop&w=800&q=80",
+    galleryImages: [
+      "https://images.unsplash.com/photo-1505740420928-5e560c06d30e?auto=format&fit=crop&w=800&q=80",
+      "https://images.unsplash.com/photo-1484704849700-f032a568e944?auto=format&fit=crop&w=800&q=80",
+      "https://images.unsplash.com/photo-1546435770-a3e426bf472b?auto=format&fit=crop&w=800&q=80"
+    ],
+    description: "Industry-leading noise canceling with custom 40mm drivers and 30-hour battery life.",
+    specifications: [
+      "Industry-Leading ANC: Block out distractions with advanced active noise cancellation that adapts to your environment.",
+      "Immersive Audio: Custom 40mm drivers deliver high-fidelity sound with deep bass and crisp highs.",
+      "30-Hour Battery Life: Enjoy uninterrupted listening all day, with a quick 10-minute charge providing 5 hours of playback.",
+      "Multipoint Connectivity: Seamlessly switch between two Bluetooth devices without reconnecting.",
+      "All-Day Comfort: Memory foam earcups and a lightweight headband design ensure maximum comfort during extended wear."
+    ],
+    reviews: []
+  },
+  {
+    id: "deal-2",
+    title: "Samsung Galaxy Watch 6 Classic -...",
+    slug: "samsung-galaxy-watch-6-classic",
+    category: "accessories",
+    categoryName: "Accessories",
+    price: 1199,
+    originalPrice: 1499,
+    discountPercentage: 20,
+    rating: 4.8,
+    reviewsCount: 890,
+    badge: "SALE",
+    isDealOfTheDay: true,
+    isFeatured: false,
+    isBestSeller: true,
+    stock: 12,
+    brand: "Samsung",
+    colors: ["Black", "Silver"],
+    soldCount: 1950,
+    image: "https://images.unsplash.com/photo-1523275335684-37898b6baf30?auto=format&fit=crop&w=800&q=80",
+    galleryImages: [
+      "https://images.unsplash.com/photo-1523275335684-37898b6baf30?auto=format&fit=crop&w=800&q=80",
+      "https://images.unsplash.com/photo-1508685096489-7aacd43bd3b1?auto=format&fit=crop&w=800&q=80"
+    ],
+    description: "Timeless stainless steel style featuring a rotating bezel, advanced sleep coaching, ECG tracking, and personalized HR zones.",
+    specifications: [
+      "Signature Rotating Bezel & Sapphire Crystal Glass",
+      "Advanced Sleep Coaching with Sleep Zone Analysis",
+      "BIA Body Composition Sensor",
+      "Up to 40 hours battery life"
+    ],
+    reviews: []
+  },
+  {
+    id: "deal-3",
+    title: "De'Longhi Dedica Deluxe Espresso...",
+    slug: "delonghi-dedica-espresso-machine",
+    category: "home",
+    categoryName: "Home",
+    price: 799,
+    originalPrice: 1199,
+    discountPercentage: 30,
+    rating: 4.8,
+    reviewsCount: 650,
+    badge: "SALE",
+    isDealOfTheDay: true,
+    isFeatured: false,
+    isBestSeller: false,
+    stock: 7,
+    brand: "De'Longhi",
+    colors: ["Stainless Steel", "Matte Black"],
+    soldCount: 820,
+    image: "https://images.unsplash.com/photo-1517256064527-09c73fc73e38?auto=format&fit=crop&w=800&q=80",
+    galleryImages: [
+      "https://images.unsplash.com/photo-1517256064527-09c73fc73e38?auto=format&fit=crop&w=800&q=80"
+    ],
+    description: "Slim 15-bar pump espresso and cappuccino machine crafted for barista-grade espresso, lattes, and cappuccinos in compact kitchens.",
+    specifications: [
+      "15-bar professional pressure",
+      "Adjustable milk frother for micro-foam texture",
+      "Compact 6-inch slim stainless steel silhouette",
+      "Removable 35oz water reservoir"
+    ],
+    reviews: []
+  },
+
+  // --- Featured for You (Matching Attachment 2x2 Grid) ---
+  {
+    id: "feat-1",
+    title: "LG 34\" Curved UltraWide QHD Monitor",
+    slug: "lg-34-curved-ultrawide-qhd-monitor",
+    category: "electronics",
+    categoryName: "Electronics",
+    price: 1299,
+    originalPrice: 1699,
+    discountPercentage: 24,
+    rating: 5.0,
     reviewsCount: 128,
     badge: "BESTSELLER",
     isFeatured: true,
     isBestSeller: true,
     stock: 14,
-    brand: "Aura",
-    colors: ["Midnight", "Silver", "Sand"],
-    soldCount: 1840,
-    image: "https://images.unsplash.com/photo-1505740420928-5e560c06d30e?auto=format&fit=crop&w=800&q=80",
+    brand: "LG",
+    colors: ["Black / Silver"],
+    soldCount: 128,
+    image: "https://images.unsplash.com/photo-1527443224154-c4a3942d3acf?auto=format&fit=crop&w=800&q=80",
     galleryImages: [
-      "https://images.unsplash.com/photo-1505740420928-5e560c06d30e?auto=format&fit=crop&w=800&q=80",
-      "https://images.unsplash.com/photo-1484704849700-f032a568e944?auto=format&fit=crop&w=800&q=80",
-      "https://images.unsplash.com/photo-1546435770-a3e426bf472b?auto=format&fit=crop&w=800&q=80",
-      "https://images.unsplash.com/photo-1583394838336-acd977736f90?auto=format&fit=crop&w=800&q=80"
+      "https://images.unsplash.com/photo-1527443224154-c4a3942d3acf?auto=format&fit=crop&w=800&q=80",
+      "https://images.unsplash.com/photo-1585792180666-f7347c490ee2?auto=format&fit=crop&w=800&q=80"
     ],
-    description: "Immerse yourself in high-fidelity acoustics with active noise cancellation, 40-hour battery life, and ultra-comfortable memory foam ear cushions.",
+    description: "Immersive 34-inch 21:9 curved UltraWide QHD (3440 x 1440) display with sRGB 99% color gamut and HDR10 support for seamless multitasking and gaming.",
     specifications: [
-      "Active Noise Canceling (ANC)",
-      "Bluetooth 5.3 Low Latency",
-      "40 Hours Playback",
-      "USB-C Fast Charging (10 min = 4 hours)",
-      "Multi-device Multipoint Connectivity"
+      "34\" Curved UltraWide QHD (3440 x 1440)",
+      "sRGB 99% Color Gamut with HDR10",
+      "USB Type-C connectivity with 65W Power Delivery",
+      "Ergonomic Tilt & Height Adjustable Stand"
     ],
-    reviews: [
-      {
-        id: "rev-1",
-        author: "Alexander Vance",
-        avatar: "https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?auto=format&fit=crop&w=120&q=80",
-        rating: 5,
-        date: "August 14, 2026",
-        title: "Phenomenal noise cancellation & battery life!",
-        comment: "The soundstage is wide, clear, and perfectly balanced. I wore these on a 14-hour flight and the battery still had 60% remaining. Absolutely worth every penny.",
-        verified: true
-      },
-      {
-        id: "rev-2",
-        author: "Sophia Martinez",
-        avatar: "https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&w=120&q=80",
-        rating: 5,
-        date: "August 2, 2026",
-        title: "Sleek aesthetic and memory foam comfort",
-        comment: "No ear pressure even after hours of editing videos. The build quality feels super premium.",
-        verified: true
-      }
-    ]
+    reviews: []
+  },
+  {
+    id: "feat-2",
+    title: "Philips Sonicare ProtectiveClean 4300",
+    slug: "philips-sonicare-protectiveclean-4300",
+    category: "home",
+    categoryName: "Home",
+    price: 249,
+    originalPrice: 349,
+    discountPercentage: 29,
+    rating: 5.0,
+    reviewsCount: 3402,
+    badge: "BESTSELLER",
+    isFeatured: true,
+    isBestSeller: true,
+    stock: 25,
+    brand: "Philips Sonicare",
+    colors: ["Pastel Pink", "White", "Black"],
+    soldCount: 3402,
+    image: "https://images.unsplash.com/photo-1559591937-e1032d8471b4?auto=format&fit=crop&w=800&q=80",
+    galleryImages: [
+      "https://images.unsplash.com/photo-1559591937-e1032d8471b4?auto=format&fit=crop&w=800&q=80"
+    ],
+    description: "Gentle yet effective rechargeable sonic toothbrush that removes up to 7x more plaque than a manual toothbrush with pressure sensor protection.",
+    specifications: [
+      "Pressure sensor pulses when brushing too hard",
+      "BrushSync technology alerts when to replace brush head",
+      "Quadpacer and Smartimer encourage 2-minute brushing",
+      "Long-lasting 14-day battery life on a single charge"
+    ],
+    reviews: []
+  },
+  {
+    id: "feat-3",
+    title: "Nike Air Force 1 '07 - Men's Classic Sneakers",
+    slug: "nike-air-force-1-07-classic-sneakers",
+    category: "fashion",
+    categoryName: "Fashion",
+    price: 499,
+    originalPrice: 599,
+    discountPercentage: 17,
+    rating: 5.0,
+    reviewsCount: 845,
+    badge: "BESTSELLER",
+    isFeatured: true,
+    isBestSeller: true,
+    stock: 18,
+    brand: "Nike",
+    colors: ["Triple White"],
+    soldCount: 845,
+    image: "https://images.unsplash.com/photo-1595950653106-6c9ebd614d3a?auto=format&fit=crop&w=800&q=80",
+    galleryImages: [
+      "https://images.unsplash.com/photo-1595950653106-6c9ebd614d3a?auto=format&fit=crop&w=800&q=80",
+      "https://images.unsplash.com/photo-1542291026-7eec264c27ff?auto=format&fit=crop&w=800&q=80"
+    ],
+    description: "The radiance lives on in the Nike Air Force 1 '07, the b-ball icon that puts a fresh spin on what you know best: crisp leather, bold details and classic comfort.",
+    specifications: [
+      "Stitched crisp real leather overlays for durability",
+      "Nike Air cushioning for lightweight, all-day comfort",
+      "Padded, low-cut collar looks sleek and feels great",
+      "Non-marking rubber outsole with heritage pivot circles"
+    ],
+    reviews: []
+  },
+  {
+    id: "feat-4",
+    title: "Apple MacBook Air M2 Chip 8GB RAM 256GB...",
+    slug: "apple-macbook-air-m2-chip",
+    category: "electronics",
+    categoryName: "Electronics",
+    price: 4299,
+    originalPrice: 4799,
+    discountPercentage: 10,
+    rating: 5.0,
+    reviewsCount: 1204,
+    badge: "HOT",
+    isFeatured: true,
+    isBestSeller: true,
+    stock: 10,
+    brand: "Apple",
+    colors: ["Space Gray", "Midnight", "Silver", "Starlight"],
+    soldCount: 1204,
+    image: "https://images.unsplash.com/photo-1517336714731-489689fd1ca8?auto=format&fit=crop&w=800&q=80",
+    galleryImages: [
+      "https://images.unsplash.com/photo-1517336714731-489689fd1ca8?auto=format&fit=crop&w=800&q=80",
+      "https://images.unsplash.com/photo-1611186871348-b1ce696e52c9?auto=format&fit=crop&w=800&q=80"
+    ],
+    description: "Strikingly thin design with lightning-fast M2 performance, brilliant 13.6-inch Liquid Retina display, 1080p FaceTime HD camera, and up to 18 hours of battery life.",
+    specifications: [
+      "Apple M2 chip with 8-core CPU and up to 10-core GPU",
+      "13.6-inch Liquid Retina display with 500 nits brightness",
+      "Silent fanless design with up to 18 hours battery life",
+      "MagSafe 3 charging port with two Thunderbolt ports"
+    ],
+    reviews: []
   },
   {
     id: "prod-2",

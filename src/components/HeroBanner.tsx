@@ -8,46 +8,39 @@ import "@/styles/hero-banner.css";
 export default function HeroBanner() {
   return (
     <section className="al-hero-section">
-      <div className="al-hero-bg-container">
-        {/* Luxury Modern Living Room with City Skyline Night Background */}
+      <div className="header-container al-hero-container-outer">
         <div 
           className="al-hero-image-bg"
           style={{
-            backgroundImage: `linear-gradient(to right, rgba(8, 18, 38, 0.92) 0%, rgba(8, 18, 38, 0.75) 45%, rgba(8, 18, 38, 0.3) 100%), url('https://images.unsplash.com/photo-1600210492486-724fe5c67fb0?auto=format&fit=crop&w=2000&q=85')`
+            backgroundImage: `linear-gradient(to top, rgba(15, 23, 42, 0.88) 0%, rgba(15, 23, 42, 0.45) 45%, rgba(15, 23, 42, 0.1) 100%), url('https://images.unsplash.com/photo-1519389950473-47ba0277781c?auto=format&fit=crop&w=1600&q=85')`
           }}
         >
-          <div className="header-container al-hero-content-wrap">
+          <div className="al-hero-content-wrap">
             <motion.div 
               className="al-hero-content"
-              initial={{ opacity: 0, y: 24 }}
+              initial={{ opacity: 0, y: 18 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6, ease: "easeOut" }}
+              transition={{ duration: 0.5, ease: "easeOut" }}
             >
-              {/* Exclusive Deals Badge */}
+              {/* BIG SAVINGS Tag Badge */}
               <div className="al-hero-badge">
-                EXCLUSIVE AL-UMAIMA EXPRESS DEALS
+                BIG SAVINGS
               </div>
 
               {/* Main Headline */}
               <h1 className="al-hero-title">
-                Upgrade Your Life with<br />
-                Premium Tech & Fashion
+                Upgrade Your Life
               </h1>
 
               {/* Subheading */}
               <p className="al-hero-subtitle">
-                Discover ANC headphones, smartwatch gadgets, minimalist jackets, and smart home lighting engineered for peak daily performance.
+                Top tech & fashion at unbeatable prices.
               </p>
 
-              {/* CTA Buttons */}
+              {/* CTA Button */}
               <div className="al-hero-cta-group">
                 <Link href="/products" className="al-hero-btn-primary">
                   <span>Shop Now</span>
-                  <ArrowRight size={17} className="btn-arrow" />
-                </Link>
-
-                <Link href="/products?featured=true" className="al-hero-btn-secondary">
-                  <span>Explore Deals</span>
                 </Link>
               </div>
             </motion.div>

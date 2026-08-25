@@ -21,12 +21,12 @@ export default function OrderSummary() {
       <div className="al-price-breakdown">
         <div className="al-price-row">
           <span className="al-row-label">Price ({totalItemsCount} {totalItemsCount === 1 ? "item" : "items"})</span>
-          <span className="al-row-val">${totalOriginalPrice.toFixed(2)}</span>
+          <span className="al-row-val">AED {totalOriginalPrice.toLocaleString()}</span>
         </div>
 
         <div className="al-price-row">
           <span className="al-row-label">Discount</span>
-          <span className="al-row-val al-val-green">-${totalSavings.toFixed(2)}</span>
+          <span className="al-row-val al-val-green">-AED {totalSavings.toLocaleString()}</span>
         </div>
 
         <div className="al-price-row">
@@ -38,13 +38,13 @@ export default function OrderSummary() {
       {/* Dotted Divider & Total Amount */}
       <div className="al-total-row">
         <span className="al-total-label">Total Amount</span>
-        <span className="al-total-val">${subtotal.toFixed(2)}</span>
+        <span className="al-total-val">AED {subtotal.toLocaleString()}</span>
       </div>
 
       {/* Savings Highlight Banner */}
       {totalSavings > 0 && (
         <div className="al-savings-banner">
-          You will save ${totalSavings.toFixed(2)} on this order
+          You will save AED {totalSavings.toLocaleString()} on this order
         </div>
       )}
 

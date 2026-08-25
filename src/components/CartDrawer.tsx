@@ -12,7 +12,7 @@ export default function CartDrawer() {
 
   if (!isCartOpen) return null;
 
-  const shippingHint = subtotal >= 100 ? "You unlocked free shipping" : `Add $${(100 - subtotal).toFixed(2)} more for free shipping`;
+  const shippingHint = subtotal >= 250 ? "You unlocked free shipping" : `Add AED ${(250 - subtotal).toLocaleString()} more for free shipping`;
 
   return (
     <div className="drawer-backdrop" onClick={closeCart}>
@@ -29,7 +29,7 @@ export default function CartDrawer() {
 
         <div className="shipping-progress">
           <div className="progress-track">
-            <div className="progress-fill" style={{ width: `${Math.min(100, (subtotal / 100) * 100)}%` }} />
+            <div className="progress-fill" style={{ width: `${Math.min(100, (subtotal / 250) * 100)}%` }} />
           </div>
           <span>{shippingHint}</span>
         </div>
@@ -51,7 +51,7 @@ export default function CartDrawer() {
                   <Link href={`/products/${item.product.id}`} onClick={closeCart}>
                     {item.product.title}
                   </Link>
-                  <strong>${item.product.price.toFixed(2)}</strong>
+                  <strong>AED {item.product.price.toLocaleString()}</strong>
                   <div className="qty-row">
                     <button onClick={() => updateQuantity(item.product.id, item.quantity - 1)} aria-label="Decrease">
                       <Minus size={12} />
@@ -74,7 +74,7 @@ export default function CartDrawer() {
           <footer className="drawer-footer">
             <div className="subtotal-row">
               <span>Subtotal</span>
-              <strong>${subtotal.toFixed(2)}</strong>
+              <strong>AED {subtotal.toLocaleString()}</strong>
             </div>
             <p className="tax-note">Shipping & tax calculated at checkout</p>
             <Link href="/checkout" className="btn btn-primary full" onClick={closeCart}>

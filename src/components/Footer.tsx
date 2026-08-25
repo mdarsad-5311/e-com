@@ -8,7 +8,11 @@ import "@/styles/footer.css";
 export default function Footer() {
   const pathname = usePathname();
 
-  if (pathname === "/cart" || pathname === "/checkout") {
+  if (pathname === "/checkout") {
+    return null;
+  }
+
+  if (pathname === "/cart") {
     return (
       <footer className="al-cart-secure-footer">
         <div className="header-container al-cart-footer-inner">

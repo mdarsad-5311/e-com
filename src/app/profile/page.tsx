@@ -3,631 +3,620 @@
 import { useState, FormEvent } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { 
-  User, 
-  PackageCheck, 
-  MapPin, 
-  CreditCard, 
-  Heart, 
-  LogOut, 
-  ChevronRight, 
-  Plus, 
-  Check, 
-  Trash2, 
-  Edit2, 
-  ShieldCheck, 
-  TrendingUp, 
-  Bell, 
-  Tag, 
-  Gift, 
-  Smartphone, 
-  Mail,
-  Shield
+import {
+  User,
+  PackageCheck,
+  MapPin,
+  CreditCard,
+  LogOut,
+  ChevronRight,
+  Plus,
+  Check,
+  Trash2,
+  Shield,
+  ShieldCheck,
+  Star,
+  Crown,
+  LayoutDashboard,
+  Lock,
+  ArrowRight,
+  Edit3,
+  Truck,
+  HelpCircle,
 } from "lucide-react";
-import { useAuth, UserAddress } from "@/context/AuthContext";
+import { useAuth } from "@/context/AuthContext";
 import "@/styles/profile.css";
+
+type SidebarView = "dashboard" | "orders" | "addresses" | "security" | "payments";
 
 export default function ProfilePage() {
   const router = useRouter();
   const { user, isAdmin, orders, addresses, updateProfile, addAddress, deleteAddress, setDefaultAddress, logout } = useAuth();
 
-  const [activeTab, setActiveTab] = useState<"profile" | "addresses" | "pan" | "payments">("profile");
-  
-  // Profile form state
-  const [isEditingInfo, setIsEditingInfo] = useState<boolean>(false);
-  const [firstName, setFirstName] = useState<string>(user?.firstName || "Alexander");
-  const [lastName, setLastName] = useState<string>(user?.lastName || "Vance");
-  const [gender, setGender] = useState<"Male" | "Female">(user?.gender || "Male");
-  const [email, setEmail] = useState<string>(user?.email || "alexander.vance@example.com");
-  const [phone, setPhone] = useState<string>(user?.phone || "9876543210");
-  const [saveSuccessMsg, setSaveSuccessMsg] = useState<string>("");
+  const [activeView, setActiveView] = useState<SidebarView>("dashboard");
 
-  // Address form state
-  const [isAddingAddress, setIsAddingAddress] = useState<boolean>(false);
-  const [newAddrName, setNewAddrName] = useState<string>("");
-  const [newAddrPhone, setNewAddrPhone] = useState<string>("");
-  const [newAddrPincode, setNewAddrPincode] = useState<string>("");
-  const [newAddrLocality, setNewAddrLocality] = useState<string>("");
-  const [newAddrStreet, setNewAddrStreet] = useState<string>("");
-  const [newAddrCity, setNewAddrCity] = useState<string>("");
-  const [newAddrState, setNewAddrState] = useState<string>("");
-  const [newAddrLandmark, setNewAddrLandmark] = useState<string>("");
-  const [newAddrType, setNewAddrType] = useState<"HOME" | "WORK">("HOME");
+  const [firstName, setFirstName] = useState(user?.firstName || "Welcome");
+  const [lastName, setLastName]   = useState(user?.lastName  || "User");
+  const [email, setEmail]         = useState(user?.email     || "user@example.com");
+  const [phone, setPhone]         = useState(user?.phone     || "+1 555-0123");
+  const [saveSuccessMsg, setSaveSuccessMsg] = useState("");
 
-  // PAN Card state
-  const [panNumber, setPanNumber] = useState<string>(user?.panCard || "ABCDE1234F");
-  const [panName, setPanName] = useState<string>(user?.name || "Alexander Vance");
-  const [panSaved, setPanSaved] = useState<boolean>(false);
+  const [isAddingAddress, setIsAddingAddress] = useState(false);
+  const [newAddrName, setNewAddrName]   = useState("");
+  const [newAddrPhone, setNewAddrPhone] = useState("");
+  const [newAddrStreet, setNewAddrStreet] = useState("");
+  const [newAddrCity, setNewAddrCity]   = useState("");
+  const [newAddrState, setNewAddrState] = useState("");
+  const [newAddrZip, setNewAddrZip]     = useState("");
+  const [newAddrType, setNewAddrType]   = useState<"HOME" | "WORK">("HOME");
 
   if (!user) {
     return (
-      <div className="container py-8" style={{ textAlign: "center", minHeight: "50vh" }}>
-            <div className="card" style={{ maxWidth: 450, margin: "2rem auto", padding: "2.5rem 2rem" }}>
-              <User size={48} style={{ color: "#2874F0", margin: "0 auto 1rem auto" }} />
-              <h2 style={{ fontSize: "1.4rem", fontWeight: 700 }}>Missing Flipkart Login</h2>
-              <p style={{ color: "#878787", marginTop: "0.5rem" }}>
-                Please log in to your Flipkart account to access your account profile and orders.
-              </p>
-              <Link href="/login" className="flipkart-btn-orange" style={{ display: "inline-flex", alignItems: "center", justifyContent: "center", marginTop: "1.5rem", textDecoration: "none" }}>
-                LOG IN TO FLIPKART
-              </Link>
-            </div>
-          </div>
+      <div className="pf-page">
+        <div className="pf-unauth-card">
+          <User size={48} className="pf-unauth-icon" />
+          <h2 className="pf-unauth-title">Sign in to your account</h2>
+          <p className="pf-unauth-sub">Please log in to access your account profile and orders.</p>
+          <Link href="/login" className="pf-unauth-btn">Log in to Al-Umaima</Link>
+        </div>
+      </div>
     );
   }
 
   const handleSaveProfile = (e: FormEvent) => {
     e.preventDefault();
-    updateProfile({
-      firstName,
-      lastName,
-      gender,
-      email,
-      phone
-    });
-    setIsEditingInfo(false);
-    setSaveSuccessMsg("Profile details updated successfully!");
+    updateProfile({ firstName, lastName, email, phone });
+    setSaveSuccessMsg("Profile updated successfully!");
     setTimeout(() => setSaveSuccessMsg(""), 3000);
   };
 
   const handleAddAddressSubmit = (e: FormEvent) => {
     e.preventDefault();
-    if (!newAddrName || !newAddrPhone || !newAddrPincode || !newAddrStreet) return;
-
+    if (!newAddrName || !newAddrStreet) return;
     addAddress({
       label: newAddrType === "HOME" ? "Home" : "Work",
       recipient: newAddrName,
       phone: newAddrPhone,
-      pincode: newAddrPincode,
-      locality: newAddrLocality,
+      pincode: newAddrZip,
+      locality: newAddrCity,
       street: newAddrStreet,
-      city: newAddrCity || "Bengaluru",
-      state: newAddrState || "Karnataka",
-      landmark: newAddrLandmark,
+      city: newAddrCity || "New York",
+      state: newAddrState || "NY",
+      landmark: "",
       addressType: newAddrType,
-      isDefault: addresses.length === 0
+      isDefault: addresses.length === 0,
     });
-
     setIsAddingAddress(false);
-    // Reset form
-    setNewAddrName("");
-    setNewAddrPhone("");
-    setNewAddrPincode("");
-    setNewAddrLocality("");
-    setNewAddrStreet("");
-    setNewAddrCity("");
-    setNewAddrState("");
-    setNewAddrLandmark("");
+    setNewAddrName(""); setNewAddrPhone(""); setNewAddrStreet("");
+    setNewAddrCity(""); setNewAddrState(""); setNewAddrZip("");
   };
 
-  const handleLogout = () => {
-    logout();
-    router.push("/login");
-  };
+  const defaultAddr = addresses.find((a) => a.isDefault) || addresses[0];
+  const recentOrders = orders.slice(0, 3);
+
+  const sidebarLinks: { id: SidebarView; label: string; icon: React.ReactNode }[] = [
+    { id: "dashboard",  label: "Dashboard",       icon: <LayoutDashboard size={18} /> },
+    { id: "orders",     label: "Your Orders",     icon: <PackageCheck size={18} /> },
+    { id: "addresses",  label: "Saved Addresses", icon: <MapPin size={18} /> },
+    { id: "security",   label: "Security",        icon: <Lock size={18} /> },
+    { id: "payments",   label: "Payment Methods", icon: <CreditCard size={18} /> },
+  ];
+
+  // Mobile menu items matching attachment
+  const mobileMenuItems = [
+    {
+      icon: <PackageCheck size={22} className="pf-mob-icon-orders" />,
+      iconBg: "pf-mob-icon-bg-orders",
+      label: "Your Orders",
+      sub: "Track, return, or buy things again",
+      action: () => setActiveView("orders"),
+    },
+    {
+      icon: <Truck size={22} className="pf-mob-icon-tracking" />,
+      iconBg: "pf-mob-icon-bg-tracking",
+      label: "Tracking",
+      sub: "View real time delivery status",
+      action: () => router.push("/track-order"),
+    },
+    {
+      icon: <MapPin size={22} className="pf-mob-icon-address" />,
+      iconBg: "pf-mob-icon-bg-address",
+      label: "Saved Addresses",
+      sub: "Edit delivery locations and preferences",
+      action: () => setActiveView("addresses"),
+    },
+    {
+      icon: <ShieldCheck size={22} className="pf-mob-icon-security" />,
+      iconBg: "pf-mob-icon-bg-security",
+      label: "Security Settings",
+      sub: "Manage passwords, 2FA, and sessions",
+      action: () => setActiveView("security"),
+    },
+    {
+      icon: <CreditCard size={22} className="pf-mob-icon-payment" />,
+      iconBg: "pf-mob-icon-bg-payment",
+      label: "Payment Methods",
+      sub: "Manage cards and billing info",
+      action: () => setActiveView("payments"),
+    },
+    {
+      icon: <HelpCircle size={22} className="pf-mob-icon-help" />,
+      iconBg: "pf-mob-icon-bg-help",
+      label: "Help Center",
+      sub: "Contact support and FAQs",
+      action: () => router.push("/faq"),
+    },
+  ];
 
   return (
-    <div className="account-page-root">
-      <div style={{ backgroundColor: "#F1F3F6", minHeight: "85vh" }}>
-        <div className="container">
-          <div className="flipkart-account-layout">
-            {/* LEFT SIDEBAR NAVIGATION */}
-            <aside className="account-sidebar-stack">
-              {/* User Avatar & Greeting Header Card */}
-              <div className="account-user-card">
-                <div className="user-avatar-circle">
-                  {user.avatar ? (
-                    <img src={user.avatar} alt={user.name} />
-                  ) : (
-                    <span>{user.name.charAt(0)}</span>
-                  )}
-                </div>
-                <div>
-                  <div className="user-hello-text">Hello,</div>
-                  <div className="user-display-name">{user.name}</div>
-                </div>
-              </div>
+    <div className="pf-page">
 
-              {/* Account Navigation Menu Card */}
-              <div className="account-nav-card">
-                {/* Group 1: MY ORDERS */}
-                <div className="nav-group">
-                  <Link href="/orders" className="nav-group-header clickable">
-                    <span style={{ display: "flex", alignItems: "center", gap: "0.75rem" }}>
-                      <PackageCheck size={18} style={{ color: "#2874F0" }} /> MY ORDERS
-                    </span>
-                    <ChevronRight size={16} />
-                  </Link>
+      {/* ═══════════════ MOBILE LAYOUT ═══════════════ */}
+      <div className="pf-mobile-layout">
+        {/* Show mobile account menu when on "dashboard" view */}
+        {activeView === "dashboard" && (
+          <>
+            {/* User Header card */}
+            <div className="pf-mob-user-card">
+              <div className="pf-mob-avatar-wrap">
+                <div className="pf-mob-avatar">
+                  {user.avatar
+                    ? <img src={user.avatar} alt={user.name} />
+                    : <span>{user.name.charAt(0).toUpperCase()}</span>
+                  }
                 </div>
-
-                {/* Group 2: ACCOUNT SETTINGS */}
-                <div className="nav-group">
-                  <div className="nav-group-header">
-                    <span style={{ display: "flex", alignItems: "center", gap: "0.75rem" }}>
-                      <User size={18} style={{ color: "#2874F0" }} /> ACCOUNT SETTINGS
-                    </span>
-                  </div>
-                  <button
-                    className={`nav-sub-item ${activeTab === "profile" ? "active" : ""}`}
-                    onClick={() => setActiveTab("profile")}
-                  >
-                    <span>Profile Information</span>
-                  </button>
-                  <button
-                    className={`nav-sub-item ${activeTab === "addresses" ? "active" : ""}`}
-                    onClick={() => setActiveTab("addresses")}
-                  >
-                    <span>Manage Addresses ({addresses.length})</span>
-                  </button>
-                  <button
-                    className={`nav-sub-item ${activeTab === "pan" ? "active" : ""}`}
-                    onClick={() => setActiveTab("pan")}
-                  >
-                    <span>PAN Card Information</span>
-                  </button>
-                </div>
-
-                {/* Group 3: PAYMENTS */}
-                <div className="nav-group">
-                  <div className="nav-group-header">
-                    <span style={{ display: "flex", alignItems: "center", gap: "0.75rem" }}>
-                      <CreditCard size={18} style={{ color: "#2874F0" }} /> PAYMENTS
-                    </span>
-                  </div>
-                  <button
-                    className={`nav-sub-item ${activeTab === "payments" ? "active" : ""}`}
-                    onClick={() => setActiveTab("payments")}
-                  >
-                    <span>Gift Cards & Saved Cards</span>
-                  </button>
-                </div>
-
-                {/* Group 4: MY STUFF */}
-                <div className="nav-group">
-                  <div className="nav-group-header">
-                    <span style={{ display: "flex", alignItems: "center", gap: "0.75rem" }}>
-                      <Tag size={18} style={{ color: "#2874F0" }} /> MY STUFF
-                    </span>
-                  </div>
-                  <Link href="/wishlist" className="nav-sub-item">
-                    <span>My Wishlist</span>
-                  </Link>
-                </div>
-
-                {/* Admin Panel Direct Shortcut if Admin */}
-                {isAdmin && (
-                  <div className="nav-group" style={{ background: "#FFF7ED" }}>
-                    <Link href="/admin" className="nav-group-header clickable" style={{ color: "#E5530B" }}>
-                      <span style={{ display: "flex", alignItems: "center", gap: "0.75rem" }}>
-                        <Shield size={18} style={{ color: "#E5530B" }} /> ADMIN CONTROL PANEL
-                      </span>
-                      <ChevronRight size={16} />
-                    </Link>
-                  </div>
-                )}
-
-                {/* Logout Action */}
-                <button onClick={handleLogout} className="logout-nav-item">
-                  <LogOut size={18} /> Logout
+                <button type="button" className="pf-mob-edit-badge" aria-label="Edit profile">
+                  <Edit3 size={12} />
                 </button>
               </div>
-            </aside>
-
-            {/* RIGHT MAIN CONTENT AREA */}
-            <div className="account-content-pane">
-              {saveSuccessMsg && (
-                <div className="verified-badge" style={{ fontSize: "0.85rem", padding: "0.6rem 1rem", marginBottom: "1.25rem" }}>
-                  <Check size={16} /> {saveSuccessMsg}
+              <div>
+                <div className="pf-mob-user-name">Welcome, User</div>
+                <div className="pf-mob-prime-badge">
+                  <Star size={11} className="pf-mob-prime-star" />
+                  Al-Umaima Prime Member
                 </div>
-              )}
+              </div>
+            </div>
 
-              {/* TAB 1: PROFILE INFORMATION */}
-              {activeTab === "profile" && (
-                <div>
-                  {/* Personal Info Header */}
-                  <div className="pane-section-header">
-                    <h2 className="pane-section-title">Personal Information</h2>
-                    <button 
-                      onClick={() => setIsEditingInfo(!isEditingInfo)} 
-                      className="edit-link-btn"
-                    >
-                      {isEditingInfo ? "Cancel" : "Edit"}
-                    </button>
+            {/* Menu list */}
+            <div className="pf-mob-menu-list">
+              {mobileMenuItems.map((item, idx) => (
+                <button
+                  key={idx}
+                  type="button"
+                  className="pf-mob-menu-item"
+                  onClick={item.action}
+                >
+                  <div className={`pf-mob-icon-wrap ${item.iconBg}`}>
+                    {item.icon}
                   </div>
-
-                  <form onSubmit={handleSaveProfile}>
-                    <div className="personal-info-grid">
-                      <div className="fk-field-box">
-                        <label className="fk-field-label">First Name</label>
-                        <input
-                          type="text"
-                          className="fk-field-input"
-                          value={firstName}
-                          onChange={(e) => setFirstName(e.target.value)}
-                          disabled={!isEditingInfo}
-                        />
-                      </div>
-
-                      <div className="fk-field-box">
-                        <label className="fk-field-label">Last Name</label>
-                        <input
-                          type="text"
-                          className="fk-field-input"
-                          value={lastName}
-                          onChange={(e) => setLastName(e.target.value)}
-                          disabled={!isEditingInfo}
-                        />
-                      </div>
-                    </div>
-
-                    <div style={{ marginBottom: "2rem" }}>
-                      <label className="fk-field-label">Your Gender</label>
-                      <div className="gender-radio-group">
-                        <label className="gender-label">
-                          <input
-                            type="radio"
-                            name="gender"
-                            value="Male"
-                            checked={gender === "Male"}
-                            onChange={() => setGender("Male")}
-                            disabled={!isEditingInfo}
-                          />
-                          <span>Male</span>
-                        </label>
-                        <label className="gender-label">
-                          <input
-                            type="radio"
-                            name="gender"
-                            value="Female"
-                            checked={gender === "Female"}
-                            onChange={() => setGender("Female")}
-                            disabled={!isEditingInfo}
-                          />
-                          <span>Female</span>
-                        </label>
-                      </div>
-                    </div>
-
-                    {/* Email Address Block */}
-                    <div className="pane-section-header" style={{ marginTop: "2rem" }}>
-                      <h2 className="pane-section-title">
-                        Email Address <span className="verified-badge">✓ Verified</span>
-                      </h2>
-                    </div>
-
-                    <div className="personal-info-grid">
-                      <div className="fk-field-box" style={{ gridColumn: "1 / -1" }}>
-                        <input
-                          type="email"
-                          className="fk-field-input"
-                          value={email}
-                          onChange={(e) => setEmail(e.target.value)}
-                          disabled={!isEditingInfo}
-                        />
-                      </div>
-                    </div>
-
-                    {/* Mobile Number Block */}
-                    <div className="pane-section-header" style={{ marginTop: "1rem" }}>
-                      <h2 className="pane-section-title">
-                        Mobile Number <span className="verified-badge">✓ Verified</span>
-                      </h2>
-                    </div>
-
-                    <div className="personal-info-grid">
-                      <div className="fk-field-box" style={{ gridColumn: "1 / -1" }}>
-                        <input
-                          type="tel"
-                          className="fk-field-input"
-                          value={phone}
-                          onChange={(e) => setPhone(e.target.value)}
-                          disabled={!isEditingInfo}
-                        />
-                      </div>
-                    </div>
-
-                    {isEditingInfo && (
-                      <button type="submit" className="fk-save-btn">
-                        SAVE PROFILE DETAILS
-                      </button>
-                    )}
-                  </form>
-
-                  {/* Flipkart FAQs Accordion */}
-                  <div className="flipkart-faq-box">
-                    <h3 className="faq-title">Frequently Asked Questions</h3>
-                    
-                    <div className="faq-item">
-                      <div className="faq-question">What happens when I update my email address or mobile number?</div>
-                      <div className="faq-answer">
-                        Your login identity updates automatically. You will receive future order updates, digital invoices, and account notifications on your updated details.
-                      </div>
-                    </div>
-
-                    <div className="faq-item">
-                      <div className="faq-question">Does my Flipkart account activity get lost if I change my details?</div>
-                      <div className="faq-answer">
-                        No! All your past orders, wishlist items, saved shipping addresses, and SuperCoins remain intact under your profile.
-                      </div>
-                    </div>
+                  <div className="pf-mob-menu-text">
+                    <div className="pf-mob-menu-label">{item.label}</div>
+                    <div className="pf-mob-menu-sub">{item.sub}</div>
                   </div>
-                </div>
-              )}
+                  <ChevronRight size={18} className="pf-mob-chevron" />
+                </button>
+              ))}
+            </div>
+          </>
+        )}
 
-              {/* TAB 2: MANAGE ADDRESSES */}
-              {activeTab === "addresses" && (
-                <div>
-                  <div className="pane-section-header">
-                    <h2 className="pane-section-title">Manage Addresses</h2>
+        {/* Sub-views on mobile */}
+        {activeView !== "dashboard" && (
+          <div className="pf-mob-subview">
+            <button
+              type="button"
+              className="pf-mob-back-btn"
+              onClick={() => setActiveView("dashboard")}
+            >
+              ← Back
+            </button>
+
+            {/* Orders sub-view */}
+            {activeView === "orders" && (
+              <div>
+                <h1 className="pf-mob-subview-title">Your Orders</h1>
+                {orders.length === 0 ? (
+                  <div className="pf-empty-state">
+                    <PackageCheck size={40} className="pf-empty-icon" />
+                    <div className="pf-empty-title">No orders yet</div>
+                    <Link href="/products" className="pf-cta-btn">Browse Products</Link>
                   </div>
-
-                  {/* Add New Address Trigger Button */}
-                  <button 
-                    onClick={() => setIsAddingAddress(!isAddingAddress)} 
-                    className="add-address-trigger-btn"
-                  >
-                    <Plus size={18} /> {isAddingAddress ? "CANCEL ADDING ADDRESS" : "ADD A NEW ADDRESS"}
-                  </button>
-
-                  {/* Add Address Expandable Form */}
-                  {isAddingAddress && (
-                    <form onSubmit={handleAddAddressSubmit} className="address-form-box">
-                      <h3 style={{ fontSize: "1rem", fontWeight: 700, marginBottom: "1rem" }}>ADD A NEW ADDRESS</h3>
-                      
-                      <div className="form-row-2">
-                        <div className="fk-field-box">
-                          <label className="fk-field-label">Name *</label>
-                          <input
-                            type="text"
-                            className="fk-field-input"
-                            placeholder="Full Name"
-                            value={newAddrName}
-                            onChange={(e) => setNewAddrName(e.target.value)}
-                            required
-                          />
+                ) : (
+                  <div className="pf-orders-mini-list">
+                    {orders.slice(0, 5).map((order) => (
+                      <div key={order.id} className="pf-order-mini-card">
+                        <div className="pf-order-mini-meta">
+                          <span className="pf-order-mini-id">#{order.id}</span>
+                          <span className="pf-order-mini-date">{order.date}</span>
+                          <strong>${order.totalAmount.toFixed(2)}</strong>
                         </div>
-                        <div className="fk-field-box">
-                          <label className="fk-field-label">10-digit Mobile Number *</label>
-                          <input
-                            type="tel"
-                            className="fk-field-input"
-                            placeholder="Mobile Number"
-                            value={newAddrPhone}
-                            onChange={(e) => setNewAddrPhone(e.target.value)}
-                            required
-                          />
-                        </div>
-                      </div>
-
-                      <div className="form-row-2">
-                        <div className="fk-field-box">
-                          <label className="fk-field-label">Pincode *</label>
-                          <input
-                            type="text"
-                            className="fk-field-input"
-                            placeholder="6-digit Pincode"
-                            value={newAddrPincode}
-                            onChange={(e) => setNewAddrPincode(e.target.value)}
-                            required
-                          />
-                        </div>
-                        <div className="fk-field-box">
-                          <label className="fk-field-label">Locality *</label>
-                          <input
-                            type="text"
-                            className="fk-field-input"
-                            placeholder="Locality / Area"
-                            value={newAddrLocality}
-                            onChange={(e) => setNewAddrLocality(e.target.value)}
-                            required
-                          />
-                        </div>
-                      </div>
-
-                      <div className="fk-field-box" style={{ marginBottom: "1rem" }}>
-                        <label className="fk-field-label">Address (Area and Street) *</label>
-                        <textarea
-                          rows={2}
-                          className="fk-field-input"
-                          style={{ height: "auto", padding: "0.5rem" }}
-                          placeholder="Flat no, House name, Street address"
-                          value={newAddrStreet}
-                          onChange={(e) => setNewAddrStreet(e.target.value)}
-                          required
-                        />
-                      </div>
-
-                      <div className="form-row-2">
-                        <div className="fk-field-box">
-                          <label className="fk-field-label">City / District / Town *</label>
-                          <input
-                            type="text"
-                            className="fk-field-input"
-                            placeholder="City"
-                            value={newAddrCity}
-                            onChange={(e) => setNewAddrCity(e.target.value)}
-                          />
-                        </div>
-                        <div className="fk-field-box">
-                          <label className="fk-field-label">State *</label>
-                          <input
-                            type="text"
-                            className="fk-field-input"
-                            placeholder="State"
-                            value={newAddrState}
-                            onChange={(e) => setNewAddrState(e.target.value)}
-                          />
-                        </div>
-                      </div>
-
-                      <div style={{ marginBottom: "1.25rem" }}>
-                        <label className="fk-field-label">Address Type</label>
-                        <div className="gender-radio-group">
-                          <label className="gender-label">
-                            <input
-                              type="radio"
-                              name="addrType"
-                              value="HOME"
-                              checked={newAddrType === "HOME"}
-                              onChange={() => setNewAddrType("HOME")}
-                            />
-                            <span>Home (All day delivery)</span>
-                          </label>
-                          <label className="gender-label">
-                            <input
-                              type="radio"
-                              name="addrType"
-                              value="WORK"
-                              checked={newAddrType === "WORK"}
-                              onChange={() => setNewAddrType("WORK")}
-                            />
-                            <span>Work (Delivery between 10 AM - 6 PM)</span>
-                          </label>
-                        </div>
-                      </div>
-
-                      <div style={{ display: "flex", gap: "1rem" }}>
-                        <button type="submit" className="fk-save-btn">
-                          SAVE ADDRESS
-                        </button>
-                        <button 
-                          type="button" 
-                          onClick={() => setIsAddingAddress(false)}
-                          style={{ color: "#2874F0", fontWeight: 700, background: "none", border: "none" }}
-                        >
-                          CANCEL
-                        </button>
-                      </div>
-                    </form>
-                  )}
-
-                  {/* Address List */}
-                  <div className="address-cards-stack">
-                    {addresses.map((addr) => (
-                      <div key={addr.id} className="flipkart-address-card">
-                        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-                          <div>
-                            <span className="address-type-tag">{addr.addressType}</span>
-                            <span className="address-recipient">{addr.recipient}</span>
-                            <span className="address-phone">{addr.phone}</span>
-                          </div>
-                          {addr.isDefault && (
-                            <span className="verified-badge">DEFAULT ADDRESS</span>
-                          )}
-                        </div>
-
-                        <div className="address-text-body">
-                          {addr.street}, {addr.locality}, {addr.city}, {addr.state} - <strong>{addr.pincode}</strong>
-                          {addr.landmark && <div>Landmark: {addr.landmark}</div>}
-                        </div>
-
-                        <div className="address-actions-bar">
-                          {!addr.isDefault && (
-                            <button onClick={() => setDefaultAddress(addr.id)} className="addr-action-btn">
-                              SET AS DEFAULT
-                            </button>
-                          )}
-                          <button onClick={() => deleteAddress(addr.id)} className="addr-action-btn delete">
-                            DELETE
-                          </button>
+                        <div className="pf-order-mini-status">
+                          {order.status === "Delivered" && <span className="pf-status-badge pf-status-delivered"><Check size={12} />Delivered</span>}
+                          {order.status === "In Transit" && <span className="pf-status-badge pf-status-transit">In Transit</span>}
+                          {order.status === "Cancelled" && <span className="pf-status-badge pf-status-cancelled">Cancelled</span>}
                         </div>
                       </div>
                     ))}
+                    <Link href="/orders" className="pf-cta-btn pf-cta-outline" style={{ textAlign: "center" }}>View All Orders →</Link>
                   </div>
-                </div>
-              )}
+                )}
+              </div>
+            )}
 
-              {/* TAB 3: PAN CARD INFORMATION */}
-              {activeTab === "pan" && (
-                <div>
-                  <div className="pane-section-header">
-                    <h2 className="pane-section-title">PAN Card Information</h2>
-                  </div>
+            {/* Addresses sub-view */}
+            {activeView === "addresses" && (
+              <div>
+                <h1 className="pf-mob-subview-title">Saved Addresses</h1>
+                <button type="button" className="pf-add-addr-trigger" onClick={() => setIsAddingAddress(!isAddingAddress)}>
+                  <Plus size={16} />
+                  {isAddingAddress ? "Cancel" : "Add a new address"}
+                </button>
 
-                  <div className="personal-info-grid">
-                    <div className="fk-field-box">
-                      <label className="fk-field-label">PAN Card Number</label>
-                      <input
-                        type="text"
-                        className="fk-field-input"
-                        value={panNumber}
-                        onChange={(e) => setPanNumber(e.target.value.toUpperCase())}
-                        maxLength={10}
-                      />
+                {isAddingAddress && (
+                  <form onSubmit={handleAddAddressSubmit} className="pf-addr-form">
+                    <div className="pf-field"><label>Full Name *</label><input type="text" required value={newAddrName} onChange={(e) => setNewAddrName(e.target.value)} /></div>
+                    <div className="pf-field"><label>Phone</label><input type="tel" value={newAddrPhone} onChange={(e) => setNewAddrPhone(e.target.value)} /></div>
+                    <div className="pf-field full-width"><label>Street Address *</label><input type="text" required value={newAddrStreet} onChange={(e) => setNewAddrStreet(e.target.value)} /></div>
+                    <div className="pf-form-row">
+                      <div className="pf-field"><label>City</label><input type="text" value={newAddrCity} onChange={(e) => setNewAddrCity(e.target.value)} /></div>
+                      <div className="pf-field"><label>State</label><input type="text" value={newAddrState} onChange={(e) => setNewAddrState(e.target.value)} /></div>
                     </div>
-                    <div className="fk-field-box">
-                      <label className="fk-field-label">Full Name on PAN Card</label>
-                      <input
-                        type="text"
-                        className="fk-field-input"
-                        value={panName}
-                        onChange={(e) => setPanName(e.target.value)}
-                      />
+                    <div className="pf-form-actions">
+                      <button type="submit" className="pf-cta-btn">Save Address</button>
                     </div>
-                  </div>
+                  </form>
+                )}
 
-                  <button 
-                    onClick={() => setPanSaved(true)} 
-                    className="fk-save-btn"
-                  >
-                    SAVE PAN CARD DETAILS
-                  </button>
-
-                  {panSaved && (
-                    <div className="verified-badge" style={{ marginTop: "1rem", display: "inline-flex" }}>
-                      ✓ PAN Details verified successfully for Tax Invoices
+                <div className="pf-addr-list">
+                  {addresses.length === 0 && (
+                    <div className="pf-empty-state">
+                      <MapPin size={40} className="pf-empty-icon" />
+                      <div className="pf-empty-title">No saved addresses</div>
                     </div>
                   )}
-                </div>
-              )}
-
-              {/* TAB 4: PAYMENTS */}
-              {activeTab === "payments" && (
-                <div>
-                  <div className="pane-section-header">
-                    <h2 className="pane-section-title">Flipkart Gift Cards & Saved Cards</h2>
-                  </div>
-
-                  <div className="card" style={{ padding: "1.5rem", marginBottom: "1.5rem", background: "#F4F8FF", border: "1px solid #2874F0" }}>
-                    <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-                      <div>
-                        <div style={{ fontSize: "0.8rem", color: "#878787", fontWeight: 700 }}>FLIPKART GIFT CARD BALANCE</div>
-                        <div style={{ fontSize: "1.75rem", fontWeight: 900, color: "#2874F0" }}>$0.00 / ₹0</div>
+                  {addresses.map((addr) => (
+                    <div key={addr.id} className={`pf-addr-card ${addr.isDefault ? "pf-addr-default" : ""}`}>
+                      <div className="pf-addr-card-top">
+                        <div className="pf-addr-tags">
+                          <span className="pf-addr-type-tag">{addr.addressType}</span>
+                          {addr.isDefault && <span className="pf-default-tag">Default</span>}
+                        </div>
+                        <div className="pf-addr-card-actions">
+                          {!addr.isDefault && <button type="button" className="pf-addr-action-btn" onClick={() => setDefaultAddress(addr.id)}>Set Default</button>}
+                          <button type="button" className="pf-addr-action-btn pf-danger" onClick={() => deleteAddress(addr.id)}><Trash2 size={14} /> Remove</button>
+                        </div>
                       </div>
-                      <button className="flipkart-btn-orange" style={{ width: "auto", padding: "0 1.25rem", height: 40 }}>
-                        + Add Gift Card
+                      <div className="pf-addr-name">{addr.recipient}</div>
+                      <div className="pf-addr-body">{addr.street}, {addr.city}, {addr.state} {addr.pincode}</div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
+
+            {/* Security sub-view */}
+            {activeView === "security" && (
+              <div>
+                <h1 className="pf-mob-subview-title">Account Settings</h1>
+
+                {saveSuccessMsg && (
+                  <div className="pf-success-banner"><Check size={16} /> {saveSuccessMsg}</div>
+                )}
+
+                {/* Personal Information Card */}
+                <div className="pf-settings-card">
+                  <div className="pf-settings-card-header">
+                    <h2 className="pf-settings-card-title">Personal Information</h2>
+                    <p className="pf-settings-card-sub">Manage your basic profile details.</p>
+                  </div>
+                  <form onSubmit={handleSaveProfile} className="pf-personal-info-form">
+                    <div className="pf-personal-info-grid">
+                      <div className="pf-field">
+                        <label className="pf-field-label">Full Name</label>
+                        <input type="text" className="pf-field-input" value={`${firstName} ${lastName}`.trim()} onChange={(e) => { const p = e.target.value.split(" "); setFirstName(p[0] || ""); setLastName(p.slice(1).join(" ")); }} placeholder="John Doe" />
+                      </div>
+                      <div className="pf-field">
+                        <label className="pf-field-label">Email Address</label>
+                        <input type="email" className="pf-field-input" value={email} onChange={(e) => setEmail(e.target.value)} />
+                      </div>
+                      <div className="pf-field">
+                        <label className="pf-field-label">Phone Number</label>
+                        <input type="tel" className="pf-field-input" value={phone} onChange={(e) => setPhone(e.target.value)} />
+                      </div>
+                    </div>
+                    <div className="pf-personal-save-row">
+                      <button type="submit" className="pf-save-changes-btn">Save Changes</button>
+                    </div>
+                  </form>
+                </div>
+
+                {/* Login & Security Card */}
+                <div className="pf-settings-card" style={{ marginTop: "1rem" }}>
+                  <div className="pf-settings-card-header">
+                    <h2 className="pf-settings-card-title">Login &amp; Security</h2>
+                    <p className="pf-settings-card-sub">Update your password and secure your account.</p>
+                  </div>
+                  <div className="pf-security-rows">
+                    <div className="pf-security-row">
+                      <div className="pf-security-row-info">
+                        <div className="pf-security-row-label">Password</div>
+                        <div className="pf-security-row-meta">Last changed 3 months ago.</div>
+                      </div>
+                      <button type="button" className="pf-edit-btn">Edit</button>
+                    </div>
+                    <div className="pf-security-row pf-security-row-last">
+                      <div className="pf-security-row-info">
+                        <div className="pf-security-row-label">Two-Factor Authentication (2FA)</div>
+                        <div className="pf-security-row-meta">Add an extra layer of security.</div>
+                      </div>
+                      <button type="button" className="pf-toggle-switch pf-toggle-on" aria-label="2FA enabled">
+                        <span className="pf-toggle-thumb" />
                       </button>
                     </div>
                   </div>
+                </div>
+              </div>
+            )}
 
-                  <div className="faq-title">Saved Payment Methods</div>
-                  <p style={{ fontSize: "0.875rem", color: "#878787" }}>
-                    No saved cards yet. Cards used during checkout will safely appear here for fast 1-click payments.
-                  </p>
+            {/* Payments sub-view */}
+            {activeView === "payments" && (
+              <div>
+                <h1 className="pf-mob-subview-title">Payment Methods</h1>
+                <div className="pf-payments-empty">
+                  <CreditCard size={40} className="pf-empty-icon" />
+                  <div className="pf-empty-title">No saved payment methods</div>
+                  <div className="pf-empty-sub">Cards used during checkout will appear here.</div>
+                  <Link href="/checkout" className="pf-cta-btn">Go to Checkout</Link>
+                </div>
+              </div>
+            )}
+          </div>
+        )}
+      </div>
+
+      {/* ═══════════════ DESKTOP LAYOUT ═══════════════ */}
+      <div className="pf-layout pf-desktop-layout">
+        {/* LEFT SIDEBAR */}
+        <aside className="pf-sidebar">
+          <div className="pf-sidebar-user">
+            <div className="pf-avatar">
+              {user.avatar ? <img src={user.avatar} alt={user.name} /> : <span>{user.name.charAt(0).toUpperCase()}</span>}
+            </div>
+            <div className="pf-sidebar-user-info">
+              <div className="pf-sidebar-welcome">Welcome, User</div>
+              <div className="pf-sidebar-prime">
+                <Star size={12} className="pf-prime-star" />
+                Al-Umaima Prime Member
+              </div>
+            </div>
+          </div>
+
+          <nav className="pf-sidebar-nav">
+            {sidebarLinks.map((link) => (
+              <button key={link.id} type="button" className={`pf-nav-item ${activeView === link.id ? "pf-nav-active" : ""}`} onClick={() => setActiveView(link.id)}>
+                <span className="pf-nav-icon">{link.icon}</span>
+                <span className="pf-nav-label">{link.label}</span>
+              </button>
+            ))}
+            {isAdmin && (
+              <Link href="/admin" className="pf-nav-item pf-nav-admin">
+                <span className="pf-nav-icon"><Shield size={18} /></span>
+                <span className="pf-nav-label">Admin Panel</span>
+              </Link>
+            )}
+            <div className="pf-sidebar-divider" />
+            <button type="button" className="pf-nav-item pf-nav-clearfilters" onClick={() => {}}>Clear All Filters</button>
+          </nav>
+        </aside>
+
+        {/* MAIN CONTENT */}
+        <main className="pf-main">
+
+          {/* DASHBOARD */}
+          {activeView === "dashboard" && (
+            <div className="pf-view">
+              <div className="pf-dashboard-hero">
+                <div>
+                  <h1 className="pf-dashboard-title">Dashboard</h1>
+                  <p className="pf-dashboard-sub">Manage your account settings, track orders, and discover new deals.</p>
+                </div>
+                <div className="pf-prime-badge">
+                  <Crown size={13} className="pf-prime-crown" />
+                  <span className="pf-prime-badge-label">PRIME ACTIVE</span>
+                  <span className="pf-prime-since">Member since 2021</span>
+                </div>
+              </div>
+
+              <div className="pf-dashboard-grid">
+                <button type="button" className="pf-dash-card" onClick={() => setActiveView("orders")}>
+                  <div className="pf-dash-card-top"><div className="pf-dash-icon pf-icon-orders"><PackageCheck size={22} /></div><ArrowRight size={16} className="pf-dash-arrow" /></div>
+                  <div className="pf-dash-card-title">Your Orders</div>
+                  <div className="pf-dash-card-sub">Track, return, or buy things again</div>
+                </button>
+                <button type="button" className="pf-dash-card" onClick={() => setActiveView("security")}>
+                  <div className="pf-dash-card-top"><div className="pf-dash-icon pf-icon-security"><ShieldCheck size={22} /></div><ArrowRight size={16} className="pf-dash-arrow" /></div>
+                  <div className="pf-dash-card-title">Login &amp; Security</div>
+                  <div className="pf-dash-card-sub">Edit login, name, and mobile number</div>
+                </button>
+                <button type="button" className="pf-dash-card">
+                  <div className="pf-dash-card-top"><div className="pf-dash-icon pf-icon-prime"><Crown size={22} /></div><ArrowRight size={16} className="pf-dash-arrow" /></div>
+                  <div className="pf-dash-card-title">Prime</div>
+                  <div className="pf-dash-card-sub">View benefits and payment settings</div>
+                </button>
+                <button type="button" className="pf-dash-card" onClick={() => setActiveView("addresses")}>
+                  <div className="pf-dash-card-top"><div className="pf-dash-icon pf-icon-address"><MapPin size={22} /></div><ArrowRight size={16} className="pf-dash-arrow" /></div>
+                  <div className="pf-dash-card-title">Saved Addresses</div>
+                  <div className="pf-dash-card-sub">Edit addresses for orders and gifts</div>
+                  {defaultAddr ? (
+                    <div className="pf-dash-default-addr">Default: {defaultAddr.street}, {defaultAddr.city}, {defaultAddr.state} {defaultAddr.pincode}</div>
+                  ) : (
+                    <div className="pf-dash-default-addr">Default: 123 Retail Ave, Suite 400, NY 10001</div>
+                  )}
+                </button>
+                <button type="button" className="pf-dash-card" onClick={() => setActiveView("payments")}>
+                  <div className="pf-dash-card-top"><div className="pf-dash-icon pf-icon-payment"><CreditCard size={22} /></div><ArrowRight size={16} className="pf-dash-arrow" /></div>
+                  <div className="pf-dash-card-title">Payment Options</div>
+                  <div className="pf-dash-card-sub">Edit or add payment methods</div>
+                </button>
+              </div>
+
+              {/* Recent Orders Table */}
+              <div className="pf-recent-orders-card">
+                <div className="pf-recent-orders-header">
+                  <h2 className="pf-recent-orders-title">Recent Orders</h2>
+                  <button type="button" className="pf-view-all-btn" onClick={() => setActiveView("orders")}>View All <ArrowRight size={14} /></button>
+                </div>
+                <table className="pf-orders-table">
+                  <thead>
+                    <tr className="pf-table-head-row">
+                      <th>Order ID</th><th>Date</th><th>Total</th><th>Status</th><th>Action</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {recentOrders.length === 0 ? (
+                      <>
+                        <tr className="pf-table-row"><td className="pf-order-id">#AU-9876543</td><td>Oct 24, 2023</td><td className="pf-order-total">$129.99</td><td><span className="pf-status-badge pf-status-delivered"><Check size={12} />Delivered</span></td><td><button type="button" className="pf-view-details-btn">View Details</button></td></tr>
+                        <tr className="pf-table-row"><td className="pf-order-id">#AU-9876544</td><td>Oct 20, 2023</td><td className="pf-order-total">$45.50</td><td><span className="pf-status-badge pf-status-transit">In Transit</span></td><td><button type="button" className="pf-view-details-btn">View Details</button></td></tr>
+                        <tr className="pf-table-row"><td className="pf-order-id">#AU-9876545</td><td>Oct 15, 2023</td><td className="pf-order-total">$899.00</td><td><span className="pf-status-badge pf-status-delivered"><Check size={12} />Delivered</span></td><td><button type="button" className="pf-view-details-btn">View Details</button></td></tr>
+                      </>
+                    ) : (
+                      recentOrders.map((order) => (
+                        <tr key={order.id} className="pf-table-row">
+                          <td className="pf-order-id">#{order.id}</td>
+                          <td>{order.date}</td>
+                          <td className="pf-order-total">${order.totalAmount.toFixed(2)}</td>
+                          <td>
+                            {order.status === "Delivered" && <span className="pf-status-badge pf-status-delivered"><Check size={12} />Delivered</span>}
+                            {order.status === "In Transit" && <span className="pf-status-badge pf-status-transit">In Transit</span>}
+                            {order.status === "Processing" && <span className="pf-status-badge pf-status-processing">Processing</span>}
+                            {order.status === "Cancelled" && <span className="pf-status-badge pf-status-cancelled">Cancelled</span>}
+                          </td>
+                          <td><Link href={`/track-order?id=${order.id}`} className="pf-view-details-btn">View Details</Link></td>
+                        </tr>
+                      ))
+                    )}
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          )}
+
+          {/* ORDERS */}
+          {activeView === "orders" && (
+            <div className="pf-view">
+              <Link href="/orders" className="pf-orders-page-link">
+                <h1 className="pf-section-heading">Your Orders</h1>
+              </Link>
+              <p className="pf-section-sub"><Link href="/orders" className="pf-link">Go to full orders page →</Link></p>
+              {orders.length === 0 ? (
+                <div className="pf-empty-state"><PackageCheck size={48} className="pf-empty-icon" /><div className="pf-empty-title">No orders yet</div><Link href="/products" className="pf-cta-btn">Browse Products</Link></div>
+              ) : (
+                <div className="pf-orders-mini-list">
+                  {orders.slice(0, 5).map((order) => (
+                    <div key={order.id} className="pf-order-mini-card">
+                      <div className="pf-order-mini-meta"><span className="pf-order-mini-id">#{order.id}</span><span className="pf-order-mini-date">{order.date}</span><strong>${order.totalAmount.toFixed(2)}</strong></div>
+                      <div className="pf-order-mini-status">
+                        {order.status === "Delivered" && <span className="pf-status-badge pf-status-delivered"><Check size={12} />Delivered</span>}
+                        {order.status === "In Transit" && <span className="pf-status-badge pf-status-transit">In Transit</span>}
+                      </div>
+                    </div>
+                  ))}
+                  <Link href="/orders" className="pf-cta-btn pf-cta-outline">View All Orders →</Link>
                 </div>
               )}
             </div>
-          </div>
-        </div>
+          )}
+
+          {/* ADDRESSES */}
+          {activeView === "addresses" && (
+            <div className="pf-view">
+              <h1 className="pf-section-heading">Saved Addresses</h1>
+              <button type="button" className="pf-add-addr-trigger" onClick={() => setIsAddingAddress(!isAddingAddress)}>
+                <Plus size={16} />{isAddingAddress ? "Cancel" : "Add a new address"}
+              </button>
+              {isAddingAddress && (
+                <form onSubmit={handleAddAddressSubmit} className="pf-addr-form">
+                  <div className="pf-form-row">
+                    <div className="pf-field"><label>Full Name *</label><input type="text" required value={newAddrName} onChange={(e) => setNewAddrName(e.target.value)} /></div>
+                    <div className="pf-field"><label>Phone</label><input type="tel" value={newAddrPhone} onChange={(e) => setNewAddrPhone(e.target.value)} /></div>
+                  </div>
+                  <div className="pf-field full-width"><label>Street Address *</label><input type="text" required value={newAddrStreet} onChange={(e) => setNewAddrStreet(e.target.value)} /></div>
+                  <div className="pf-form-row">
+                    <div className="pf-field"><label>City</label><input type="text" value={newAddrCity} onChange={(e) => setNewAddrCity(e.target.value)} /></div>
+                    <div className="pf-field"><label>State</label><input type="text" value={newAddrState} onChange={(e) => setNewAddrState(e.target.value)} /></div>
+                    <div className="pf-field"><label>ZIP</label><input type="text" value={newAddrZip} onChange={(e) => setNewAddrZip(e.target.value)} /></div>
+                  </div>
+                  <div className="pf-form-actions"><button type="submit" className="pf-cta-btn">Save Address</button><button type="button" className="pf-text-btn" onClick={() => setIsAddingAddress(false)}>Cancel</button></div>
+                </form>
+              )}
+              <div className="pf-addr-list">
+                {addresses.length === 0 && <div className="pf-empty-state"><MapPin size={40} className="pf-empty-icon" /><div className="pf-empty-title">No saved addresses</div></div>}
+                {addresses.map((addr) => (
+                  <div key={addr.id} className={`pf-addr-card ${addr.isDefault ? "pf-addr-default" : ""}`}>
+                    <div className="pf-addr-card-top">
+                      <div className="pf-addr-tags"><span className="pf-addr-type-tag">{addr.addressType}</span>{addr.isDefault && <span className="pf-default-tag">Default</span>}</div>
+                      <div className="pf-addr-card-actions">
+                        {!addr.isDefault && <button type="button" className="pf-addr-action-btn" onClick={() => setDefaultAddress(addr.id)}>Set Default</button>}
+                        <button type="button" className="pf-addr-action-btn pf-danger" onClick={() => deleteAddress(addr.id)}><Trash2 size={14} /> Remove</button>
+                      </div>
+                    </div>
+                    <div className="pf-addr-name">{addr.recipient}</div>
+                    <div className="pf-addr-body">{addr.street}, {addr.city}, {addr.state} {addr.pincode}</div>
+                    {addr.phone && <div className="pf-addr-phone">Phone: {addr.phone}</div>}
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
+
+          {/* SECURITY */}
+          {activeView === "security" && (
+            <div className="pf-view">
+              <h1 className="pf-section-heading">Account Settings</h1>
+              {saveSuccessMsg && <div className="pf-success-banner"><Check size={16} /> {saveSuccessMsg}</div>}
+
+              <div className="pf-settings-card">
+                <div className="pf-settings-card-header">
+                  <h2 className="pf-settings-card-title">Personal Information</h2>
+                  <p className="pf-settings-card-sub">Manage your basic profile details.</p>
+                </div>
+                <form onSubmit={handleSaveProfile} className="pf-personal-info-form">
+                  <div className="pf-personal-info-grid">
+                    <div className="pf-field"><label className="pf-field-label">Full Name</label><input type="text" className="pf-field-input" value={`${firstName} ${lastName}`.trim()} onChange={(e) => { const p = e.target.value.split(" "); setFirstName(p[0] || ""); setLastName(p.slice(1).join(" ")); }} placeholder="John Doe" /></div>
+                    <div className="pf-field"><label className="pf-field-label">Email Address</label><input type="email" className="pf-field-input" value={email} onChange={(e) => setEmail(e.target.value)} /></div>
+                    <div className="pf-field"><label className="pf-field-label">Phone Number</label><input type="tel" className="pf-field-input" value={phone} onChange={(e) => setPhone(e.target.value)} /></div>
+                  </div>
+                  <div className="pf-personal-save-row"><button type="submit" className="pf-save-changes-btn">Save Changes</button></div>
+                </form>
+              </div>
+
+              <div className="pf-settings-card" style={{ marginTop: "1rem" }}>
+                <div className="pf-settings-card-header">
+                  <h2 className="pf-settings-card-title">Login &amp; Security</h2>
+                  <p className="pf-settings-card-sub">Update your password and secure your account.</p>
+                </div>
+                <div className="pf-security-rows">
+                  <div className="pf-security-row"><div className="pf-security-row-info"><div className="pf-security-row-label">Password</div><div className="pf-security-row-meta">Last changed 3 months ago.</div></div><button type="button" className="pf-edit-btn">Edit</button></div>
+                  <div className="pf-security-row pf-security-row-last"><div className="pf-security-row-info"><div className="pf-security-row-label">Two-Factor Authentication (2FA)</div><div className="pf-security-row-meta">Add an extra layer of security to your account.</div></div><button type="button" className="pf-toggle-switch pf-toggle-on" aria-label="2FA enabled"><span className="pf-toggle-thumb" /></button></div>
+                </div>
+              </div>
+            </div>
+          )}
+
+          {/* PAYMENTS */}
+          {activeView === "payments" && (
+            <div className="pf-view">
+              <h1 className="pf-section-heading">Payment Methods</h1>
+              <div className="pf-payments-empty">
+                <CreditCard size={40} className="pf-empty-icon" />
+                <div className="pf-empty-title">No saved payment methods</div>
+                <div className="pf-empty-sub">Cards used during checkout will appear here for quick reuse.</div>
+                <Link href="/checkout" className="pf-cta-btn">Go to Checkout</Link>
+              </div>
+            </div>
+          )}
+        </main>
       </div>
     </div>
   );

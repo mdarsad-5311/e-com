@@ -50,6 +50,7 @@ export default function ProductDetailPage({ params }: ProductDetailPageProps) {
             <ProductGallery
               images={product.galleryImages || [product.image]}
               title={product.title}
+              product={product}
             />
           </div>
 
@@ -59,38 +60,6 @@ export default function ProductDetailPage({ params }: ProductDetailPageProps) {
           </div>
         </div>
       </div>
-
-      <style>{`
-        .al-product-detail-page {
-          background-color: #ffffff;
-          padding: 1.5rem 0 4rem;
-          min-height: 80vh;
-        }
-
-        .al-detail-breadcrumb-wrap {
-          margin-bottom: 1.5rem;
-        }
-
-        .al-product-main-grid {
-          display: grid;
-          grid-template-columns: 460px 1fr;
-          gap: 2.5rem;
-          align-items: flex-start;
-        }
-
-        @media (max-width: 1200px) {
-          .al-product-main-grid {
-            grid-template-columns: 400px 1fr;
-            gap: 1.75rem;
-          }
-        }
-
-        @media (max-width: 990px) {
-          .al-product-main-grid {
-            grid-template-columns: 1fr;
-          }
-        }
-      `}</style>
     </div>
   );
 }

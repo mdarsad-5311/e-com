@@ -1,61 +1,127 @@
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
-@import './auth.css';
-
 :root {
-  /* Al-Umaima Design Tokens */
-  --primary: #f97316;
-  --primary-hover: #ea580c;
-  --primary-light: rgba(249, 115, 22, 0.1);
-  --primary-glow: rgba(249, 115, 22, 0.25);
+  /* Surface Tokens */
+  --surface: #fbf9f8;
+  --surface-dim: #dcd9d9;
+  --surface-bright: #fbf9f8;
+  --surface-container-lowest: #ffffff;
+  --surface-container-low: #f6f3f2;
+  --surface-container: #f0eded;
+  --surface-container-high: #eae8e7;
+  --surface-container-highest: #e4e2e1;
+  --surface-variant: #e4e2e1;
+  --surface-alt: #F3F3F3;
+  --surface-tint: #3a5f94;
 
-  --secondary: #0b172a;
-  --secondary-hover: #1e293b;
-  --secondary-light: rgba(11, 23, 42, 0.08);
-
-  --success: #10B981;
-  --success-hover: #059669;
-  --success-light: rgba(16, 185, 129, 0.1);
-
-  --warning: #F59E0B;
-  --danger: #EF4444;
-  --danger-light: rgba(239, 68, 68, 0.1);
-
-  --text: #0f172a;
-  --text-muted: #64748b;
-  --text-light: #94a3b8;
+  /* Contrast & Text */
+  --on-surface: #1b1c1c;
+  --on-surface-variant: #43474f;
+  --inverse-surface: #303030;
+  --inverse-on-surface: #f3f0f0;
+  --background: #fbf9f8;
+  --on-background: #1b1c1c;
+  --background-subtle: #F8FAFC;
+  --text: #1b1c1c;
+  --text-muted: #43474f;
+  --text-light: #737780;
   --text-inverse: #FFFFFF;
 
-  --background: #f8fafc;
-  --cards: #FFFFFF;
-  --borders: #E2E8F0;
-  --borders-hover: #CBD5E1;
+  /* Outlines & Borders */
+  --outline: #737780;
+  --outline-variant: #c3c6d1;
+  --borders: #e2e8f0;
+  --borders-hover: #cbd5e1;
+  --cards: #ffffff;
   --offwhite: #FAF9F6;
   --offwhite-card: #FAFAFA;
   --offwhite-border: #E8E6E1;
 
-  /* Dark Theme Section Accents */
-  --dark-bg: #081225;
-  --dark-card: #0b172a;
+  /* Brand / Deep Commerce Blue */
+  --primary: #001e40;
+  --on-primary: #ffffff;
+  --primary-container: #003366;
+  --on-primary-container: #799dd6;
+  --inverse-primary: #a7c8ff;
+  --primary-fixed: #d5e3ff;
+  --primary-fixed-dim: #a7c8ff;
+  --on-primary-fixed: #001b3c;
+  --on-primary-fixed-variant: #1f477b;
+  --primary-hover: #002c7d;
+  --primary-light: rgba(0, 30, 64, 0.08);
+  --primary-glow: rgba(0, 51, 102, 0.2);
 
-  /* Standardized Radius Tokens */
-  --radius-hero: 12px;
-  --radius-card: 10px;
-  --radius-button: 6px;
+  /* Secondary / Amber Gold Accents */
+  --secondary: #8a5100;
+  --on-secondary: #ffffff;
+  --secondary-container: #fe9800;
+  --on-secondary-container: #643900;
+  --secondary-fixed: #ffdcbd;
+  --secondary-fixed-dim: #ffb86f;
+  --on-secondary-fixed: #2c1600;
+  --on-secondary-fixed-variant: #693c00;
+  --secondary-hover: #643900;
+  --secondary-light: rgba(138, 81, 0, 0.08);
+
+  /* Tertiary / Midnight Blue */
+  --tertiary: #001950;
+  --on-tertiary: #ffffff;
+  --tertiary-container: #002c7d;
+  --on-tertiary-container: #7397ff;
+  --tertiary-fixed: #dbe1ff;
+  --tertiary-fixed-dim: #b4c5ff;
+  --on-tertiary-fixed: #00174b;
+  --on-tertiary-fixed-variant: #003ea8;
+
+  /* High-Impact Action Buttons */
+  --btn-add-to-cart: #FF9900;
+  --btn-add-to-cart-hover: #ea8a00;
+  --btn-buy-now: #F97316;
+  --btn-buy-now-hover: #ea580c;
+
+  /* Pricing, Deals & Status */
+  --price-red: #B12704;
+  --error: #ba1a1a;
+  --on-error: #ffffff;
+  --error-container: #ffdad6;
+  --on-error-container: #93000a;
+  --status-success: #1E293B;
+  --success: #10B981;
+  --success-hover: #059669;
+  --success-light: rgba(16, 185, 129, 0.1);
+  --warning: #F59E0B;
+  --danger: #B12704;
+  --danger-light: rgba(177, 39, 4, 0.1);
+
+  /* Dark Theme Section Accents */
+  --dark-bg: #001950;
+  --dark-card: #001e40;
+
+  /* Shapes & Radii */
+  --radius-sm: 0.125rem;
+  --radius-button: 0.25rem;
+  --radius-card: 0.5rem;
+  --radius-badge: 0.5rem;
   --radius-pill: 9999px;
-  --radius-sm: 6px;
+  --radius-hero: 0.75rem;
+
+  /* Spacing Grid */
+  --space-base: 4px;
+  --space-gutter: 16px;
+  --space-tight: 8px;
+  --space-loose: 24px;
+  --margin-mobile: 12px;
+  --margin-desktop: 24px;
+  --max-width: 1440px;
 
   /* Shadows */
-  --shadow-card: 0 2px 8px rgba(0, 0, 0, 0.04);
-  --shadow-card-hover: 0 12px 24px rgba(0, 0, 0, 0.08);
+  --shadow-card: 0 1px 4px rgba(0, 0, 0, 0.04);
+  --shadow-card-hover: 0 10px 24px rgba(0, 0, 0, 0.08);
+  --shadow-modal: 0px 4px 20px rgba(0, 0, 0, 0.08);
   --shadow-lg: 0 16px 36px rgba(0, 0, 0, 0.12);
 
   /* Typography */
   --font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-  --line-height: 1.6;
-
-  /* Layout */
-  --max-width: 1400px;
-  --transition-normal: all 250ms cubic-bezier(0.4, 0, 0.2, 1);
+  --line-height: 1.5;
+  --transition-normal: all 200ms cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 /* Global Reset & Typography */
@@ -126,7 +192,7 @@ input, select, textarea {
 
 @media (max-width: 768px) {
   .main-content {
-    padding-top: var(--header-mobile);
+    padding-bottom: 65px;
   }
 }
 

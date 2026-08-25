@@ -3,6 +3,7 @@
 import { FormEvent, useEffect, useState } from "react";
 import { PackageSearch, Truck } from "lucide-react";
 import { useAuth } from "@/context/AuthContext";
+import "@/styles/track-order.css";
 
 interface LastOrder {
   id: string;
@@ -64,48 +65,10 @@ export default function TrackOrderPage() {
           <Truck size={18} />
           <div>
             <strong>Latest order {lastOrder.id}</strong>
-            <p>{lastOrder.status} · ${lastOrder.total.toFixed(2)} · ETA {lastOrder.eta}</p>
+            <p>{lastOrder.status} · AED {lastOrder.total.toLocaleString()} · ETA {lastOrder.eta}</p>
           </div>
         </div>
       )}
-
-      <style jsx>{`
-        .track-form {
-          margin-top: 1.5rem;
-          max-width: 640px;
-          display: flex;
-          align-items: center;
-          gap: 0.65rem;
-          background: #fff;
-          border: 1px solid var(--borders);
-          border-radius: 12px;
-          padding: 0.5rem 0.75rem;
-        }
-        .track-form input {
-          flex: 1;
-          border: none;
-          outline: none;
-          height: 44px;
-          font-size: 0.95rem;
-        }
-        .track-result {
-          margin-top: 1rem;
-          background: var(--primary-light);
-          color: var(--text);
-          padding: 1rem 1.15rem;
-          border-radius: 12px;
-          font-weight: 600;
-          max-width: 640px;
-        }
-        .last-order {
-          margin-top: 1.25rem;
-          max-width: 640px;
-          padding: 1rem 1.15rem;
-          display: flex;
-          gap: 0.75rem;
-          align-items: center;
-        }
-      `}</style>
     </div>
   );
 }

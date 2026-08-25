@@ -4,19 +4,17 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { 
   Star, 
-  Heart, 
-  ShoppingCart, 
-  Zap, 
-  Check, 
   ShieldCheck, 
-  Lock, 
   Truck, 
-  Store, 
-  RotateCcw, 
+  MapPin, 
   Tag, 
   CreditCard, 
-  RefreshCw,
-  ChevronDown
+  Lock, 
+  Store, 
+  RotateCcw, 
+  Heart, 
+  ChevronDown,
+  Check
 } from "lucide-react";
 import { Product } from "@/data/products";
 import { useCart } from "@/context/CartContext";
@@ -31,6 +29,7 @@ interface ProductInfoProps {
 
 export default function ProductInfo({ product }: ProductInfoProps) {
   const router = useRouter();
+  const [selectedColor, setSelectedColor] = useState<string>("Matte Black");
   const [quantity, setQuantity] = useState<number>(1);
   const [isAdded, setIsAdded] = useState<boolean>(false);
   const { addToCart } = useCart();
@@ -43,9 +42,9 @@ export default function ProductInfo({ product }: ProductInfoProps) {
   const handleAddToCart = () => {
     addToCart(product, quantity);
     setIsAdded(true);
-    showToast("Added to cart");
+    showToast(`${product.title} added to cart`);
     openCart();
-    setTimeout(() => setIsAdded(false), 2500);
+    setTimeout(() => setIsAdded(false), 2000);
   };
 
   const handleBuyNow = () => {
@@ -53,14 +52,19 @@ export default function ProductInfo({ product }: ProductInfoProps) {
     router.push("/checkout");
   };
 
-  const discountPercentage = product.originalPrice 
-    ? Math.round(((product.originalPrice - product.price) / product.originalPrice) * 100)
-    : 17;
+  // Price formatting
+  const priceParts = product.price.toFixed(2).split(".");
+  const dollars = priceParts[0];
+  const cents = priceParts[1] || "00";
+
+  const originalPriceVal = product.originalPrice || (product.price + 50);
+  const savingsVal = (originalPriceVal - product.price).toFixed(2);
+  const discountPct = product.discountPercentage || Math.round(((originalPriceVal - product.price) / originalPriceVal) * 100);
 
   // Render 5 stars based on rating
   const renderStars = (rating: number) => {
     return Array.from({ length: 5 }).map((_, index) => {
-      const isFilled = index < Math.floor(rating);
+      const isFilled = index < Math.floor(rating || 5);
       return (
         <Star
           key={index}
@@ -73,82 +77,147 @@ export default function ProductInfo({ product }: ProductInfoProps) {
     });
   };
 
-  // Specific high quality bullet points
-  const bulletPoints = product.specifications && product.specifications.length > 0 ? [
-    { title: "Next-Gen Active Noise Canceling", text: "Block out unwanted background noise for an immersive listening experience." },
-    { title: "40-Hour Battery Life", text: "Enjoy uninterrupted music playback all week on a single full charge." },
-    { title: "Premium Studio Sound", text: "Custom-tuned 40mm drivers deliver deep bass and crystal-clear highs." },
-    { title: "Ergonomic Comfort", text: "Memory foam ear cushions and an adjustable headband ensure all-day comfort." },
-    { title: "Multi-Point Connection", text: "Seamlessly switch between your smartphone and laptop without missing a beat." }
-  ] : [
-    { title: "Premium Quality Construction", text: product.description },
-    { title: "Engineered for Daily Performance", text: "Built to last with rigorous quality inspection and warranty." },
-    { title: "Universal Compatibility", text: "Works seamlessly across iOS, Android, macOS, and Windows." }
+  // Color options
+  const colorOptions = [
+    { name: "Matte Black", img: "https://images.unsplash.com/photo-1505740420928-5e560c06d30e?auto=format&fit=crop&w=120&q=80" },
+    { name: "Silver White", img: "https://images.unsplash.com/photo-1484704849700-f032a568e944?auto=format&fit=crop&w=120&q=80" },
+    { name: "Midnight Navy", img: "https://images.unsplash.com/photo-1546435770-a3e426bf472b?auto=format&fit=crop&w=120&q=80" }
+  ];
+
+  // Specific high quality bullet points matching attachment
+  const bulletPoints = [
+    { 
+      title: "Industry-Leading ANC", 
+      text: "Block out distractions with advanced active noise cancellation that adapts to your environment." 
+    },
+    { 
+      title: "Immersive Audio", 
+      text: "Custom 40mm drivers deliver high-fidelity sound with deep bass and crisp highs." 
+    },
+    { 
+      title: "30-Hour Battery Life", 
+      text: "Enjoy uninterrupted listening all day, with a quick 10-minute charge providing 5 hours of playback." 
+    },
+    { 
+      title: "Multipoint Connectivity", 
+      text: "Seamlessly switch between two Bluetooth devices without reconnecting." 
+    },
+    { 
+      title: "All-Day Comfort", 
+      text: "Memory foam earcups and a lightweight headband design ensure maximum comfort during extended wear." 
+    }
   ];
 
   return (
     <div className="al-product-details-columns">
       {/* Center Column: Product Specs, Offers, Description */}
       <div className="al-center-product-info">
-        {/* Category Tag */}
-        <div className="al-brand-tag">
-          AL-UMAIMA PREMIUM {product.categoryName?.toUpperCase() || "AUDIO"}
+        {/* Brand Tag + Assured Badge */}
+        <div className="al-brand-assured-row">
+          <span className="al-brand-title-badge">
+            {product.brand?.toUpperCase() || "AURA AUDIO"}
+          </span>
+          <div className="al-assured-pill">
+            <ShieldCheck size={13} className="assured-shield" />
+            <span>Al-Umaima Assured</span>
+          </div>
         </div>
 
         {/* Product Title */}
         <h1 className="al-product-title">{product.title}</h1>
 
-        {/* Rating Line + Al-Umaima Assured Badge */}
-        <div className="al-rating-assured-row">
+        {/* Rating Line */}
+        <div className="al-rating-row">
           <div className="al-stars-container">
             {renderStars(product.rating)}
           </div>
-          <span className="al-rating-val">{product.rating.toFixed(1)}</span>
-          <span className="al-reviews-text">({product.reviewsCount || 128} reviews)</span>
-
-          <div className="al-assured-pill">
-            <ShieldCheck size={14} className="assured-shield" />
-            <span>Al-Umaima Assured</span>
-          </div>
+          <button type="button" className="al-ratings-link">
+            {(product.reviewsCount || 4821).toLocaleString()} ratings
+          </button>
         </div>
 
         {/* Price Block */}
         <div className="al-detail-price-block">
           <div className="al-price-row-main">
-            <span className="al-current-price-red">${product.price.toFixed(2)}</span>
-            {product.originalPrice && (
-              <span className="al-original-price-gray">${product.originalPrice.toFixed(2)}</span>
-            )}
+            <span className="al-price-currency">$</span>
+            <span className="al-current-price-red">{dollars}</span>
+            <span className="al-price-cents">{cents}</span>
           </div>
 
-          <div className="al-discount-tax-row">
-            <span className="al-red-discount-pill">-{discountPercentage}% OFF</span>
-            <span className="al-tax-note">Inclusive of all taxes</span>
+          <div className="al-savings-row">
+            <span className="al-original-price-gray">${originalPriceVal.toFixed(2)}</span>
+            <span className="al-save-highlight">You save ${savingsVal} ({discountPct}%)</span>
           </div>
         </div>
 
-        {/* Offers Card */}
-        <div className="al-offers-card">
-          <div className="al-offers-header">
-            <Tag size={16} className="offers-tag-icon" />
-            <span className="offers-title">Offers</span>
+        {/* Delivery Box */}
+        <div className="al-delivery-card">
+          <div className="al-del-row-main">
+            <Truck size={17} className="al-del-icon" />
+            <div className="al-del-content">
+              <div>
+                <strong>FREE Delivery</strong> Tomorrow, Oct 24
+              </div>
+              <div className="al-del-timer">
+                Order within <strong>5 hrs 30 mins</strong>
+              </div>
+            </div>
           </div>
+
+          <div className="al-del-location-row">
+            <MapPin size={15} className="al-del-pin" />
+            <span className="al-del-location-link">Deliver to New York 10001</span>
+          </div>
+        </div>
+
+        {/* Stock Status */}
+        <div className="al-stock-status-line">
+          In Stock
+        </div>
+
+        {/* Color Selector */}
+        <div className="al-color-selector-section">
+          <div className="al-color-label-row">
+            <span className="al-color-label-title">Color:</span>
+            <span className="al-color-label-val">{selectedColor}</span>
+          </div>
+
+          <div className="al-color-thumbnails-row">
+            {colorOptions.map((opt) => (
+              <button
+                key={opt.name}
+                type="button"
+                className={`al-color-thumb-box ${selectedColor === opt.name ? "active" : ""}`}
+                onClick={() => setSelectedColor(opt.name)}
+                title={opt.name}
+              >
+                <img src={opt.img} alt={opt.name} className="al-color-thumb-img" />
+              </button>
+            ))}
+          </div>
+        </div>
+
+        {/* Available Offers */}
+        <div className="al-offers-card">
+          <h2 className="al-offers-heading">Available Offers</h2>
 
           <div className="al-offers-list">
             <div className="al-offer-item">
-              <CreditCard size={16} className="offer-icon" />
+              <Tag size={17} className="offer-tag-icon" />
               <div>
                 <strong className="offer-type">Bank Offer</strong>
-                <p className="offer-desc">5% Instant Discount on Al-Umaima Axis Bank Credit Card</p>
+                <p className="offer-desc">
+                  5% Unlimited Cashback on Al-Umaima Axis Bank Credit Card.
+                </p>
               </div>
             </div>
 
             <div className="al-offer-item">
-              <RefreshCw size={16} className="offer-icon" />
+              <CreditCard size={17} className="offer-card-icon" />
               <div>
                 <strong className="offer-type">No Cost EMI</strong>
                 <p className="offer-desc">
-                  EMI starts at ${(product.price / 6).toFixed(2)}/month. No Cost EMI available.
+                  Available on orders above $3,000.
                 </p>
               </div>
             </div>
@@ -157,7 +226,7 @@ export default function ProductInfo({ product }: ProductInfoProps) {
 
         {/* About this item */}
         <div className="al-about-item-section">
-          <h3 className="about-item-heading">About this item</h3>
+          <h2 className="about-item-heading">About this item</h2>
           <ul className="about-item-bullets">
             {bulletPoints.map((item, idx) => (
               <li key={idx} className="about-bullet-li">
@@ -168,29 +237,25 @@ export default function ProductInfo({ product }: ProductInfoProps) {
         </div>
       </div>
 
-      {/* Right Column: Checkout / Buy Box */}
+      {/* Right Column (Desktop Buy Box) */}
       <div className="al-right-buy-box">
         <div className="al-buy-box-card">
-          {/* Price */}
           <div className="buy-box-price">${product.price.toFixed(2)}</div>
 
-          {/* Delivery Details */}
           <div className="buy-box-delivery">
             <div className="delivery-free-line">
-              <strong>FREE delivery</strong> Tomorrow, Oct 25.
+              <strong>FREE delivery</strong> Tomorrow, Oct 24.
             </div>
             <div className="delivery-timer-line">
-              Order within <strong>4 hrs 38 mins.</strong>
+              Order within <strong>5 hrs 30 mins.</strong>
             </div>
           </div>
 
-          {/* In Stock */}
           <div className="buy-box-stock">
             <Check size={16} className="stock-check-icon" />
             <span className="stock-in-text">In Stock</span>
           </div>
 
-          {/* Quantity Selector */}
           <div className="buy-box-qty-row">
             <label htmlFor="qty-select" className="qty-label">Quantity:</label>
             <div className="qty-select-wrapper">
@@ -208,33 +273,22 @@ export default function ProductInfo({ product }: ProductInfoProps) {
             </div>
           </div>
 
-          {/* Add to Cart Button */}
           <button
             type="button"
             className={`buy-box-cart-btn ${isAdded ? "added" : ""}`}
             onClick={handleAddToCart}
           >
-            {isAdded ? (
-              <>
-                <Check size={17} /> Added to Cart
-              </>
-            ) : (
-              <>
-                <ShoppingCart size={17} /> Add to Cart
-              </>
-            )}
+            {isAdded ? "Added to Cart" : "Add to Cart"}
           </button>
 
-          {/* Buy Now Button */}
           <button
             type="button"
             className="buy-box-buy-now-btn"
             onClick={handleBuyNow}
           >
-            <Zap size={17} /> Buy Now
+            Buy Now
           </button>
 
-          {/* Trust Assurance List */}
           <div className="buy-box-trust-list">
             <div className="trust-list-item">
               <Lock size={15} className="trust-item-icon" />
@@ -254,7 +308,6 @@ export default function ProductInfo({ product }: ProductInfoProps) {
             </div>
           </div>
 
-          {/* Add to Wishlist Button */}
           <button
             type="button"
             className={`buy-box-wishlist-btn ${isWishlisted ? "wishlisted" : ""}`}
@@ -268,6 +321,25 @@ export default function ProductInfo({ product }: ProductInfoProps) {
             <span>{isWishlisted ? "In Wishlist" : "Add to Wishlist"}</span>
           </button>
         </div>
+      </div>
+
+      {/* Mobile Fixed Sticky Bottom Action Bar */}
+      <div className="al-mobile-bottom-actions">
+        <button
+          type="button"
+          className="al-mobile-add-cart-btn"
+          onClick={handleAddToCart}
+        >
+          {isAdded ? "Added" : "Add to Cart"}
+        </button>
+
+        <button
+          type="button"
+          className="al-mobile-buy-now-btn"
+          onClick={handleBuyNow}
+        >
+          Buy Now
+        </button>
       </div>
     </div>
   );

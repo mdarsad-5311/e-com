@@ -31,7 +31,7 @@ export default function Navbar() {
   const [isUserDropdownOpen, setIsUserDropdownOpen] = useState<boolean>(false);
   const [isLocationModalOpen, setIsLocationModalOpen] = useState<boolean>(false);
   const [selectedCategory, setSelectedCategory] = useState<string>("All");
-  const [locationText, setLocationText] = useState<string>("New York 10001");
+  const [locationText, setLocationText] = useState<string>("Dubai, UAE");
   const [pincodeInput, setPincodeInput] = useState<string>("");
   const [searchInput, setSearchInput] = useState<string>("");
 
@@ -73,15 +73,16 @@ export default function Navbar() {
   };
 
   const handleSelectCity = (cityName: string, code: string) => {
-    setLocationText(`${cityName} ${code}`);
+    setLocationText(`${cityName}, ${code}`);
     setIsLocationModalOpen(false);
   };
 
   const subNavLinks = [
-    { name: "Mobiles", href: "/category/electronics" },
+    { name: "Mobiles", href: "/category/mobiles" },
     { name: "Electronics", href: "/category/electronics" },
     { name: "Fashion", href: "/category/fashion" },
-    { name: "Home", href: "/" },
+    { name: "Home", href: "/category/home-living" },
+    { name: "Beauty", href: "/category/beauty" },
     { name: "Deals", href: "/products?featured=true" },
   ];
 
@@ -93,18 +94,30 @@ export default function Navbar() {
             Al-Umaima
           </Link>
           <div className="al-secure-badge">
-            <Lock size={15} className="al-lock-icon" />
-            <span>100% Secure Checkout</span>
+            <Lock size={16} className="al-lock-icon" />
+            <span>Secure Checkout</span>
           </div>
         </div>
       </header>
     );
   }
 
+  const searchPlaceholder = pathname.includes("electronics")
+    ? "Search Electronics..."
+    : pathname.includes("mobiles")
+    ? "Search Mobiles..."
+    : pathname.includes("fashion")
+    ? "Search Fashion..."
+    : pathname.includes("home")
+    ? "Search Home..."
+    : pathname.includes("beauty")
+    ? "Search Beauty..."
+    : "Search Electronics...";
+
   return (
     <header className="al-umaima-header">
-      {/* Tier 1: Utility Top Bar */}
-      <div className="utility-top-bar">
+      {/* Tier 1: Utility Top Bar (Desktop Only) */}
+      <div className="utility-top-bar desktop-only-bar">
         <div className="header-container utility-flex">
           {/* Deliver to location */}
           <button 
@@ -117,6 +130,7 @@ export default function Navbar() {
             <span className="deliver-text">
               Deliver to <span className="deliver-highlight">{locationText}</span>
             </span>
+            <ChevronDown size={11} className="pin-chevron" />
           </button>
 
           {/* Quick Utility Links */}
@@ -129,60 +143,51 @@ export default function Navbar() {
         </div>
       </div>
 
-      {/* Tier 2: Main Navigation & Search Row */}
-      <div className="main-nav-bar">
-        <div className="header-container main-nav-flex">
-          {/* Brand Logo */}
-          <div className="brand-logo-wrap">
+      {/* Main Header Container */}
+      <div className="header-container main-nav-wrap-box">
+        {/* Top Row on Mobile: Logo on Left, Cart on Right */}
+        <div className="main-nav-top-row">
+          <div className="brand-location-col">
             <Link href="/" className="brand-logo-link">
               <span className="brand-name-text">Al-Umaima</span>
             </Link>
+            <button 
+              type="button" 
+              className="mobile-deliver-btn desktop-only-bar" 
+              onClick={() => setIsLocationModalOpen(true)}
+              title="Choose delivery location"
+            >
+              <MapPin size={11} className="pin-icon-mobile" />
+              <span className="mobile-deliver-label">Deliver to Dubai, U...</span>
+              <ChevronDown size={10} className="pin-chevron-mobile" />
+            </button>
           </div>
 
-          {/* Center Search Bar with All dropdown + Input + Orange Button */}
-          <form className="nav-search-form" onSubmit={handleSearchSubmit}>
-            <div className="search-group">
-              <div className="search-select-wrap">
-                <select 
-                  className="search-cat-dropdown"
-                  value={selectedCategory}
-                  onChange={(e) => setSelectedCategory(e.target.value)}
-                  aria-label="Select category"
-                >
-                  <option value="All">All</option>
-                  <option value="electronics">Electronics</option>
-                  <option value="fashion">Fashion</option>
-                  <option value="home-living">Home & Living</option>
-                  <option value="accessories">Accessories</option>
-                </select>
-                <ChevronDown size={12} className="select-chevron" />
-              </div>
-
-              <input 
-                type="text"
-                placeholder="Search products, brands and more"
-                value={searchInput}
-                onChange={(e) => setSearchInput(e.target.value)}
-                className="search-input"
-              />
-
-              <button type="submit" className="search-submit-btn" aria-label="Search">
-                <Search size={18} strokeWidth={2.5} />
-              </button>
-            </div>
-          </form>
-
-          {/* Right Actions: Profile, Orders, Cart */}
+          {/* Right Action Icons */}
           <div className="header-actions">
-            {/* Profile Dropdown */}
+            {/* Cart Button */}
+            <button 
+              type="button" 
+              className="cart-action-btn nav-icon-link" 
+              onClick={openCart}
+              title="Shopping Cart"
+              aria-label="Cart"
+            >
+              <div className="cart-icon-container">
+                <ShoppingCart size={22} className="nav-top-icon" />
+              </div>
+            </button>
+
+            {/* Profile (Desktop) */}
             <div 
-              className="user-nav-wrap"
+              className="user-nav-wrap desktop-only-bar"
               onMouseEnter={() => setIsUserDropdownOpen(true)}
               onMouseLeave={() => setIsUserDropdownOpen(false)}
             >
-              <Link href={user ? "/profile" : "/login"} className="user-action-link nav-icon-link">
-                <User size={19} className="nav-top-icon" />
-                <span className="nav-top-label">{user ? user.name.split(" ")[0] : "Profile"}</span>
+              <Link href={user ? "/profile" : "/login"} className="user-action-link nav-icon-link" aria-label="Profile">
+                <div className="user-icon-circle">
+                  <User size={19} className="nav-top-icon" />
+                </div>
               </Link>
 
               {isUserDropdownOpen && (
@@ -218,42 +223,48 @@ export default function Navbar() {
                 </div>
               )}
             </div>
-
-            {/* Orders Link */}
-            <Link href="/orders" className="nav-icon-link" title="Your Orders">
-              <Truck size={19} className="nav-top-icon" />
-              <span className="nav-top-label">Orders</span>
-            </Link>
-
-            {/* Cart Button */}
-            <button 
-              type="button" 
-              className="cart-action-btn nav-icon-link" 
-              onClick={openCart}
-              title="Shopping Cart"
-            >
-              <div className="cart-icon-container">
-                <ShoppingCart size={20} className="nav-top-icon" />
-                <span className="cart-badge">{totalItemsCount > 0 ? totalItemsCount : 3}</span>
-              </div>
-              <span className="nav-top-label">Cart</span>
-            </button>
-
-            {/* Mobile Menu Toggle */}
-            <button 
-              type="button" 
-              className="mobile-nav-toggle"
-              onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-              aria-label="Toggle navigation menu"
-            >
-              {isMobileMenuOpen ? <X size={22} /> : <Menu size={22} />}
-            </button>
           </div>
+        </div>
+
+        {/* Row 2: Search Bar Row */}
+        <div className="main-search-row">
+          <form className="nav-search-form" onSubmit={handleSearchSubmit}>
+            <div className="search-group">
+              <div className="search-select-wrap">
+                <select 
+                  className="search-cat-dropdown"
+                  value={selectedCategory}
+                  onChange={(e) => setSelectedCategory(e.target.value)}
+                  aria-label="Select category"
+                >
+                  <option value="All">All</option>
+                  <option value="mobiles">Mobiles</option>
+                  <option value="electronics">Electronics</option>
+                  <option value="fashion">Fashion</option>
+                  <option value="home">Home</option>
+                  <option value="beauty">Beauty</option>
+                </select>
+                <ChevronDown size={12} className="select-chevron" />
+              </div>
+
+              <input 
+                type="text"
+                placeholder={searchPlaceholder}
+                value={searchInput}
+                onChange={(e) => setSearchInput(e.target.value)}
+                className="search-input"
+              />
+
+              <button type="submit" className="search-submit-btn" aria-label="Search">
+                <Search size={18} strokeWidth={2.5} color="#ffffff" />
+              </button>
+            </div>
+          </form>
         </div>
       </div>
 
-      {/* Tier 3: Sub-Navigation Bar */}
-      <nav className="sub-nav-bar">
+      {/* Tier 3: Sub-Navigation Bar (Desktop) */}
+      <nav className="sub-nav-bar desktop-sub-nav">
         <div className="header-container sub-nav-flex">
           <div className="sub-nav-links">
             {subNavLinks.map((item) => {

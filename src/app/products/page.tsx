@@ -12,6 +12,9 @@ function ProductsContent() {
   const initialCategory = searchParams.get("category") || "all";
   const initialQuery = searchParams.get("q") || "";
 
+  // Mobile filter drawer state
+  const [isMobileFilterOpen, setIsMobileFilterOpen] = useState(false);
+
   // Filter & Accordion States
   const [openSections, setOpenSections] = useState({
     category: true,
@@ -89,10 +92,12 @@ function ProductsContent() {
   }, [selectedCategory, initialQuery, selectedBrands, selectedPriceRange, selectedRatings, sortBy]);
 
   const availableBrands = [
-    { name: "Aura", count: 24 },
+    { name: "Sony", count: 12 },
+    { name: "JBL", count: 8 },
+    { name: "Keychron", count: 6 },
+    { name: "Apple", count: 14 },
+    { name: "AURA AUDIO", count: 24 },
     { name: "Pulse", count: 18 },
-    { name: "Vortex", count: 12 },
-    { name: "Sony", count: 8 },
   ];
 
   const currentCategoryObj = categories.find((c) => c.slug === selectedCategory);
@@ -102,10 +107,43 @@ function ProductsContent() {
 
   return (
     <div className="al-catalog-page">
+      {/* Mobile Top Sub-Toolbar: Filter on Left, Sort on Right (Matching Reference Screenshot) */}
+      <div className="al-mobile-filter-toolbar">
+        <div className="container al-mobile-toolbar-flex">
+          <button
+            type="button"
+            className="al-mobile-filter-trigger"
+            onClick={() => setIsMobileFilterOpen(true)}
+            aria-label="Filter products"
+          >
+            <span style={{ display: "inline-flex", alignItems: "center", gap: "6px" }}>
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><line x1="4" x2="20" y1="21" y2="21"/><line x1="4" x2="20" y1="14" y2="14"/><line x1="4" x2="20" y1="7" y2="7"/><circle cx="8" cy="7" r="2"/><circle cx="16" cy="14" r="2"/><circle cx="10" cy="21" r="2"/></svg>
+              Filter
+            </span>
+          </button>
+
+          <div className="al-mobile-sort-wrap">
+            <span className="al-sort-prefix">Sort</span>
+            <select
+              value={sortBy}
+              onChange={(e) => setSortBy(e.target.value)}
+              className="al-mobile-sort-select"
+              aria-label="Sort products"
+            >
+              <option value="featured">Featured</option>
+              <option value="price-low">Price: Low to High</option>
+              <option value="price-high">Price: High to Low</option>
+              <option value="rating">Highest Rated</option>
+            </select>
+            <ChevronDown size={14} className="al-sort-chevron" />
+          </div>
+        </div>
+      </div>
+
       <div className="container">
         <div className="al-catalog-layout">
           {/* Left Sidebar Filters */}
-          <aside className="al-filter-sidebar">
+          <aside className="al-filter-sidebar desktop-filter-sidebar">
             <div className="al-filter-top-row">
               <span className="al-filter-heading">Filters</span>
               <button onClick={handleClearAll} className="al-clear-all-btn">

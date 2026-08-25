@@ -1,7 +1,50 @@
 import "@/styles/globals.css";
+import "@/styles/auth.css";
+import "@/styles/navbar.css";
+import "@/styles/footer.css";
+import "@/styles/hero-banner.css";
+import "@/styles/categories.css";
+import "@/styles/deal-of-the-day.css";
+import "@/styles/product-card.css";
+import "@/styles/featured-products.css";
+import "@/styles/best-sellers.css";
+import "@/styles/brand-trust.css";
+import "@/styles/customer-testimonials.css";
+import "@/styles/vip-perks.css";
+import "@/styles/promo-banners.css";
+import "@/styles/quick-view-modal.css";
+import "@/styles/cart-drawer.css";
+import "@/styles/toast-viewport.css";
+import "@/styles/search-bar.css";
+import "@/styles/category-page.css";
+import "@/styles/product-info.css";
+import "@/styles/product-gallery.css";
+import "@/styles/product-reviews.css";
+import "@/styles/order-summary.css";
+import "@/styles/orders-page.css";
+import "@/styles/profile.css";
+import "@/styles/breadcrumbs.css";
+import "@/styles/skeleton-card.css";
+import "@/styles/recently-viewed.css";
+import "@/styles/cart-page.css";
+import "@/styles/cart-item.css";
+import "@/styles/bottom-nav.css";
+import "@/styles/checkout.css";
+import "@/styles/wishlist.css";
+import "@/styles/track-order.css";
+import "@/styles/faq.css";
+import "@/styles/admin.css";
+
 import AppProviders from "@/components/AppProviders";
 import { Metadata } from "next";
 import { ReactNode } from "react";
+import { Inter } from "next/font/google";
+
+const inter = Inter({
+  subsets: ["latin"],
+  weight: ["300", "400", "500", "600", "700", "800", "900"],
+  display: "swap",
+});
 
 export const metadata: Metadata = {
   title: {
@@ -47,7 +90,7 @@ interface RootLayoutProps {
 export default function RootLayout({ children }: RootLayoutProps) {
   return (
     <html lang="en">
-      <body>
+      <body className={inter.className}>
         <AppProviders>{children}</AppProviders>
       </body>
     </html>

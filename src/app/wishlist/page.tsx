@@ -6,6 +6,7 @@ import { useWishlist } from "@/context/WishlistContext";
 import { useCart } from "@/context/CartContext";
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
+import "@/styles/wishlist.css";
 
 export default function WishlistPage() {
   const { wishlist, removeFromWishlist } = useWishlist();
@@ -64,9 +65,9 @@ export default function WishlistPage() {
                   </Link>
 
                   <div className="wishlist-price-row">
-                    <span className="current-price">${product.price.toFixed(2)}</span>
+                    <span className="current-price">AED {product.price.toLocaleString()}</span>
                     {product.originalPrice && (
-                      <span className="old-price">${product.originalPrice.toFixed(2)}</span>
+                      <span className="old-price">AED {product.originalPrice.toLocaleString()}</span>
                     )}
                   </div>
 
@@ -101,141 +102,6 @@ export default function WishlistPage() {
           </Link>
         </div>
       )}
-
-      <style jsx>{`
-        .wishlist-page-header {
-          margin-bottom: 2.5rem;
-        }
-
-        .wishlist-grid {
-          display: grid;
-          grid-template-columns: repeat(4, 1fr);
-          gap: 1.75rem;
-        }
-
-        @media (max-width: 1200px) { .wishlist-grid { grid-template-columns: repeat(3, 1fr); } }
-        @media (max-width: 868px) { .wishlist-grid { grid-template-columns: repeat(2, 1fr); } }
-        @media (max-width: 580px) { .wishlist-grid { grid-template-columns: 1fr; } }
-
-        .wishlist-card {
-          position: relative;
-          background: #FFFFFF;
-          border-radius: 20px;
-          border: 1px solid var(--borders);
-          box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
-          padding: 1.25rem;
-          display: flex;
-          flex-direction: column;
-          overflow: hidden;
-        }
-
-        .remove-wishlist-btn {
-          position: absolute;
-          top: 1.5rem;
-          right: 1.5rem;
-          width: 34px;
-          height: 34px;
-          border-radius: 50%;
-          background: #FFFFFF;
-          border: 1px solid var(--borders);
-          color: var(--text-muted);
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          z-index: 2;
-          transition: all 0.2s ease;
-        }
-
-        .remove-wishlist-btn:hover {
-          color: var(--danger);
-          border-color: var(--danger);
-        }
-
-        .wishlist-img-frame {
-          width: 100%;
-          height: 200px;
-          border-radius: 14px;
-          overflow: hidden;
-          background: #F8FAFC;
-        }
-
-        .wishlist-img {
-          width: 100%;
-          height: 100%;
-          object-fit: cover;
-        }
-
-        .wishlist-card-content {
-          margin-top: 1rem;
-          display: flex;
-          flex-direction: column;
-          flex: 1;
-        }
-
-        .wishlist-cat {
-          font-size: 0.72rem;
-          font-weight: 800;
-          color: var(--primary);
-          text-transform: uppercase;
-        }
-
-        .wishlist-title {
-          font-size: 1rem;
-          font-weight: 800;
-          color: var(--text);
-          margin: 0.3rem 0 0.6rem;
-          display: -webkit-box;
-          -webkit-line-clamp: 2;
-          -webkit-box-orient: vertical;
-          overflow: hidden;
-        }
-
-        .wishlist-price-row {
-          display: flex;
-          align-items: baseline;
-          gap: 0.5rem;
-          margin-bottom: 1rem;
-        }
-
-        .current-price { font-size: 1.35rem; font-weight: 900; color: var(--text); }
-        .old-price { font-size: 0.85rem; color: var(--text-muted); text-decoration: line-through; }
-
-        .move-cart-btn {
-          width: 100%;
-          height: 44px;
-          border-radius: 12px;
-          margin-top: auto;
-          font-size: 0.875rem;
-        }
-
-        .move-cart-btn.moved {
-          background: var(--success);
-        }
-
-        .empty-wishlist-card {
-          background: #FFFFFF;
-          border-radius: 24px;
-          border: 1px solid var(--borders);
-          padding: 4rem 2rem;
-          text-align: center;
-          max-width: 500px;
-          margin: 2rem auto;
-          display: flex;
-          flex-direction: column;
-          align-items: center;
-          gap: 1rem;
-        }
-
-        .heart-icon-wrapper {
-          width: 80px;
-          height: 80px;
-          border-radius: 50%;
-          background: var(--danger-light);
-          display: flex;
-          align-items: center;
-          justify-content: center;
-        }
-      `}</style>
     </div>
   );
 }

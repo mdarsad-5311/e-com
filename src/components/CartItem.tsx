@@ -33,9 +33,9 @@ export default function CartItem({ item, isSavedItem = false }: CartItemProps) {
             <h3 className="al-cart-item-title">{product.title}</h3>
           </Link>
           <div className="al-cart-price-block">
-            <span className="al-cart-curr-price">${product.price.toFixed(2)}</span>
+            <span className="al-cart-curr-price">AED {product.price.toLocaleString()}</span>
             {product.originalPrice && product.originalPrice > product.price && (
-              <s className="al-cart-orig-price">${product.originalPrice.toFixed(2)}</s>
+              <s className="al-cart-orig-price">AED {product.originalPrice.toLocaleString()}</s>
             )}
           </div>
         </div>
