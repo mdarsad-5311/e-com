@@ -44,6 +44,141 @@
   font-weight: 800;
 }
 
+.al-summary-value.al-val-green {
+  color: #16A34A;
+  font-weight: 800;
+}
+
+.al-discount-row {
+  background: #F0FDF4;
+  padding: 0.35rem 0.65rem;
+  border-radius: 6px;
+  border: 1px dashed #86EFAC;
+}
+
+/* Promo Code Section */
+.al-promo-section {
+  margin-top: 1rem;
+}
+
+.al-promo-form {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.al-promo-input-wrap {
+  position: relative;
+  flex: 1;
+  display: flex;
+  align-items: center;
+}
+
+.al-promo-icon {
+  position: absolute;
+  left: 10px;
+  color: #94A3B8;
+}
+
+.al-promo-input {
+  width: 100%;
+  height: 38px;
+  background-color: #F8FAFC;
+  border: 1px solid #E2E8F0;
+  border-radius: 6px;
+  padding: 0 0.75rem 0 2.1rem;
+  font-size: 0.85rem;
+  color: #0C2340;
+  text-transform: uppercase;
+  font-weight: 600;
+  outline: none;
+  transition: all 0.15s ease;
+}
+
+.al-promo-input:focus {
+  border-color: #0C2340;
+  background-color: #FFFFFF;
+}
+
+.al-promo-btn {
+  height: 38px;
+  padding: 0 1rem;
+  background-color: #0C2340;
+  color: #FFFFFF;
+  border: none;
+  border-radius: 6px;
+  font-size: 0.825rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: background-color 0.15s ease;
+}
+
+.al-promo-btn:hover {
+  background-color: #07172B;
+}
+
+.al-applied-coupon-pill {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: #F0FDF4;
+  border: 1px solid #BBF7D0;
+  border-radius: 8px;
+  padding: 0.6rem 0.85rem;
+}
+
+.al-coupon-pill-left {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+}
+
+.al-coupon-tag-icon {
+  color: #16A34A;
+}
+
+.al-applied-coupon-pill strong {
+  font-size: 0.85rem;
+  color: #15803D;
+  display: block;
+}
+
+.al-applied-coupon-pill p {
+  font-size: 0.72rem;
+  color: #166534;
+  margin: 0;
+}
+
+.al-coupon-remove-btn {
+  background: none;
+  border: none;
+  color: #94A3B8;
+  cursor: pointer;
+  padding: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 4px;
+}
+
+.al-coupon-remove-btn:hover {
+  background: #DCFCE7;
+  color: #DC2626;
+}
+
+.al-coupon-msg-error {
+  font-size: 0.75rem;
+  color: #DC2626;
+  margin-top: 0.35rem;
+  font-weight: 500;
+}
+
+.al-coupon-msg-success {
+  font-size: 0.75rem;
+  color: #16A34A;
+  margin-top: 0.35rem;
+  font-weight: 500;
+}
+
 .al-summary-divider {
   height: 1px;
   background-color: #f1f5f9;

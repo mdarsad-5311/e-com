@@ -46,19 +46,85 @@
   flex-direction: column;
 }
 
-/* Title */
+/* Title & Share Row */
+.al-detail-title-share-row {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
 .al-detail-product-title {
   font-size: 1.85rem;
   font-weight: 800;
-  color: #0C2340;
+  color: #001A33;
   line-height: 1.25;
   letter-spacing: -0.02em;
   margin-bottom: 0.5rem;
+  flex: 1;
 }
 
-/* Inline description shown below title (Attachment 1 mobile style) */
+.al-share-btn {
+  background: #F1F5F9;
+  border: 1px solid #E2E8F0;
+  border-radius: 50%;
+  width: 38px;
+  height: 38px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #475569;
+  cursor: pointer;
+  flex-shrink: 0;
+  transition: all 0.15s ease;
+}
+
+.al-share-btn:hover {
+  background: #E2E8F0;
+  color: #001A33;
+}
+
+/* Scarcity & Inventory Urgency Box */
+.al-scarcity-urgency-box {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  background: #FFF7ED;
+  border: 1px solid #FFEDD5;
+  border-radius: 8px;
+  padding: 0.55rem 0.85rem;
+  font-size: 0.825rem;
+  color: #9A3412;
+  margin-bottom: 0.85rem;
+}
+
+.al-flame-icon {
+  color: #EA580C;
+  flex-shrink: 0;
+}
+
+/* Size Guide Trigger Button */
+.al-size-guide-trigger {
+  background: none;
+  border: none;
+  color: #FF7A00;
+  font-size: 0.825rem;
+  font-weight: 700;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  cursor: pointer;
+  text-decoration: underline;
+  padding: 0;
+}
+
+.al-size-guide-trigger:hover {
+  color: #E06A00;
+}
+
+/* Inline description shown below title */
 .al-detail-inline-desc {
-  font-size: 0.85rem;
+  font-size: 0.88rem;
   line-height: 1.55;
   color: #475569;
   margin-bottom: 0.75rem;
@@ -369,6 +435,92 @@
   cursor: pointer;
 }
 
+/* Guarantees Row */
+.al-detail-guarantees-row {
+  display: flex;
+  gap: 0.75rem;
+  margin-bottom: 1.5rem;
+  flex-wrap: wrap;
+}
+
+.al-guarantee-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  background: #F8FAFC;
+  border: 1px solid #E2E8F0;
+  border-radius: 6px;
+  padding: 0.45rem 0.75rem;
+  font-size: 0.78rem;
+  font-weight: 600;
+  color: #334155;
+}
+
+.al-guarantee-icon {
+  color: #10B981;
+  flex-shrink: 0;
+}
+
+/* Mobile Sticky Floating Purchase Bar (Single Full-width) */
+.al-mobile-sticky-action-bar--single {
+  display: none;
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background-color: #ffffff;
+  border-top: 1px solid #e2e8f0;
+  padding: 0.75rem 1.25rem;
+  z-index: 1000;
+  box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.08);
+  align-items: center;
+  gap: 1rem;
+}
+
+.al-mobile-sticky-info {
+  display: flex;
+  flex-direction: column;
+}
+
+.al-mobile-sticky-price {
+  font-size: 1.15rem;
+  font-weight: 800;
+  color: #001A33;
+}
+
+.al-mobile-sticky-variant {
+  font-size: 0.72rem;
+  color: #64748B;
+  font-weight: 500;
+}
+
+.al-mobile-btn-add-full {
+  flex: 1;
+  height: 46px;
+  background-color: #FF7A00;
+  color: #ffffff;
+  border: none;
+  border-radius: 8px;
+  font-size: 0.95rem;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  cursor: pointer;
+  box-shadow: 0 4px 12px rgba(255, 122, 0, 0.3);
+  transition: all 0.15s ease;
+}
+
+.al-mobile-btn-add-full:hover {
+  background-color: #E06A00;
+}
+
+.al-mobile-btn-add-full.added {
+  background-color: #10B981;
+  box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3);
+}
+
 @media (max-width: 768px) {
   .al-product-detail-grid {
     grid-template-columns: 1fr;
@@ -377,7 +529,7 @@
   .al-detail-desktop-cta {
     display: none;
   }
-  .al-mobile-sticky-action-bar {
+  .al-mobile-sticky-action-bar--single {
     display: flex;
   }
   .al-detail-product-title {
@@ -388,5 +540,8 @@
   }
   .al-detail-breadcrumbs {
     display: none;
+  }
+  .al-product-detail-page {
+    padding-bottom: 6.5rem;
   }
 }

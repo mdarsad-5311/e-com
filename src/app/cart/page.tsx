@@ -1,14 +1,20 @@
 "use client";
 
 import Link from "next/link";
-import { ChevronRight, ShoppingBag, ArrowLeft, Trash2 } from "lucide-react";
+import { ChevronRight, ShoppingBag, ArrowLeft, Trash2, Truck, CheckCircle2 } from "lucide-react";
 import { useCart } from "@/context/CartContext";
 import CartItem from "@/components/CartItem";
 import OrderSummary from "@/components/OrderSummary";
 import "@/styles/cart-page.css";
 
+const FREE_SHIPPING_THRESHOLD = 150;
+
 export default function CartPage() {
   const { cart, savedForLater, clearCart, totalItemsCount, subtotal } = useCart();
+
+  const remainingForFreeShipping = Math.max(0, FREE_SHIPPING_THRESHOLD - subtotal);
+  const progressPct = Math.min(100, Math.round((subtotal / FREE_SHIPPING_THRESHOLD) * 100));
+  const isFreeShippingUnlocked = subtotal >= FREE_SHIPPING_THRESHOLD;
 
   return (
     <div className="al-cart-page-wrapper">
@@ -28,6 +34,31 @@ export default function CartPage() {
             </button>
           )}
         </div>
+
+        {/* Dynamic Free Shipping Progress Card */}
+        {cart.length > 0 && (
+          <div className={`al-cart-shipping-card ${isFreeShippingUnlocked ? "unlocked" : ""}`}>
+            <div className="al-cart-shipping-info">
+              {isFreeShippingUnlocked ? (
+                <div className="al-cart-shipping-badge-unlocked">
+                  <CheckCircle2 size={18} />
+                  <span>Congratulations! You qualify for <strong>FREE Express Delivery</strong>.</span>
+                </div>
+              ) : (
+                <div className="al-cart-shipping-badge-locked">
+                  <Truck size={18} />
+                  <span>Add <strong>${remainingForFreeShipping.toFixed(2)}</strong> more to unlock <strong>FREE Express Delivery</strong>!</span>
+                </div>
+              )}
+            </div>
+            <div className="al-cart-progress-track" role="progressbar" aria-valuenow={progressPct} aria-valuemin={0} aria-valuemax={100}>
+              <div
+                className={`al-cart-progress-bar ${isFreeShippingUnlocked ? "unlocked" : ""}`}
+                style={{ width: `${progressPct}%` }}
+              />
+            </div>
+          </div>
+        )}
 
         {/* Cart Main Content Grid */}
         {cart.length > 0 || savedForLater.length > 0 ? (

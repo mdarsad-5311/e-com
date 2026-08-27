@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { ArrowLeft, Share2, Heart, ShieldCheck, Award } from "lucide-react";
 import { useWishlist } from "@/context/WishlistContext";
@@ -15,7 +16,7 @@ interface ProductGalleryProps {
   product?: Product;
 }
 
-const MAX_THUMBS = 3; // show 3 thumbnails, then "+N" pill
+const MAX_THUMBS = 4;
 
 export default function ProductGallery({ images, title, product }: ProductGalleryProps) {
   const router = useRouter();
@@ -46,7 +47,6 @@ export default function ProductGallery({ images, title, product }: ProductGaller
     }
   };
 
-  // Thumbnails: show MAX_THUMBS, then overflow pill
   const visibleThumbs = galleryList.slice(0, MAX_THUMBS);
   const extraCount = galleryList.length > MAX_THUMBS ? galleryList.length - MAX_THUMBS : 0;
 
@@ -105,18 +105,21 @@ export default function ProductGallery({ images, title, product }: ProductGaller
         )}
 
         {/* When only assured (no bestseller) */}
-        {!isBestSeller && !isAssured && (
+        {!isBestSeller && isAssured && (
           <div className="al-gallery-assured-badge">
             <ShieldCheck size={14} className="al-assured-badge-icon" />
             <span>Al-Umaima Assured</span>
           </div>
         )}
 
-        {/* Product Image */}
+        {/* Product Image with Next/Image */}
         <div className="al-main-img-frame">
-          <img
+          <Image
             src={galleryList[activeImageIndex]}
-            alt={title}
+            alt={`${title} - Showcase view`}
+            width={650}
+            height={650}
+            priority
             className="al-main-img"
           />
         </div>
@@ -145,7 +148,13 @@ export default function ProductGallery({ images, title, product }: ProductGaller
             onClick={() => setActiveImageIndex(idx)}
             aria-label={`View image ${idx + 1}`}
           >
-            <img src={img} alt={`${title} view ${idx + 1}`} />
+            <Image
+              src={img}
+              alt={`${title} thumbnail ${idx + 1}`}
+              width={70}
+              height={70}
+              className="al-gallery-thumb-img"
+            />
           </button>
         ))}
         {extraCount > 0 && (

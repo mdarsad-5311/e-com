@@ -7,6 +7,7 @@ import { WishlistProvider } from "@/context/WishlistContext";
 import { ToastProvider } from "@/context/ToastContext";
 import { UIProvider } from "@/context/UIContext";
 import { RecentlyViewedProvider } from "@/context/RecentlyViewedContext";
+import { CouponProvider } from "@/context/CouponContext";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import BottomNav from "@/components/BottomNav";
@@ -20,8 +21,9 @@ export default function AppProviders({ children }: { children: ReactNode }) {
       <ToastProvider>
         <UIProvider>
           <CartProvider>
-            <WishlistProvider>
-              <RecentlyViewedProvider>
+            <CouponProvider>
+              <WishlistProvider>
+                <RecentlyViewedProvider>
                 <Navbar />
                 <main className="main-content">{children}</main>
                 <Footer />
@@ -30,7 +32,8 @@ export default function AppProviders({ children }: { children: ReactNode }) {
                 <QuickViewModal />
                 <ToastViewport />
               </RecentlyViewedProvider>
-            </WishlistProvider>
+              </WishlistProvider>
+            </CouponProvider>
           </CartProvider>
         </UIProvider>
       </ToastProvider>

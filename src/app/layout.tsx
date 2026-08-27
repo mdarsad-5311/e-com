@@ -43,6 +43,9 @@ import "@/styles/electronics-page.css";
 import "@/styles/saved-addresses.css";
 import "@/styles/payment-methods.css";
 import "@/styles/trending-now.css";
+import "@/styles/size-guide-modal.css";
+import "@/styles/pincode-checker.css";
+import "@/styles/frequently-bought.css";
 
 
 

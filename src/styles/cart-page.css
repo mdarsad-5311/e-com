@@ -46,6 +46,69 @@
   color: #DC2626;
 }
 
+/* Shipping Progress Card */
+.al-cart-shipping-card {
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 12px;
+  padding: 1.25rem 1.5rem;
+  margin-bottom: 2rem;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.03);
+  transition: all 0.3s ease;
+}
+
+.al-cart-shipping-card.unlocked {
+  background: #f0fdf4;
+  border-color: #bbf7d0;
+}
+
+.al-cart-shipping-info {
+  margin-bottom: 0.75rem;
+}
+
+.al-cart-shipping-badge-locked {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  font-size: 0.95rem;
+  color: #334155;
+}
+
+.al-cart-shipping-badge-locked svg {
+  color: #FF7A00;
+}
+
+.al-cart-shipping-badge-unlocked {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  font-size: 0.95rem;
+  color: #15803d;
+  font-weight: 600;
+}
+
+.al-cart-shipping-badge-unlocked svg {
+  color: #16a34a;
+}
+
+.al-cart-progress-track {
+  height: 8px;
+  background-color: #e2e8f0;
+  border-radius: 99px;
+  overflow: hidden;
+}
+
+.al-cart-progress-bar {
+  height: 100%;
+  background: linear-gradient(90deg, #FF7A00, #F59E0B);
+  border-radius: 99px;
+  transition: width 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.al-cart-progress-bar.unlocked {
+  background: linear-gradient(90deg, #10B981, #059669);
+}
+
 /* 2-Column Cart Grid */
 .al-cart-grid {
   display: grid;

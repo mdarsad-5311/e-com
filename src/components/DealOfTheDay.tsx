@@ -1,8 +1,9 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import Image from "next/image";
 import Link from "next/link";
-import { Clock, ShieldCheck, ShoppingCart } from "lucide-react";
+import { Clock, ShieldCheck, ShoppingCart, Check } from "lucide-react";
 import { products } from "@/data/products";
 import { useCart } from "@/context/CartContext";
 import { useToast } from "@/context/ToastContext";
@@ -78,14 +79,16 @@ export default function DealOfTheDay() {
           <div className="al-deal-media-panel">
             <span className="al-deal-discount-tag">-30% OFF</span>
             <div className="al-deal-image-wrap">
-              <img
+              <Image
                 src="https://images.unsplash.com/photo-1546435770-a3e426bf472b?auto=format&fit=crop&w=1000&q=80"
                 alt="AuraSync Pro Wireless Headphones"
+                width={540}
+                height={380}
                 className="al-deal-product-image"
               />
             </div>
             <div className="al-deal-image-caption">
-              <span className="al-caption-brand">AL-UMAIMA | PREMIUM ONLINE SHOPPING</span>
+              <span className="al-caption-brand">AL-UMAIMA | PREMIUM AUDIO</span>
               <span className="al-caption-model">AURA P1 Wireless Headphones</span>
             </div>
           </div>
@@ -103,7 +106,7 @@ export default function DealOfTheDay() {
 
             {/* Product Description */}
             <p className="al-deal-item-desc">
-              Active noise cancellation, 40-hour battery life, and studio-grade sound in a sleek, ergonomic design.
+              Active noise cancellation, 40-hour battery life, and studio-grade sound in a sleek, ergonomic titanium frame.
             </p>
 
             {/* Pricing */}
@@ -118,8 +121,17 @@ export default function DealOfTheDay() {
               className={`al-deal-cart-btn ${isAdded ? "added" : ""}`}
               onClick={handleAddToCart}
             >
-              <ShoppingCart size={18} />
-              <span>{isAdded ? "Added to Cart" : "Add to Cart"}</span>
+              {isAdded ? (
+                <>
+                  <Check size={18} />
+                  <span>Added to Cart!</span>
+                </>
+              ) : (
+                <>
+                  <ShoppingCart size={18} />
+                  <span>Add to Cart</span>
+                </>
+              )}
             </button>
           </div>
         </div>

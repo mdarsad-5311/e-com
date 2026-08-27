@@ -54,6 +54,21 @@
   align-items: flex-start;
 }
 
+.al-hero-top-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  background: rgba(255, 140, 0, 0.15);
+  border: 1px solid rgba(255, 140, 0, 0.4);
+  color: #FF8C00;
+  font-size: 0.78rem;
+  font-weight: 700;
+  padding: 0.3rem 0.75rem;
+  border-radius: 99px;
+  margin-bottom: 1rem;
+  backdrop-filter: blur(4px);
+}
+
 .al-hero-heading {
   font-size: clamp(2.4rem, 4.2vw, 3.4rem);
   font-weight: 900;

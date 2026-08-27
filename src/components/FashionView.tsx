@@ -10,6 +10,7 @@ import {
   Plus
 } from "lucide-react";
 import { Product } from "@/data/products";
+import ProductCard from "@/components/ProductCard";
 import { useWishlist } from "@/context/WishlistContext";
 import { useCart } from "@/context/CartContext";
 import "@/styles/fashion-page.css";
@@ -37,7 +38,7 @@ export default function FashionView({ products }: FashionViewProps) {
     addToCart(product);
   };
 
-  // Curated Fashion Products from Attachment
+  // Curated Fashion Products
   const latestArrivalsData: Product[] = useMemo(() => {
     const defaultFashionProducts: Product[] = [
       {
@@ -46,7 +47,7 @@ export default function FashionView({ products }: FashionViewProps) {
         slug: "technical-shell-jacket",
         category: "fashion",
         categoryName: "Fashion",
-        subCategory: "Outerwear",
+        subCategory: "Jackets",
         price: 189.00,
         rating: 4.9,
         reviewsCount: 92,
@@ -68,7 +69,7 @@ export default function FashionView({ products }: FashionViewProps) {
         slug: "structured-crossbody",
         category: "fashion",
         categoryName: "Fashion",
-        subCategory: "Accessories",
+        subCategory: "Bags",
         price: 145.00,
         rating: 4.8,
         reviewsCount: 78,
@@ -136,19 +137,46 @@ export default function FashionView({ products }: FashionViewProps) {
   }, [products]);
 
   // Featured product (the cashmere turtleneck — used in the horizontal featured card)
-  const featuredProduct = latestArrivalsData.find(p => p.subCategory === "Knitwear") || latestArrivalsData[2];
+  const featuredProduct = useMemo(() => {
+    return latestArrivalsData.find(p => {
+      const sub = (p.subCategory || "").toLowerCase();
+      const title = (p.title || "").toLowerCase();
+      return sub.includes("knit") || title.includes("cashmere") || title.includes("turtleneck");
+    }) || latestArrivalsData[2] || latestArrivalsData[0];
+  }, [latestArrivalsData]);
 
-  // Grid products (first 2 for the 2-col grid)
+  // Filtered Grid products based on active category tab
   const gridProducts = useMemo(() => {
-    const filtered = activeTab === "All"
-      ? latestArrivalsData
-      : latestArrivalsData.filter(p => p.subCategory === activeTab);
-    return filtered.slice(0, 2);
+    if (activeTab === "All") {
+      return latestArrivalsData.slice(0, 2);
+    }
+    const filtered = latestArrivalsData.filter(p => {
+      const sub = (p.subCategory || "").toLowerCase();
+      const title = (p.title || "").toLowerCase();
+      if (activeTab === "Jackets") {
+        return sub === "jackets" || sub === "outerwear" || title.includes("jacket");
+      }
+      if (activeTab === "Knitwear") {
+        return sub === "knitwear" || title.includes("turtleneck") || title.includes("knit") || title.includes("sweater");
+      }
+      if (activeTab === "Accessories") {
+        return sub === "accessories" || sub === "bags" || title.includes("bag") || title.includes("crossbody");
+      }
+      if (activeTab === "Footwear") {
+        return sub === "footwear" || title.includes("boot") || title.includes("shoe");
+      }
+      if (activeTab === "Bags") {
+        return sub === "bags" || title.includes("bag") || title.includes("crossbody");
+      }
+      return sub === activeTab.toLowerCase();
+    });
+
+    return filtered.length > 0 ? filtered.slice(0, 2) : latestArrivalsData.slice(0, 2);
   }, [latestArrivalsData, activeTab]);
 
   return (
     <div className="al-fashion-page-wrapper">
-      {/* 1. HERO BANNER — Full-width mobile-first */}
+      {/* 1. HERO BANNER — Full-width background image with aligned content */}
       <section className="al-fashion-hero al-fashion-hero--mobile">
         <img
           src="https://images.unsplash.com/photo-1551028719-00167b16eac5?auto=format&fit=crop&w=1200&q=80"
@@ -156,33 +184,37 @@ export default function FashionView({ products }: FashionViewProps) {
           className="al-fashion-hero-bg-img"
         />
         <div className="al-fashion-hero-overlay" />
-        <div className="al-fashion-hero-mobile-content">
-          <span className="al-fashion-hero-tag">NEW SEASON</span>
-          <h1 className="al-fashion-hero-title">
-            The Icon<br />Redefined
-          </h1>
-          <p className="al-fashion-hero-desc">
-            Elevate your everyday with premium materials and precision tailoring.
-          </p>
-          <a href="#latest-arrivals" className="al-btn-hero-collection">
-            Shop The Collection <ArrowRight size={16} />
-          </a>
+        <div className="header-container al-fashion-hero-container">
+          <div className="al-fashion-hero-mobile-content">
+            <span className="al-fashion-hero-tag">NEW SEASON</span>
+            <h1 className="al-fashion-hero-title">
+              The Icon<br />Redefined
+            </h1>
+            <p className="al-fashion-hero-desc">
+              Elevate your everyday with premium materials and precision tailoring.
+            </p>
+            <a href="#latest-arrivals" className="al-btn-hero-collection">
+              Shop The Collection <ArrowRight size={16} />
+            </a>
+          </div>
         </div>
       </section>
 
       {/* 2. CATEGORY FILTER TABS — Scrollable horizontal pills */}
       <nav className="al-fashion-cat-tabs" aria-label="Category filter">
-        <div className="al-fashion-cat-tabs-inner">
-          {CATEGORY_TABS.map(tab => (
-            <button
-              key={tab}
-              type="button"
-              className={`al-fashion-cat-tab ${activeTab === tab ? "active" : ""}`}
-              onClick={() => setActiveTab(tab)}
-            >
-              {tab}
-            </button>
-          ))}
+        <div className="header-container">
+          <div className="al-fashion-cat-tabs-inner">
+            {CATEGORY_TABS.map(tab => (
+              <button
+                key={tab}
+                type="button"
+                className={`al-fashion-cat-tab ${activeTab === tab ? "active" : ""}`}
+                onClick={() => setActiveTab(tab)}
+              >
+                {tab}
+              </button>
+            ))}
+          </div>
         </div>
       </nav>
 
@@ -197,47 +229,11 @@ export default function FashionView({ products }: FashionViewProps) {
             </Link>
           </div>
 
-          {/* 2-Column Product Grid */}
-          <div className="al-fashion-products-grid-2col">
-            {gridProducts.map((product) => {
-              const isWish = isInWishlist(product.id);
-              return (
-                <div key={product.id} className="al-fashion-product-card">
-                  <div className="al-product-card-img-wrap">
-                    <Link href={`/products/${product.slug || product.id}`}>
-                      <img
-                        src={product.image}
-                        alt={product.title}
-                        className="al-product-card-img"
-                      />
-                    </Link>
-                    <button
-                      type="button"
-                      onClick={(e) => handleWishlistClick(e, product)}
-                      className={`al-card-wishlist-btn ${isWish ? "active" : ""}`}
-                      aria-label="Add to wishlist"
-                    >
-                      <Heart size={15} fill={isWish ? "#e11d48" : "none"} />
-                    </button>
-                  </div>
-                  <div className="al-product-card-info">
-                    <span className="al-fashion-card-subcategory">{product.subCategory}</span>
-                    <Link
-                      href={`/products/${product.slug || product.id}`}
-                      className="al-fashion-card-title"
-                    >
-                      {product.title}
-                    </Link>
-                    <div className="al-fashion-card-bottom-row">
-                      <span className="al-fashion-card-price">${product.price.toFixed(2)}</span>
-                      <span className="al-fashion-card-assured-icon" title="Al-Umaima Assured">
-                        <ShieldCheck size={14} />
-                      </span>
-                    </div>
-                  </div>
-                </div>
-              );
-            })}
+          {/* Product Grid */}
+          <div className="al-products-grid">
+            {gridProducts.map((product) => (
+              <ProductCard key={product.id} product={product} />
+            ))}
           </div>
 
           {/* Featured Product Card — horizontal layout */}
@@ -317,11 +313,11 @@ export default function FashionView({ products }: FashionViewProps) {
               <div className="al-bento-left-content">
                 <span className="al-bento-trending-pill">Trending</span>
                 <h3 className="al-bento-main-title">Urban Utility</h3>
-                <button type="button" className="al-bento-shop-btn">Shop Collection</button>
+                <span className="al-bento-shop-btn">Shop Collection</span>
               </div>
             </Link>
             <div className="al-bento-right-col">
-              <Link href="/products?q=minimalist" className="al-bento-mini-card">
+              <Link href="/products?category=fashion" className="al-bento-mini-card">
                 <img
                   src="https://images.unsplash.com/photo-1490481651871-ab68de25d43d?auto=format&fit=crop&w=800&q=80"
                   alt="Minimalist Classics"
@@ -352,10 +348,13 @@ export default function FashionView({ products }: FashionViewProps) {
 
       {/* 5. AL-UMAIMA ASSURED STRIP */}
       <div className="al-fashion-assured-strip">
-        <ShieldCheck size={18} className="al-fashion-assured-icon" />
-        <span className="al-fashion-assured-text">Al-Umaima Assured</span>
-        <span className="al-fashion-assured-sub">Quality guaranteed on every order</span>
+        <div className="header-container al-fashion-assured-inner">
+          <ShieldCheck size={18} className="al-fashion-assured-icon" />
+          <span className="al-fashion-assured-text">Al-Umaima Assured</span>
+          <span className="al-fashion-assured-sub">Quality guaranteed on every order</span>
+        </div>
       </div>
     </div>
   );
 }
+

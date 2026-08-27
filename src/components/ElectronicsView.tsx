@@ -4,6 +4,7 @@ import { useState, useMemo } from "react";
 import Link from "next/link";
 import { Heart, ShoppingCart, Check, ShieldCheck } from "lucide-react";
 import { Product } from "@/data/products";
+import ProductCard from "@/components/ProductCard";
 import { useWishlist } from "@/context/WishlistContext";
 import { useCart } from "@/context/CartContext";
 import { useToast } from "@/context/ToastContext";
@@ -223,67 +224,10 @@ export default function ElectronicsView({ products }: ElectronicsViewProps) {
         <div className="container">
           <h2 className="al-electronics-section-heading">Trending in Electronics</h2>
 
-          <div className="al-electronics-grid-2col">
-            {displayList.map((product) => {
-              const isWish = isInWishlist(product.id);
-              const isItemAdded = addedId === product.id;
-
-              return (
-                <div key={product.id} className="al-elec-card">
-                  {/* Card Image Wrap */}
-                  <div className="al-elec-card-img-wrap">
-                    <Link href={`/products/${product.slug || product.id}`} style={{ display: "contents" }}>
-                      <img
-                        src={product.image}
-                        alt={product.title}
-                        className="al-elec-card-img"
-                      />
-                    </Link>
-
-                    {/* Assured Badge */}
-                    {product.isAssured && (
-                      <div className="al-elec-assured-pill">
-                        <ShieldCheck size={11} />
-                        <span>Assured</span>
-                      </div>
-                    )}
-
-                    {/* Wishlist Button */}
-                    <button
-                      type="button"
-                      className={`al-elec-wish-btn ${isWish ? "active" : ""}`}
-                      onClick={(e) => handleWishlistClick(e, product)}
-                      aria-label="Toggle wishlist"
-                    >
-                      <Heart size={15} fill={isWish ? "#e11d48" : "none"} color={isWish ? "#e11d48" : "#64748b"} />
-                    </button>
-                  </div>
-
-                  {/* Card Info */}
-                  <div className="al-elec-card-info">
-                    <span className="al-elec-card-subcat">{product.subCategory || "Electronics"}</span>
-                    <Link
-                      href={`/products/${product.slug || product.id}`}
-                      className="al-elec-card-title"
-                    >
-                      {product.title}
-                    </Link>
-                    <div className="al-elec-card-bottom">
-                      <span className="al-elec-card-price">${product.price.toFixed(2)}</span>
-                      <button
-                        type="button"
-                        className={`al-elec-card-cart-btn ${isItemAdded ? "added" : ""}`}
-                        onClick={(e) => handleAddToCart(e, product)}
-                        aria-label={`Add ${product.title} to cart`}
-                        title="Add to cart"
-                      >
-                        {isItemAdded ? <Check size={15} /> : <ShoppingCart size={15} />}
-                      </button>
-                    </div>
-                  </div>
-                </div>
-              );
-            })}
+          <div className="al-products-grid">
+            {displayList.map((product) => (
+              <ProductCard key={product.id} product={product} />
+            ))}
           </div>
         </div>
       </section>
