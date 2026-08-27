@@ -145,8 +145,8 @@ export default function ProductInfo({ product }: ProductInfoProps) {
         </span>
       </div>
 
-      {/* Color Swatch Selector */}
-      <div className="al-detail-colors-section">
+      {/* Color Swatches */}
+      <div className="al-color-selector-block" role="radiogroup" aria-label="Select Color">
         <div className="al-color-label">
           <span>Color:</span>
           <strong>{selectedColor}</strong>
@@ -156,11 +156,13 @@ export default function ProductInfo({ product }: ProductInfoProps) {
             <button
               key={c.name}
               type="button"
+              role="radio"
+              aria-checked={selectedColor === c.name}
               onClick={() => setSelectedColor(c.name)}
               className={`al-swatch-circle ${selectedColor === c.name ? "active" : ""}`}
               style={{ backgroundColor: c.hex }}
               title={c.name}
-              aria-label={c.name}
+              aria-label={`Color ${c.name}`}
             />
           ))}
         </div>
@@ -168,7 +170,7 @@ export default function ProductInfo({ product }: ProductInfoProps) {
 
       {/* Size Selector (for fashion / clothing) */}
       {(isFashion || !showMaterialOptions) && (
-        <div className="al-detail-size-section">
+        <div className="al-detail-size-section" role="radiogroup" aria-label="Select Size">
           <div className="al-size-header-row">
             <span className="al-size-label">Size</span>
             <span className="al-size-guide-link">All Size Guide</span>
@@ -178,8 +180,11 @@ export default function ProductInfo({ product }: ProductInfoProps) {
               <button
                 key={s}
                 type="button"
+                role="radio"
+                aria-checked={selectedSize === s}
                 className={`al-size-btn ${selectedSize === s ? "active" : ""}`}
                 onClick={() => setSelectedSize(s)}
+                aria-label={`Size ${s}`}
               >
                 {s}
               </button>
@@ -190,18 +195,23 @@ export default function ProductInfo({ product }: ProductInfoProps) {
 
       {/* Material Options (for home/office products) */}
       {showMaterialOptions && (
-        <div className="al-material-options-section">
+        <div className="al-material-options-section" role="radiogroup" aria-label="Select Material">
           <div className="al-material-options-title">Material Options</div>
           <div className="al-material-options-grid">
             {MATERIAL_OPTIONS.map(opt => (
               <button
                 key={opt.id}
                 type="button"
+                role="radio"
+                aria-checked={selectedMaterial === opt.id}
                 className={`al-material-option-card ${selectedMaterial === opt.id ? "active" : ""}`}
                 onClick={() => setSelectedMaterial(opt.id)}
               >
-                <span className="al-material-option-name">{opt.name}</span>
-                <span className="al-material-option-sub">{opt.sub}</span>
+                <div className="al-material-radio-indicator" />
+                <div className="al-material-info">
+                  <div className="al-material-name">{opt.name}</div>
+                  <div className="al-material-sub">{opt.sub}</div>
+                </div>
               </button>
             ))}
           </div>

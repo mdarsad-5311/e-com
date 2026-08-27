@@ -1,4 +1,4 @@
-/* Al-Umaima Product Card Styles - Matching Reference Design System & Storefront */
+/* Al-Umaima Product Card Styles - Exact Match to Attachment 2 */
 
 .al-card-item {
   position: relative;
@@ -10,221 +10,198 @@
   flex-direction: column;
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.03);
   transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
-  padding: 0.85rem;
+  padding: 0;
 }
 
 .al-card-item:hover {
   transform: translateY(-3px);
-  box-shadow: 0 12px 24px -6px rgba(12, 35, 64, 0.08);
+  box-shadow: 0 12px 24px -6px rgba(0, 26, 51, 0.08);
   border-color: #cbd5e1;
 }
 
-/* Card Top Bar: Assured Tag & Wishlist */
-.al-card-top-bar {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  min-height: 28px;
-  margin-bottom: 0.5rem;
+/* Image Wrap with Overlay Badges */
+.al-card-img-wrap-outer {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 1 / 1;
+  background-color: #f8fafc;
+  overflow: hidden;
 }
 
-.al-assured-tag {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.35rem;
-  background-color: #FFF7ED;
-  color: #FF7A00;
-  border: 1px solid rgba(255, 122, 0, 0.2);
-  border-radius: 4px;
-  padding: 2px 7px;
-  font-size: 0.65rem;
-  font-weight: 800;
-  letter-spacing: 0.04em;
-  text-transform: uppercase;
-}
-
-.al-assured-tag-icon {
-  color: #FF7A00;
-  flex-shrink: 0;
-}
-
-.al-assured-placeholder {
-  flex: 1;
-}
-
-.al-wishlist-circle-btn {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 32px;
-  height: 32px;
-  border-radius: 50%;
-  background: #f8fafc;
-  border: 1px solid #e2e8f0;
-  cursor: pointer;
-  color: #64748b;
-  margin-left: auto;
-  transition: all 0.15s ease;
-}
-
-.al-wishlist-circle-btn:hover {
-  background: #ffffff;
-  border-color: #cbd5e1;
-  color: #FF7A00;
-  transform: scale(1.05);
-}
-
-.al-wishlist-circle-btn.active {
-  background: #FFF7ED;
-  border-color: rgba(255, 122, 0, 0.3);
-  color: #FF7A00;
-}
-
-/* Product Image Link */
 .al-card-img-link {
   display: block;
   width: 100%;
-  text-decoration: none;
+  height: 100%;
 }
 
 .al-card-img-frame {
   width: 100%;
-  height: 190px;
-  background-color: #ffffff;
-  border-radius: 8px;
-  overflow: hidden;
+  height: 100%;
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 0.5rem;
 }
 
 .al-card-img {
-  max-width: 100%;
-  max-height: 100%;
-  object-fit: contain;
-  transition: transform 0.25s ease;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  transition: transform 0.3s ease;
 }
 
 .al-card-item:hover .al-card-img {
   transform: scale(1.04);
 }
 
-/* Product Info Body */
+/* Gold Assured Pill (Attachment 2) */
+.al-assured-pill-gold {
+  position: absolute;
+  top: 0.6rem;
+  left: 0.6rem;
+  background-color: #f59e0b;
+  color: #000000;
+  font-size: 0.68rem;
+  font-weight: 800;
+  padding: 0.2rem 0.55rem;
+  border-radius: 4px;
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+  z-index: 2;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12);
+}
+
+/* Wishlist Button */
+.al-wishlist-circle-btn {
+  position: absolute;
+  top: 0.6rem;
+  right: 0.6rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  cursor: pointer;
+  color: #64748b;
+  z-index: 2;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.08);
+  transition: all 0.15s ease;
+}
+
+.al-wishlist-circle-btn:hover {
+  transform: scale(1.08);
+  color: #e11d48;
+}
+
+.al-wishlist-circle-btn.active {
+  background: #fee2e2;
+  border-color: #fca5a5;
+  color: #e11d48;
+}
+
+/* Body */
 .al-card-body {
-  padding: 0.75rem 0.25rem 0.25rem;
+  padding: 0.85rem 1rem 1rem;
   display: flex;
   flex-direction: column;
   flex: 1;
 }
 
-/* 5-Star Rating Row */
-.al-card-rating-row {
-  display: flex;
-  align-items: center;
-  gap: 0.35rem;
-  margin-bottom: 0.4rem;
-}
-
-.al-stars-group {
-  display: flex;
-  align-items: center;
-  gap: 2px;
-}
-
-.al-star-icon {
-  flex-shrink: 0;
-}
-
-.al-reviews-count {
-  font-size: 0.75rem;
-  color: #64748b;
-  font-weight: 500;
-}
-
-/* Title */
 .al-card-title-link {
   text-decoration: none;
-  margin-bottom: 0.75rem;
 }
 
 .al-card-title {
-  font-size: 0.875rem;
-  font-weight: 600;
-  color: #0C2340;
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: #001A33;
   line-height: 1.35;
+  margin-bottom: 0.35rem;
   display: -webkit-box;
   -webkit-line-clamp: 2;
   -webkit-box-orient: vertical;
   overflow: hidden;
-  height: 2.7em;
   transition: color 0.15s ease;
 }
 
 .al-card-title:hover {
-  color: #FF7A00;
+  color: #FF8C00;
 }
 
-/* Bottom Row: Price & Dark Navy Cart Icon Button */
+.al-card-desc-snippet {
+  font-size: 0.78rem;
+  line-height: 1.45;
+  color: #64748b;
+  margin-bottom: 0.5rem;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+/* Star Rating Row */
+.al-card-rating-row {
+  display: flex;
+  align-items: center;
+  gap: 0.3rem;
+  font-size: 0.8rem;
+  margin-bottom: 0.75rem;
+}
+
+.al-star-single {
+  color: #f59e0b;
+}
+
+.al-rating-num {
+  font-weight: 800;
+  color: #001A33;
+}
+
+.al-reviews-count {
+  color: #94a3b8;
+  font-weight: 500;
+}
+
+/* Bottom Row */
 .al-card-bottom-row {
   display: flex;
   align-items: center;
   justify-content: space-between;
   margin-top: auto;
-  padding-top: 0.5rem;
-}
-
-.al-card-price-group {
-  display: flex;
-  align-items: baseline;
-  gap: 0.35rem;
+  padding-top: 0.25rem;
 }
 
 .al-card-price {
-  font-size: 1.25rem;
-  font-weight: 800;
-  color: #0C2340;
-  letter-spacing: -0.02em;
+  font-size: 1.15rem;
+  font-weight: 900;
+  color: #001A33;
+  letter-spacing: -0.01em;
 }
 
-/* Circular Dark Navy Add-to-Cart Button */
-.al-cart-round-btn {
+/* Circular Orange Cart Button (Attachment 2) */
+.al-cart-orange-btn {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background-color: #FF8C00;
+  border: none;
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 38px;
-  height: 38px;
-  border-radius: 50%;
-  background-color: #0C2340;
-  border: none;
   cursor: pointer;
-  box-shadow: 0 2px 6px rgba(12, 35, 64, 0.2);
-  transition: transform 0.15s ease, background-color 0.15s ease, box-shadow 0.15s ease;
+  box-shadow: 0 2px 8px rgba(255, 140, 0, 0.35);
+  transition: all 0.15s ease;
 }
 
-.al-cart-round-btn:hover {
-  background-color: #07172B;
+.al-cart-orange-btn:hover {
+  background-color: #e07800;
   transform: scale(1.08);
-  box-shadow: 0 4px 10px rgba(12, 35, 64, 0.3);
 }
 
-.al-cart-round-btn:active {
-  transform: scale(0.95);
-}
-
-.al-cart-round-btn.added {
-  background-color: #10B981;
-}
-
-@media (max-width: 640px) {
-  .al-card-img-frame {
-    height: 140px;
-  }
-  .al-card-price {
-    font-size: 1.1rem;
-  }
-  .al-cart-round-btn {
-    width: 34px;
-    height: 34px;
-  }
+.al-cart-orange-btn.added {
+  background-color: #16a34a;
 }

@@ -32,13 +32,16 @@
 }
 
 .al-bottom-tab:hover {
-  color: #0C2340;
+  color: #001A33;
 }
 
 .al-bottom-tab.active {
-  color: #FF7A00;
+  color: #FF8C00;
   font-weight: 700;
+  background-color: #FFF7ED;
+  border-radius: 10px;
 }
+
 
 .al-bottom-cart-wrap {
   position: relative;

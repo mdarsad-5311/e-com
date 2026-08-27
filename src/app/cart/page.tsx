@@ -8,14 +8,16 @@ import OrderSummary from "@/components/OrderSummary";
 import "@/styles/cart-page.css";
 
 export default function CartPage() {
-  const { cart, savedForLater, clearCart, totalItemsCount } = useCart();
+  const { cart, savedForLater, clearCart, totalItemsCount, subtotal } = useCart();
 
   return (
     <div className="al-cart-page-wrapper">
       <div className="al-cart-main-container">
         {/* Cart Page Title */}
         <div className="al-cart-header-title-row">
-          <h1 className="al-cart-main-heading">Shopping Cart</h1>
+          <h1 className="al-cart-main-heading">
+            {cart.length > 0 ? `Your Cart (${totalItemsCount})` : "Your Cart"}
+          </h1>
           {cart.length > 0 && (
             <button
               onClick={clearCart}
@@ -65,12 +67,26 @@ export default function CartPage() {
               </div>
             </div>
 
-            {/* Right Column: Order Summary Sidebar */}
-            <div className="al-cart-summary-section">
+            {/* Right Column: Order Summary Sidebar (Desktop) */}
+            <div className="al-cart-summary-section al-cart-desktop-summary">
               <OrderSummary />
             </div>
+
+            {/* Mobile Sticky Subtotal & Proceed to Checkout (Attachment 5) */}
+            {cart.length > 0 && (
+              <div className="al-mobile-cart-sticky-bar">
+                <div className="al-mobile-cart-subtotal-row">
+                  <span className="al-mobile-subtotal-label">Subtotal</span>
+                  <span className="al-mobile-subtotal-val">${subtotal.toFixed(2)}</span>
+                </div>
+                <Link href="/checkout" className="al-mobile-btn-checkout">
+                  Proceed to Checkout &rarr;
+                </Link>
+              </div>
+            )}
           </div>
         ) : (
+
           /* Empty Cart State */
           <div className="al-empty-cart-view">
             <div className="al-empty-icon-circle">

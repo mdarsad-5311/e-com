@@ -43,11 +43,12 @@ export default function BottomNav() {
         <span className="al-bottom-label">Cart</span>
       </Link>
 
-      {/* 4. Profile Tab */}
+      {/* 4. Account Tab (Attachment 3 & 5) */}
       <Link href="/profile" className={`al-bottom-tab ${isProfile ? "active" : ""}`}>
         <User size={22} strokeWidth={isProfile ? 2.5 : 1.8} />
-        <span className="al-bottom-label">Profile</span>
+        <span className="al-bottom-label">Account</span>
       </Link>
     </nav>
   );
 }
+

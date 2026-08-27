@@ -139,8 +139,72 @@
   background-color: #07172B;
 }
 
+/* Mobile Sticky Subtotal & Proceed to Checkout (Attachment 5) */
+.al-mobile-cart-sticky-bar {
+  display: none;
+  position: fixed;
+  bottom: 62px;
+  left: 0;
+  right: 0;
+  background: #ffffff;
+  border-top: 1px solid #e2e8f0;
+  padding: 0.85rem 1.25rem;
+  box-shadow: 0 -4px 15px rgba(0, 0, 0, 0.06);
+  z-index: 999;
+}
+
+.al-mobile-cart-subtotal-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 0.75rem;
+}
+
+.al-mobile-subtotal-label {
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: #64748b;
+}
+
+.al-mobile-subtotal-val {
+  font-size: 1.35rem;
+  font-weight: 900;
+  color: #001A33;
+}
+
+.al-mobile-btn-checkout {
+  width: 100%;
+  height: 48px;
+  background-color: #FF8C00;
+  color: #ffffff;
+  font-size: 0.95rem;
+  font-weight: 700;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  text-decoration: none;
+  box-shadow: 0 4px 14px rgba(255, 140, 0, 0.35);
+  transition: background-color 0.15s ease;
+}
+
+.al-mobile-btn-checkout:hover {
+  background-color: #e07800;
+}
+
 @media (max-width: 960px) {
   .al-cart-grid {
     grid-template-columns: 1fr;
   }
+  .al-cart-desktop-summary {
+    display: none;
+  }
+  .al-mobile-cart-sticky-bar {
+    display: block;
+  }
+  .al-cart-page-wrapper {
+    padding-bottom: 7rem;
+  }
 }
+

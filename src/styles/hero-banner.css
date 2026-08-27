@@ -1,147 +1,201 @@
-/* Al-Umaima Hero Banner Styles - Matching New Attachment */
+/* Al-Umaima Hero Banner Styles - Exact Match to Attachments 2 & 3 */
 
 .al-hero-section {
   width: 100%;
-  background-color: #0b1a30;
+  background-color: #001A33;
   overflow: hidden;
 }
 
-.al-hero-banner {
-  width: 100%;
-  min-height: 480px;
-  background-size: cover;
-  background-position: right center;
-  background-repeat: no-repeat;
+/* ==========================================================================
+   1. DESKTOP HERO (Attachment 2)
+   ========================================================================== */
+.al-hero-desktop-view {
   display: flex;
-  align-items: center;
   position: relative;
+  min-height: 520px;
+  align-items: center;
+  overflow: hidden;
+}
+
+.al-hero-desktop-bg {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center 35%;
+  z-index: 1;
+}
+
+.al-hero-overlay-desktop {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    90deg,
+    rgba(0, 26, 51, 0.94) 0%,
+    rgba(0, 26, 51, 0.82) 42%,
+    rgba(0, 26, 51, 0.25) 75%,
+    rgba(0, 26, 51, 0.1) 100%
+  );
+  z-index: 2;
 }
 
 .al-hero-container {
+  position: relative;
+  z-index: 3;
   width: 100%;
   padding: 4.5rem 1.5rem;
 }
 
 .al-hero-text-block {
-  max-width: 540px;
+  max-width: 580px;
   display: flex;
   flex-direction: column;
   align-items: flex-start;
 }
 
-/* Tag Badge */
-.al-hero-tag {
-  color: #FF7A00;
-  font-size: 0.75rem;
-  font-weight: 800;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-  margin-bottom: 1rem;
-  display: inline-block;
-}
-
-/* Headline */
 .al-hero-heading {
-  font-size: 3.25rem;
-  font-weight: 800;
-  line-height: 1.15;
+  font-size: clamp(2.4rem, 4.2vw, 3.4rem);
+  font-weight: 900;
+  line-height: 1.12;
   color: #ffffff;
-  letter-spacing: -0.02em;
+  letter-spacing: -0.03em;
   margin-bottom: 1.25rem;
-  font-family: inherit;
 }
 
-/* Description */
 .al-hero-desc {
-  font-size: 1rem;
+  font-size: 1.05rem;
   line-height: 1.6;
   color: #cbd5e1;
-  margin-bottom: 2rem;
+  margin-bottom: 2.25rem;
   font-weight: 400;
-}
-
-/* Action Buttons */
-.al-hero-actions {
-  display: flex;
-  align-items: center;
-  gap: 1rem;
+  max-width: 500px;
 }
 
 .al-hero-btn-shop {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  background-color: #FF7A00;
+  background-color: #FF8C00;
   color: #ffffff;
-  font-size: 0.95rem;
+  font-size: 1rem;
   font-weight: 700;
-  padding: 0.75rem 1.75rem;
-  border-radius: 6px;
+  padding: 0.85rem 2rem;
+  border-radius: 8px;
   text-decoration: none;
   transition: all 0.2s ease;
-  box-shadow: 0 4px 14px rgba(255, 122, 0, 0.3);
+  box-shadow: 0 4px 14px rgba(255, 140, 0, 0.35);
 }
 
 .al-hero-btn-shop:hover {
-  background-color: #E06A00;
+  background-color: #e07800;
   transform: translateY(-2px);
-  box-shadow: 0 6px 20px rgba(255, 122, 0, 0.4);
+  box-shadow: 0 6px 20px rgba(255, 140, 0, 0.45);
 }
 
-.al-hero-btn-explore {
+/* ==========================================================================
+   2. MOBILE HERO (Attachment 3)
+   ========================================================================== */
+.al-hero-mobile-view {
+  display: none;
+  position: relative;
+  min-height: 380px;
+  align-items: flex-end;
+  overflow: hidden;
+  padding: 0;
+}
+
+.al-hero-mobile-bg {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center 30%;
+  z-index: 1;
+}
+
+.al-hero-overlay-mobile {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    180deg,
+    rgba(0, 26, 51, 0.2) 0%,
+    rgba(0, 26, 51, 0.75) 60%,
+    rgba(0, 26, 51, 0.95) 100%
+  );
+  z-index: 2;
+}
+
+.al-hero-mobile-content {
+  position: relative;
+  z-index: 3;
+  padding: 1.75rem 1.25rem 2rem;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+.al-hero-assured-badge {
+  background: rgba(255, 140, 0, 0.2);
+  border: 1px solid rgba(255, 140, 0, 0.5);
+  color: #FF8C00;
+  font-size: 0.72rem;
+  font-weight: 800;
+  padding: 0.25rem 0.65rem;
+  border-radius: 4px;
   display: inline-flex;
   align-items: center;
-  justify-content: center;
-  background-color: rgba(12, 35, 64, 0.6);
-  color: #ffffff;
-  border: 1.5px solid rgba(255, 255, 255, 0.4);
-  font-size: 0.95rem;
-  font-weight: 600;
-  padding: 0.75rem 1.75rem;
-  border-radius: 6px;
-  text-decoration: none;
+  gap: 0.3rem;
+  letter-spacing: 0.04em;
+  margin-bottom: 0.75rem;
   backdrop-filter: blur(4px);
-  transition: all 0.2s ease;
 }
 
-.al-hero-btn-explore:hover {
-  background-color: rgba(255, 255, 255, 0.15);
-  border-color: #ffffff;
-  transform: translateY(-2px);
+.al-hero-mobile-title {
+  font-size: 2.15rem;
+  font-weight: 900;
+  color: #ffffff;
+  letter-spacing: -0.03em;
+  margin-bottom: 0.4rem;
+  line-height: 1.1;
 }
 
-/* Responsive */
-@media (max-width: 900px) {
-  .al-hero-banner {
-    min-height: 420px;
-    background-position: center right;
-  }
-  .al-hero-heading {
-    font-size: 2.5rem;
-  }
-  .al-hero-container {
-    padding: 3.5rem 1.5rem;
-  }
+.al-hero-mobile-sub {
+  font-size: 0.9rem;
+  color: #cbd5e1;
+  margin-bottom: 1.25rem;
 }
 
-@media (max-width: 600px) {
-  .al-hero-banner {
-    min-height: 380px;
+.al-hero-btn-shop-mobile {
+  width: 100%;
+  height: 46px;
+  background-color: #FF8C00;
+  color: #ffffff;
+  font-size: 0.95rem;
+  font-weight: 700;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-decoration: none;
+  box-shadow: 0 4px 14px rgba(255, 140, 0, 0.35);
+  transition: background-color 0.15s ease;
+}
+
+.al-hero-btn-shop-mobile:hover {
+  background-color: #e07800;
+}
+
+/* ==========================================================================
+   3. RESPONSIVE SWITCH
+   ========================================================================== */
+@media (max-width: 768px) {
+  .al-hero-desktop-view {
+    display: none;
   }
-  .al-hero-heading {
-    font-size: 2rem;
-  }
-  .al-hero-desc {
-    font-size: 0.9rem;
-    margin-bottom: 1.5rem;
-  }
-  .al-hero-actions {
-    flex-direction: row;
-    width: 100%;
-  }
-  .al-hero-btn-shop, .al-hero-btn-explore {
-    flex: 1;
-    padding: 0.65rem 1rem;
-    font-size: 0.85rem;
+  .al-hero-mobile-view {
+    display: flex;
   }
 }

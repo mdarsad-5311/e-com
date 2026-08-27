@@ -178,67 +178,107 @@
   color: #0C2340;
   cursor: pointer;
   padding: 0.25rem 0 0.75rem;
-  text-align: left;
 }
 
-.al-options-list {
-  display: flex;
-  flex-direction: column;
-  gap: 0.65rem;
-}
-
-/* Checkbox Row */
-.al-checkbox-row {
-  display: flex;
-  align-items: center;
-  gap: 0.65rem;
-  cursor: pointer;
-  user-select: none;
-}
-
-.al-checkbox-input {
-  appearance: none;
-  width: 17px;
-  height: 17px;
-  border: 1.5px solid #cbd5e1;
-  border-radius: 4px;
-  background-color: #ffffff;
-  cursor: pointer;
-  position: relative;
-  transition: all 0.15s ease;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.al-checkbox-input:checked {
-  background-color: #0C2340;
-  border-color: #0C2340;
-}
-
-.al-checkbox-input:checked::after {
-  content: "";
-  display: block;
-  width: 4px;
-  height: 8px;
-  border: solid #ffffff;
-  border-width: 0 2px 2px 0;
-  transform: rotate(45deg);
-  margin-bottom: 2px;
-}
-
-.al-checkbox-text {
+.al-filter-group-label {
   font-size: 0.85rem;
-  color: #334155;
-  font-weight: 500;
-  transition: color 0.15s ease;
+  font-weight: 700;
+  color: #001A33;
+  margin-bottom: 0.65rem;
 }
 
-.al-checkbox-row:hover .al-checkbox-text {
-  color: #0C2340;
+
+/* Price Range Inputs (Attachment 4) */
+.al-price-range-inputs {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
 }
 
-/* Main Products Grid (4 Columns Matching Attachment 2) */
+.al-price-input-box {
+  display: flex;
+  align-items: center;
+  background: #ffffff;
+  border: 1.5px solid #cbd5e1;
+  border-radius: 6px;
+  padding: 0.35rem 0.65rem;
+  flex: 1;
+}
+
+.al-price-prefix {
+  font-size: 0.82rem;
+  color: #64748b;
+  font-weight: 600;
+  margin-right: 0.3rem;
+}
+
+.al-price-input {
+  width: 100%;
+  border: none;
+  background: transparent;
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: #001A33;
+  outline: none;
+}
+
+.al-price-dash {
+  color: #94a3b8;
+  font-weight: 700;
+}
+
+/* Brand Chips (Attachment 4) */
+.al-brand-chips-row {
+  display: flex;
+  gap: 0.4rem;
+  flex-wrap: wrap;
+}
+
+.al-brand-chip {
+  padding: 0.35rem 0.75rem;
+  border-radius: 6px;
+  border: 1.5px solid #e2e8f0;
+  background: #f8fafc;
+  color: #475569;
+  font-size: 0.78rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.al-brand-chip:hover {
+  border-color: #001A33;
+  color: #001A33;
+}
+
+.al-brand-chip.active {
+  background-color: #EFF6FF;
+  border-color: #3B82F6;
+  color: #1D4ED8;
+}
+
+/* Apply Filters Button (Attachment 4) */
+.al-btn-apply-filters {
+  width: 100%;
+  height: 42px;
+  background-color: #FF8C00;
+  color: #ffffff;
+  font-size: 0.88rem;
+  font-weight: 700;
+  border-radius: 6px;
+  border: none;
+  cursor: pointer;
+  margin-top: 0.5rem;
+  transition: background-color 0.15s ease;
+  box-shadow: 0 2px 8px rgba(255, 140, 0, 0.25);
+}
+
+.al-btn-apply-filters:hover {
+  background-color: #e07800;
+}
+
+
+/* Main Products Grid (3 Columns Matching Attachment 2) */
 .al-catalog-content {
   display: flex;
   flex-direction: column;
@@ -246,9 +286,10 @@
 
 .al-products-grid {
   display: grid;
-  grid-template-columns: repeat(4, 1fr);
+  grid-template-columns: repeat(3, 1fr);
   gap: 1.25rem;
 }
+
 
 /* Load More Products Button */
 .al-load-more-wrap {

@@ -5,7 +5,9 @@ import Link from "next/link";
 import { ChevronDown, ChevronUp, ChevronRight, SlidersHorizontal, X } from "lucide-react";
 import { Product, Category } from "@/data/products";
 import ProductCard from "@/components/ProductCard";
+import SkeletonCard from "@/components/SkeletonCard";
 import "@/styles/category-page.css";
+
 
 interface CategoryViewProps {
   category: Category;
@@ -156,60 +158,61 @@ export default function CategoryView({ category, initialProducts }: CategoryView
 
             {/* Section 1: Category */}
             <div className="al-filter-group">
-              <button
-                type="button"
-                className="al-group-toggle-btn"
-                onClick={() => setIsCategoryOpen(!isCategoryOpen)}
-              >
-                <span>Category</span>
-                {isCategoryOpen ? <ChevronUp size={16} /> : <ChevronDown size={16} />}
-              </button>
-
-              {isCategoryOpen && (
-                <div className="al-options-list">
-                  {subCategoriesList.map((item) => (
-                    <label key={item} className="al-checkbox-row">
-                      <input
-                        type="checkbox"
-                        checked={selectedSubCats.includes(item)}
-                        onChange={() => handleSubCatChange(item)}
-                        className="al-checkbox-input"
-                      />
-                      <span className="al-checkbox-text">{item}</span>
-                    </label>
-                  ))}
-                </div>
-              )}
+              <h3 className="al-filter-group-label">Category</h3>
+              <div className="al-options-list">
+                {["Headphones", "Speakers", "Smart Home"].map((item) => (
+                  <label key={item} className="al-checkbox-row">
+                    <input
+                      type="checkbox"
+                      checked={selectedSubCats.includes(item)}
+                      onChange={() => handleSubCatChange(item)}
+                      className="al-checkbox-input"
+                    />
+                    <span className="al-checkbox-text">{item}</span>
+                  </label>
+                ))}
+              </div>
             </div>
 
-            {/* Section 2: Brand */}
+            {/* Section 2: Price Range (Attachment 4) */}
             <div className="al-filter-group">
-              <button
-                type="button"
-                className="al-group-toggle-btn"
-                onClick={() => setIsBrandOpen(!isBrandOpen)}
-              >
-                <span>Brand</span>
-                {isBrandOpen ? <ChevronUp size={16} /> : <ChevronDown size={16} />}
-              </button>
-
-              {isBrandOpen && (
-                <div className="al-options-list">
-                  {brandsList.map((brand) => (
-                    <label key={brand} className="al-checkbox-row">
-                      <input
-                        type="checkbox"
-                        checked={selectedBrands.includes(brand)}
-                        onChange={() => handleBrandChange(brand)}
-                        className="al-checkbox-input"
-                      />
-                      <span className="al-checkbox-text">{brand}</span>
-                    </label>
-                  ))}
+              <h3 className="al-filter-group-label">Price Range</h3>
+              <div className="al-price-range-inputs">
+                <div className="al-price-input-box">
+                  <span className="al-price-prefix">$</span>
+                  <input type="number" placeholder="50" defaultValue="50" className="al-price-input" />
                 </div>
-              )}
+                <span className="al-price-dash">-</span>
+                <div className="al-price-input-box">
+                  <span className="al-price-prefix">$</span>
+                  <input type="text" placeholder="Max" defaultValue="Max" className="al-price-input" />
+                </div>
+              </div>
             </div>
+
+            {/* Section 3: Brand Chips (Attachment 4) */}
+            <div className="al-filter-group">
+              <h3 className="al-filter-group-label">Brand</h3>
+              <div className="al-brand-chips-row">
+                {["Sony", "Bose", "Sennheiser"].map((b) => (
+                  <button
+                    key={b}
+                    type="button"
+                    className={`al-brand-chip ${selectedBrands.includes(b) ? "active" : ""}`}
+                    onClick={() => handleBrandChange(b)}
+                  >
+                    {b}
+                  </button>
+                ))}
+              </div>
+            </div>
+
+            {/* Apply Filters Button (Attachment 4) */}
+            <button type="button" className="al-btn-apply-filters">
+              Apply Filters
+            </button>
           </aside>
+
 
           {/* Right Area: Products Grid & Load More */}
           <main className="al-catalog-content">
@@ -219,7 +222,10 @@ export default function CategoryView({ category, initialProducts }: CategoryView
                   {displayedProducts.map((prod) => (
                     <ProductCard key={prod.id} product={prod} />
                   ))}
+                  {/* Skeleton Loader Card (Attachment 2) */}
+                  <SkeletonCard />
                 </div>
+
 
                 {visibleCount < filteredProducts.length && (
                   <div className="al-load-more-wrap">

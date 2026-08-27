@@ -1,0 +1,254 @@
+/* Trending Now Component Styles - Exact Match to Attachments 1 & 4 */
+
+.al-trending-now-section {
+  padding: 1.5rem 0 3rem;
+  background-color: #f8fafc;
+}
+
+.al-trending-header-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 1rem;
+}
+
+.al-trending-heading {
+  font-size: 1.25rem;
+  font-weight: 800;
+  color: #001A33;
+  letter-spacing: -0.02em;
+}
+
+.al-trending-view-all {
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: #FF8C00;
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.2rem;
+  transition: opacity 0.15s ease;
+}
+
+.al-trending-view-all:hover {
+  opacity: 0.85;
+}
+
+/* Category Filter Pills (Attachment 1 & 4) */
+.al-trending-pills-bar {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  overflow-x: auto;
+  padding: 0.25rem 0 1.25rem;
+  scrollbar-width: none;
+}
+
+.al-trending-pills-bar::-webkit-scrollbar {
+  display: none;
+}
+
+.al-trending-pill-btn {
+  flex-shrink: 0;
+  padding: 0.45rem 1.15rem;
+  border-radius: 24px;
+  border: 1.5px solid #e2e8f0;
+  background: #ffffff;
+  color: #475569;
+  font-size: 0.82rem;
+  font-weight: 700;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: all 0.15s ease;
+}
+
+.al-trending-pill-btn:hover {
+  border-color: #001A33;
+  color: #001A33;
+}
+
+.al-trending-pill-btn.active {
+  background-color: #000000;
+  border-color: #000000;
+  color: #ffffff;
+}
+
+/* 2-Column Grid (Attachments 1 & 4) */
+.al-trending-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 0.85rem;
+}
+
+/* Product Card */
+.al-trending-card {
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 10px;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.03);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.al-trending-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.06);
+}
+
+.al-trending-img-wrap {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 1 / 1;
+  background-color: #f8fafc;
+  overflow: hidden;
+}
+
+.al-trending-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  transition: transform 0.3s ease;
+}
+
+.al-trending-card:hover .al-trending-img {
+  transform: scale(1.04);
+}
+
+/* Gold Assured Badge (Attachments 1 & 4) */
+.al-trending-assured-badge {
+  position: absolute;
+  top: 0.5rem;
+  left: 0.5rem;
+  background-color: #f59e0b;
+  color: #000000;
+  font-size: 0.65rem;
+  font-weight: 800;
+  padding: 0.18rem 0.5rem;
+  border-radius: 4px;
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+  z-index: 2;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.15);
+}
+
+/* Wishlist Button */
+.al-trending-wish-btn {
+  position: absolute;
+  top: 0.5rem;
+  right: 0.5rem;
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #64748b;
+  cursor: pointer;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.08);
+  z-index: 2;
+  transition: all 0.15s ease;
+}
+
+.al-trending-wish-btn:hover {
+  transform: scale(1.1);
+  color: #e11d48;
+}
+
+.al-trending-wish-btn.active {
+  color: #e11d48;
+  background-color: #fee2e2;
+  border-color: #fca5a5;
+}
+
+/* Info */
+.al-trending-info {
+  padding: 0.75rem 0.85rem 0.85rem;
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+}
+
+.al-trending-title {
+  font-size: 0.88rem;
+  font-weight: 700;
+  color: #001A33;
+  line-height: 1.3;
+  margin-bottom: 0.45rem;
+  text-decoration: none;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.al-trending-title:hover {
+  color: #FF8C00;
+}
+
+/* Price & Star Row */
+.al-trending-meta-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 0.65rem;
+  margin-top: auto;
+}
+
+.al-trending-price {
+  font-size: 0.98rem;
+  font-weight: 800;
+  color: #001A33;
+}
+
+.al-trending-rating {
+  font-size: 0.8rem;
+  font-weight: 700;
+  color: #f59e0b;
+  display: inline-flex;
+  align-items: center;
+  gap: 2px;
+}
+
+/* Full-width Add Button (Attachments 1 & 4) */
+.al-trending-btn-add {
+  width: 100%;
+  height: 34px;
+  background-color: #EFF6FF;
+  border: 1px solid #DBEAFE;
+  color: #1E40AF;
+  font-size: 0.82rem;
+  font-weight: 700;
+  border-radius: 6px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.35rem;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.al-trending-btn-add:hover {
+  background-color: #001A33;
+  color: #ffffff;
+  border-color: #001A33;
+}
+
+.al-trending-btn-add.added {
+  background-color: #16a34a;
+  color: #ffffff;
+  border-color: #16a34a;
+}
+
+/* Desktop sizing */
+@media (min-width: 769px) {
+  .al-trending-grid {
+    grid-template-columns: repeat(4, 1fr);
+    gap: 1.25rem;
+  }
+}

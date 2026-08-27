@@ -113,9 +113,13 @@ export default function SavedAddressesPage() {
     setIsModalOpen(true);
   };
 
+  const [confirmDeleteId, setConfirmDeleteId] = useState<string | null>(null);
+
   const handleDelete = (id: string) => {
     setAddresses((prev) => prev.filter((a) => a.id !== id));
+    setConfirmDeleteId(null);
   };
+
 
   const handleSave = (e: React.FormEvent) => {
     e.preventDefault();
@@ -224,13 +228,34 @@ export default function SavedAddressesPage() {
             {/* Actions: Delete + Edit */}
             <div className="al-addr-actions-row">
               {!addr.isDefault && (
-                <button
-                  type="button"
-                  onClick={() => handleDelete(addr.id)}
-                  className="al-addr-btn-delete"
-                >
-                  Delete
-                </button>
+                confirmDeleteId === addr.id ? (
+                  <div style={{ display: "inline-flex", alignItems: "center", gap: "0.35rem" }}>
+                    <span style={{ fontSize: "0.78rem", color: "#64748b" }}>Confirm delete?</span>
+                    <button
+                      type="button"
+                      onClick={() => handleDelete(addr.id)}
+                      className="al-addr-btn-delete"
+                      style={{ fontWeight: 800 }}
+                    >
+                      Yes, Remove
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => setConfirmDeleteId(null)}
+                      style={{ fontSize: "0.78rem", color: "#64748b", background: "none", border: "none", cursor: "pointer" }}
+                    >
+                      Cancel
+                    </button>
+                  </div>
+                ) : (
+                  <button
+                    type="button"
+                    onClick={() => setConfirmDeleteId(addr.id)}
+                    className="al-addr-btn-delete"
+                  >
+                    Delete
+                  </button>
+                )
               )}
               <button
                 type="button"
@@ -240,6 +265,7 @@ export default function SavedAddressesPage() {
                 Edit
               </button>
             </div>
+
           </div>
         ))}
       </main>

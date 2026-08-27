@@ -1,189 +1,155 @@
-/* Cart Item Card Styles - Matching Attachment 2 */
+/* Al-Umaima Cart Item Styles - Exact Match to Attachment 3 */
 
 .al-cart-card {
   background: #ffffff;
   border: 1px solid #e2e8f0;
   border-radius: 12px;
-  padding: 1.5rem;
+  padding: 1rem;
   display: flex;
-  gap: 1.5rem;
-  align-items: center;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.02);
-  transition: border-color 0.15s ease;
+  align-items: flex-start;
+  gap: 1rem;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.03);
+  transition: all 0.15s ease;
 }
 
 .al-cart-card:hover {
   border-color: #cbd5e1;
 }
 
-/* Image Thumbnail */
+/* Image on Left */
 .al-cart-img-box {
-  width: 110px;
-  height: 110px;
-  background-color: #f8fafc;
+  width: 80px;
+  height: 80px;
   border-radius: 8px;
+  background-color: #f8fafc;
   overflow: hidden;
+  flex-shrink: 0;
   display: flex;
   align-items: center;
   justify-content: center;
-  flex-shrink: 0;
-  border: 1px solid #f1f5f9;
+  border: 1px solid #e2e8f0;
 }
 
 .al-cart-product-img {
-  max-width: 90%;
-  max-height: 90%;
-  object-fit: contain;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
 }
 
 /* Content Box */
 .al-cart-content-box {
+  flex: 1;
   display: flex;
   flex-direction: column;
-  flex: 1;
-  gap: 1.25rem;
+  gap: 0.35rem;
 }
 
-/* Top Row: Title + Price */
 .al-cart-top-row {
   display: flex;
-  justify-content: space-between;
   align-items: flex-start;
-  gap: 1rem;
-}
-
-.al-cart-info-main {
-  display: flex;
-  flex-direction: column;
+  justify-content: space-between;
+  gap: 0.5rem;
 }
 
 .al-cart-title-link {
   text-decoration: none;
+  flex: 1;
 }
 
 .al-cart-item-heading {
-  font-size: 1.1rem;
+  font-size: 0.92rem;
   font-weight: 700;
-  color: #0C2340;
-  line-height: 1.3;
-  margin-bottom: 0.25rem;
+  color: #001A33;
+  line-height: 1.35;
+  margin: 0;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
   transition: color 0.15s ease;
 }
 
-.al-cart-title-link:hover .al-cart-item-heading {
-  color: #FF7A00;
+.al-cart-item-heading:hover {
+  color: #FF8C00;
 }
 
-.al-cart-item-specs {
-  font-size: 0.8rem;
-  color: #64748b;
-  margin: 0;
+/* Top Right Trash Button (Attachment 3) */
+.al-cart-trash-btn {
+  background: none;
+  border: none;
+  color: #94a3b8;
+  cursor: pointer;
+  padding: 0.2rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 4px;
+  transition: all 0.15s ease;
 }
 
-.al-cart-item-price {
-  font-size: 1.25rem;
+.al-cart-trash-btn:hover {
+  color: #dc2626;
+  background-color: #fee2e2;
+}
+
+/* Orange Price (Attachment 3) */
+.al-cart-item-price-orange {
+  font-size: 0.95rem;
   font-weight: 800;
-  color: #0C2340;
-  letter-spacing: -0.02em;
+  color: #FF8C00;
 }
 
-/* Bottom Row: Stepper + Save/Remove */
+/* Stepper Control (Attachment 3) */
 .al-cart-bottom-row {
   display: flex;
-  justify-content: space-between;
   align-items: center;
+  margin-top: 0.25rem;
 }
 
-/* Stepper Pill */
 .al-cart-stepper-box {
   display: inline-flex;
   align-items: center;
-  background: #ffffff;
-  border: 1px solid #e2e8f0;
+  border: 1.5px solid #cbd5e1;
   border-radius: 6px;
-  overflow: hidden;
+  background: #ffffff;
+  padding: 2px 4px;
+  gap: 0.5rem;
 }
 
 .al-stepper-control {
   background: none;
   border: none;
-  width: 32px;
-  height: 32px;
+  color: #475569;
+  width: 24px;
+  height: 24px;
   display: flex;
   align-items: center;
   justify-content: center;
-  color: #475569;
   cursor: pointer;
-  transition: background-color 0.15s ease;
+  border-radius: 4px;
+  transition: all 0.15s ease;
 }
 
 .al-stepper-control:hover {
   background-color: #f1f5f9;
-  color: #0C2340;
+  color: #001A33;
 }
 
 .al-stepper-count {
-  width: 32px;
-  text-align: center;
-  font-size: 0.875rem;
+  font-size: 0.88rem;
   font-weight: 700;
-  color: #0C2340;
-}
-
-/* Action Links on Right */
-.al-cart-item-actions {
-  display: flex;
-  align-items: center;
-  gap: 1.25rem;
-}
-
-.al-cart-action-pill {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.35rem;
-  background: none;
-  border: none;
-  font-size: 0.85rem;
-  font-weight: 600;
-  color: #64748b;
-  cursor: pointer;
-  padding: 0;
-  transition: color 0.15s ease;
-}
-
-.al-cart-action-pill:hover {
-  color: #0C2340;
-}
-
-.al-cart-action-pill.saved {
-  color: #FF7A00;
-}
-
-.al-cart-action-pill.remove-pill {
-  color: #EF4444;
-}
-
-.al-cart-action-pill.remove-pill:hover {
-  color: #DC2626;
-  text-decoration: underline;
+  color: #001A33;
+  min-width: 16px;
+  text-align: center;
 }
 
 .al-cart-link-btn {
   background: none;
   border: none;
-  color: #0C2340;
-  font-weight: 700;
+  color: #FF8C00;
   font-size: 0.85rem;
+  font-weight: 700;
   cursor: pointer;
   text-decoration: underline;
-}
-
-@media (max-width: 600px) {
-  .al-cart-card {
-    flex-direction: column;
-    align-items: flex-start;
-  }
-  .al-cart-content-box {
-    width: 100%;
-  }
 }

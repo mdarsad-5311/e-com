@@ -147,18 +147,28 @@ p {
   color: var(--text-muted);
 }
 
-a {
-  color: inherit;
-  text-decoration: none;
+/* Accessible Focus Rings */
+:focus-visible {
+  outline: 2px solid var(--secondary);
+  outline-offset: 2px;
 }
 
-button {
-  cursor: pointer;
-  border: none;
-  background: none;
-  font-family: inherit;
-  font-weight: 600;
+button:focus-visible,
+a:focus-visible,
+input:focus-visible,
+select:focus-visible,
+textarea:focus-visible {
+  outline: 2px solid var(--secondary);
+  outline-offset: 2px;
 }
+
+/* Mobile Bottom Navigation Clearance */
+@media (max-width: 768px) {
+  main {
+    padding-bottom: 76px;
+  }
+}
+
 
 input, select, textarea {
   font-family: inherit;
