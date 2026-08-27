@@ -1,15 +1,18 @@
-/* Al-Umaima Modern Clean Header Styles - Matching Design System & Attachment 2 */
+/* Al-Umaima Modern Clean Header Styles - Enterprise Sticky/Fixed Navigation */
 
 .al-header {
-  position: sticky;
+  position: fixed;
   top: 0;
   left: 0;
   right: 0;
-  z-index: 1000;
-  background-color: #ffffff;
-  border-bottom: 1px solid #e2e8f0;
+  width: 100%;
+  z-index: 9999;
+  background-color: #FFFFFF;
+  border-bottom: 1px solid #E2E8F0;
   font-family: inherit;
+  box-shadow: 0 2px 10px rgba(0, 26, 51, 0.05);
   transition: all 0.2s ease;
+  will-change: transform;
 }
 
 .header-container {
@@ -37,17 +40,23 @@
   display: none;
   background: none;
   border: none;
-  color: #0C2340;
+  color: #001A33;
   cursor: pointer;
   padding: 0.25rem;
   align-items: center;
   justify-content: center;
+  border-radius: 6px;
+  transition: background-color 0.15s ease;
+}
+
+.al-mobile-menu-btn:hover {
+  background-color: #F1F5F9;
 }
 
 .al-brand-logo {
   font-size: 1.35rem;
-  font-weight: 800;
-  color: #0C2340;
+  font-weight: 900;
+  color: #001A33;
   text-decoration: none;
   letter-spacing: -0.02em;
   font-family: inherit;
@@ -57,7 +66,7 @@
 }
 
 .al-brand-logo:hover {
-  opacity: 0.9;
+  opacity: 0.85;
 }
 
 /* Desktop Navigation Menu */
@@ -76,19 +85,19 @@
   color: #334155;
   text-decoration: none;
   font-size: 0.875rem;
-  font-weight: 500;
+  font-weight: 600;
   padding: 0 0.25rem;
   transition: color 0.15s ease;
   white-space: nowrap;
 }
 
 .al-nav-link:hover {
-  color: #0C2340;
+  color: #001A33;
 }
 
 .al-nav-link.active {
   color: #FF7A00;
-  font-weight: 600;
+  font-weight: 700;
 }
 
 .al-active-indicator {
@@ -101,7 +110,7 @@
   border-radius: 2px 2px 0 0;
 }
 
-/* Search Bar (Matching Reference Box) */
+/* Search Bar */
 .al-search-col {
   flex: 1;
   max-width: 280px;
@@ -118,25 +127,25 @@
 .al-search-input {
   width: 100%;
   height: 38px;
-  background-color: #f1f5f9;
-  border: 1px solid #e2e8f0;
+  background-color: #F1F5F9;
+  border: 1px solid #E2E8F0;
   border-radius: 6px;
   padding: 0 2.25rem 0 0.85rem;
   font-size: 0.825rem;
-  color: #0C2340;
+  color: #001A33;
   outline: none;
   transition: all 0.2s ease;
 }
 
 .al-search-input::placeholder {
-  color: #94a3b8;
+  color: #94A3B8;
   font-size: 0.825rem;
 }
 
 .al-search-input:focus {
-  background-color: #ffffff;
-  border-color: #0C2340;
-  box-shadow: 0 0 0 3px rgba(12, 35, 64, 0.08);
+  background-color: #FFFFFF;
+  border-color: #001A33;
+  box-shadow: 0 0 0 3px rgba(0, 26, 51, 0.08);
 }
 
 .al-search-icon-btn {
@@ -146,7 +155,7 @@
   transform: translateY(-50%);
   background: none;
   border: none;
-  color: #94a3b8;
+  color: #94A3B8;
   cursor: pointer;
   padding: 0.25rem;
   display: flex;
@@ -156,7 +165,7 @@
 }
 
 .al-search-icon-btn:hover {
-  color: #0C2340;
+  color: #001A33;
 }
 
 /* Right Action Icons (Cart, Wishlist, User) */
@@ -183,8 +192,8 @@
 }
 
 .al-action-btn:hover {
-  color: #0C2340;
-  background-color: #f1f5f9;
+  color: #001A33;
+  background-color: #F1F5F9;
 }
 
 .al-badge-count {
@@ -194,7 +203,7 @@
   min-width: 16px;
   height: 16px;
   background-color: #FF7A00;
-  color: #ffffff;
+  color: #FFFFFF;
   font-size: 0.65rem;
   font-weight: 700;
   border-radius: 999px;
@@ -202,7 +211,7 @@
   align-items: center;
   justify-content: center;
   padding: 0 4px;
-  border: 1.5px solid #ffffff;
+  border: 1.5px solid #FFFFFF;
 }
 
 /* User Dropdown */
@@ -215,12 +224,12 @@
   top: calc(100% + 8px);
   right: 0;
   width: 220px;
-  background: #ffffff;
-  border: 1px solid #e2e8f0;
+  background: #FFFFFF;
+  border: 1px solid #E2E8F0;
   border-radius: 8px;
   box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1);
   padding: 0.5rem 0;
-  z-index: 1100;
+  z-index: 10000;
   animation: fadeIn 0.15s ease;
 }
 
@@ -236,12 +245,12 @@
 .al-user-name {
   font-size: 0.85rem;
   font-weight: 700;
-  color: #0C2340;
+  color: #001A33;
 }
 
 .al-user-email {
   font-size: 0.75rem;
-  color: #64748b;
+  color: #64748B;
   margin-top: 2px;
 }
 
@@ -252,8 +261,8 @@
 
 .al-menu-signin-btn {
   display: block;
-  background-color: #0C2340;
-  color: #ffffff;
+  background-color: #001A33;
+  color: #FFFFFF;
   font-size: 0.8rem;
   font-weight: 600;
   padding: 0.45rem 1rem;
@@ -269,7 +278,7 @@
 
 .al-menu-new-text {
   font-size: 0.75rem;
-  color: #64748b;
+  color: #64748B;
 }
 
 .al-menu-link-orange {
@@ -284,7 +293,7 @@
 
 .al-menu-divider {
   height: 1px;
-  background-color: #f1f5f9;
+  background-color: #F1F5F9;
   margin: 0.35rem 0;
 }
 
@@ -305,17 +314,17 @@
 }
 
 .al-menu-item:hover {
-  background-color: #f8fafc;
-  color: #0C2340;
+  background-color: #F8FAFC;
+  color: #001A33;
 }
 
 .al-menu-logout {
-  color: #dc2626;
+  color: #DC2626;
 }
 
 .al-menu-logout:hover {
-  background-color: #fee2e2;
-  color: #b91c1c;
+  background-color: #FEE2E2;
+  color: #B91C1C;
 }
 
 /* Responsive Mobile Navigation */
@@ -357,9 +366,9 @@
 .al-mobile-backdrop {
   position: fixed;
   inset: 0;
-  background-color: rgba(12, 35, 64, 0.4);
-  backdrop-filter: blur(2px);
-  z-index: 1200;
+  background-color: rgba(0, 26, 51, 0.4);
+  backdrop-filter: blur(3px);
+  z-index: 10000;
 }
 
 .al-mobile-drawer {
@@ -367,13 +376,13 @@
   top: 0;
   left: 0;
   bottom: 0;
-  width: 280px;
-  background: #ffffff;
-  box-shadow: 4px 0 20px rgba(0, 0, 0, 0.15);
+  width: 290px;
+  background: #FFFFFF;
+  box-shadow: 4px 0 25px rgba(0, 0, 0, 0.2);
   display: flex;
   flex-direction: column;
   padding: 1.25rem;
-  z-index: 1201;
+  z-index: 10001;
   animation: slideDrawer 0.2s ease-out;
 }
 
@@ -387,14 +396,14 @@
   align-items: center;
   justify-content: space-between;
   padding-bottom: 1rem;
-  border-bottom: 1px solid #e2e8f0;
+  border-bottom: 1px solid #E2E8F0;
   margin-bottom: 1rem;
 }
 
 .al-drawer-close {
   background: none;
   border: none;
-  color: #64748b;
+  color: #64748B;
   cursor: pointer;
   padding: 0.25rem;
 }
@@ -418,18 +427,18 @@
   color: #334155;
   text-decoration: none;
   font-size: 0.9rem;
-  font-weight: 500;
+  font-weight: 600;
   border-radius: 6px;
   transition: all 0.15s ease;
 }
 
 .al-drawer-link:hover {
-  background-color: #f1f5f9;
-  color: #0C2340;
+  background-color: #F1F5F9;
+  color: #001A33;
 }
 
 .al-drawer-footer {
-  border-top: 1px solid #e2e8f0;
+  border-top: 1px solid #E2E8F0;
   padding-top: 1rem;
   display: flex;
   flex-direction: column;
@@ -438,9 +447,16 @@
 
 /* Secure Checkout Header */
 .al-cart-secure-header {
-  background: #ffffff;
-  border-bottom: 1px solid #e2e8f0;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  width: 100%;
+  z-index: 9999;
+  background: #FFFFFF;
+  border-bottom: 1px solid #E2E8F0;
   padding: 1.25rem 0;
+  box-shadow: 0 2px 10px rgba(0, 26, 51, 0.05);
 }
 
 .al-cart-header-flex {
@@ -455,7 +471,7 @@
   gap: 0.4rem;
   color: #10B981;
   font-size: 0.85rem;
-  font-weight: 600;
+  font-weight: 700;
 }
 
 /* Mobile-only search icon in brand col — hidden on desktop */
@@ -469,4 +485,3 @@
     margin-left: auto;
   }
 }
-

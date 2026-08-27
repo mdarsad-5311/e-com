@@ -1,9 +1,9 @@
 /* ToastViewport Component Styles */
 .toast-viewport {
   position: fixed;
-  top: calc(var(--banner-height) + var(--nav-height-desktop) + 12px);
+  top: 84px;
   right: 1.25rem;
-  z-index: 400;
+  z-index: 10001;
   display: flex;
   flex-direction: column;
   gap: 0.6rem;
