@@ -1,221 +1,189 @@
-/* Cart Item Card Styles matching attachment */
-.al-cart-item-card {
+/* Cart Item Card Styles - Matching Attachment 2 */
+
+.al-cart-card {
   background: #ffffff;
   border: 1px solid #e2e8f0;
-  border-radius: 4px;
-  padding: 1.25rem 1.4rem;
-  display: grid;
-  grid-template-columns: 110px 1fr;
+  border-radius: 12px;
+  padding: 1.5rem;
+  display: flex;
   gap: 1.5rem;
-  align-items: flex-start;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.03);
+  align-items: center;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.02);
+  transition: border-color 0.15s ease;
 }
 
-.al-cart-img-wrap {
+.al-cart-card:hover {
+  border-color: #cbd5e1;
+}
+
+/* Image Thumbnail */
+.al-cart-img-box {
   width: 110px;
   height: 110px;
-  background: #e0e7ff;
-  border-radius: 4px;
+  background-color: #f8fafc;
+  border-radius: 8px;
   overflow: hidden;
   display: flex;
   align-items: center;
   justify-content: center;
   flex-shrink: 0;
+  border: 1px solid #f1f5f9;
 }
 
-.al-cart-img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
+.al-cart-product-img {
+  max-width: 90%;
+  max-height: 90%;
+  object-fit: contain;
 }
 
-.al-cart-info-col {
+/* Content Box */
+.al-cart-content-box {
   display: flex;
   flex-direction: column;
-  gap: 0.45rem;
+  flex: 1;
+  gap: 1.25rem;
 }
 
-.al-cart-title-price-row {
+/* Top Row: Title + Price */
+.al-cart-top-row {
   display: flex;
   justify-content: space-between;
   align-items: flex-start;
   gap: 1rem;
 }
 
-.al-cart-title-link {
-  color: #0f172a;
-  text-decoration: none;
-  flex: 1;
+.al-cart-info-main {
+  display: flex;
+  flex-direction: column;
 }
 
-.al-cart-item-title {
-  font-size: 1.05rem;
+.al-cart-title-link {
+  text-decoration: none;
+}
+
+.al-cart-item-heading {
+  font-size: 1.1rem;
   font-weight: 700;
-  color: #0f172a;
-  line-height: 1.35;
+  color: #0C2340;
+  line-height: 1.3;
+  margin-bottom: 0.25rem;
+  transition: color 0.15s ease;
+}
+
+.al-cart-title-link:hover .al-cart-item-heading {
+  color: #FF7A00;
+}
+
+.al-cart-item-specs {
+  font-size: 0.8rem;
+  color: #64748b;
   margin: 0;
 }
 
-.al-cart-title-link:hover .al-cart-item-title {
-  color: #f97316;
-}
-
-.al-cart-price-block {
-  display: flex;
-  flex-direction: column;
-  align-items: flex-end;
-  gap: 0.15rem;
-  flex-shrink: 0;
-}
-
-.al-cart-curr-price {
-  font-size: 1.15rem;
+.al-cart-item-price {
+  font-size: 1.25rem;
   font-weight: 800;
-  color: #0f172a;
+  color: #0C2340;
+  letter-spacing: -0.02em;
 }
 
-.al-cart-orig-price {
-  font-size: 0.84rem;
-  color: #64748b;
-  text-decoration: line-through;
-}
-
-.al-cart-badges-row {
+/* Bottom Row: Stepper + Save/Remove */
+.al-cart-bottom-row {
   display: flex;
-  flex-direction: column;
-  gap: 0.2rem;
-  margin-top: 0.15rem;
+  justify-content: space-between;
+  align-items: center;
 }
 
-.al-stock-status {
+/* Stepper Pill */
+.al-cart-stepper-box {
   display: inline-flex;
   align-items: center;
-  gap: 0.3rem;
-  font-size: 0.84rem;
-  font-weight: 600;
-  color: #15803d;
-}
-
-.al-check-icon {
-  color: #16a34a;
-}
-
-.al-shipping-eligibility {
-  font-size: 0.8rem;
-  color: #64748b;
-}
-
-.al-cart-actions-row {
-  display: flex;
-  align-items: center;
-  gap: 1.25rem;
-  margin-top: 0.8rem;
-}
-
-/* Stepper Controls */
-.al-cart-stepper {
-  display: inline-flex;
-  align-items: center;
-  border: 1px solid #cbd5e1;
-  border-radius: 4px;
   background: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 6px;
+  overflow: hidden;
 }
 
-.al-stepper-btn {
-  width: 28px;
-  height: 28px;
+.al-stepper-control {
+  background: none;
+  border: none;
+  width: 32px;
+  height: 32px;
   display: flex;
   align-items: center;
   justify-content: center;
-  color: #334155;
-  background: #f8fafc;
-  border: none;
+  color: #475569;
   cursor: pointer;
-  transition: background 0.15s ease;
+  transition: background-color 0.15s ease;
 }
 
-.al-stepper-btn:hover:not(:disabled) {
-  background: #e2e8f0;
-  color: #0f172a;
+.al-stepper-control:hover {
+  background-color: #f1f5f9;
+  color: #0C2340;
 }
 
-.al-stepper-btn:disabled {
-  opacity: 0.4;
-  cursor: not-allowed;
-}
-
-.al-stepper-value {
-  min-width: 32px;
+.al-stepper-count {
+  width: 32px;
   text-align: center;
-  font-size: 0.9rem;
+  font-size: 0.875rem;
   font-weight: 700;
-  color: #0f172a;
-  padding: 0 0.35rem;
-  border-left: 1px solid #e2e8f0;
-  border-right: 1px solid #e2e8f0;
-  line-height: 28px;
+  color: #0C2340;
 }
 
-/* Action Links */
-.al-cart-links-group {
+/* Action Links on Right */
+.al-cart-item-actions {
+  display: flex;
+  align-items: center;
+  gap: 1.25rem;
+}
+
+.al-cart-action-pill {
   display: inline-flex;
   align-items: center;
-  gap: 0.6rem;
-  font-size: 0.85rem;
-  font-weight: 600;
-}
-
-.al-cart-action-link {
+  gap: 0.35rem;
   background: none;
   border: none;
-  padding: 0;
   font-size: 0.85rem;
   font-weight: 600;
+  color: #64748b;
   cursor: pointer;
-  transition: opacity 0.15s ease;
+  padding: 0;
+  transition: color 0.15s ease;
 }
 
-.al-cart-action-link.save-link,
-.al-cart-action-link.move-link {
-  color: #334155;
+.al-cart-action-pill:hover {
+  color: #0C2340;
 }
 
-.al-cart-action-link.save-link:hover,
-.al-cart-action-link.move-link:hover {
-  color: #0f172a;
+.al-cart-action-pill.saved {
+  color: #FF7A00;
+}
+
+.al-cart-action-pill.remove-pill {
+  color: #EF4444;
+}
+
+.al-cart-action-pill.remove-pill:hover {
+  color: #DC2626;
   text-decoration: underline;
 }
 
-.al-cart-action-link.remove-link {
-  color: #dc2626;
-}
-
-.al-cart-action-link.remove-link:hover {
-  color: #b91c1c;
+.al-cart-link-btn {
+  background: none;
+  border: none;
+  color: #0C2340;
+  font-weight: 700;
+  font-size: 0.85rem;
+  cursor: pointer;
   text-decoration: underline;
 }
 
-.al-action-divider {
-  color: #cbd5e1;
-}
-
-@media (max-width: 640px) {
-  .al-cart-item-card {
-    grid-template-columns: 80px 1fr;
-    gap: 0.85rem;
-    padding: 0.85rem;
+@media (max-width: 600px) {
+  .al-cart-card {
+    flex-direction: column;
+    align-items: flex-start;
   }
-
-  .al-cart-img-wrap {
-    width: 80px;
-    height: 80px;
-  }
-
-  .al-cart-item-title {
-    font-size: 0.9rem;
-  }
-
-  .al-cart-curr-price {
-    font-size: 1rem;
+  .al-cart-content-box {
+    width: 100%;
   }
 }

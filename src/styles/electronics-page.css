@@ -1,0 +1,390 @@
+/* Electronics Category Page Styles - Matching Attachment 1 */
+
+.al-electronics-page-wrapper {
+  background-color: #ffffff;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+/* ==========================================================================
+   1. HERO BANNER
+   ========================================================================== */
+.al-electronics-hero {
+  position: relative;
+  min-height: 380px;
+  background: linear-gradient(135deg, #091E36 0%, #0F325C 50%, #1A4980 100%);
+  display: flex;
+  align-items: flex-end;
+  overflow: hidden;
+  color: #ffffff;
+}
+
+.al-electronics-hero-bg-img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center 25%;
+  opacity: 0.85;
+  z-index: 1;
+}
+
+.al-electronics-hero-overlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    180deg,
+    rgba(6, 20, 38, 0.15) 0%,
+    rgba(6, 20, 38, 0.65) 60%,
+    rgba(6, 20, 38, 0.95) 100%
+  );
+  z-index: 2;
+}
+
+.al-electronics-hero-content {
+  position: relative;
+  z-index: 3;
+  padding: 2.25rem 1.25rem 2.5rem;
+  width: 100%;
+  max-width: 640px;
+}
+
+.al-electronics-hero-tag {
+  display: inline-block;
+  background-color: #FF7A00;
+  color: #ffffff;
+  font-size: 0.7rem;
+  font-weight: 800;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  padding: 0.25rem 0.65rem;
+  border-radius: 4px;
+  margin-bottom: 0.85rem;
+}
+
+.al-electronics-hero-title {
+  font-size: clamp(2.2rem, 5vw, 3.2rem);
+  font-weight: 900;
+  line-height: 1.05;
+  letter-spacing: -0.03em;
+  color: #ffffff;
+  margin-bottom: 0.75rem;
+}
+
+.al-electronics-hero-desc {
+  font-size: 0.92rem;
+  line-height: 1.55;
+  color: rgba(255, 255, 255, 0.9);
+  margin-bottom: 1.5rem;
+  max-width: 440px;
+}
+
+.al-electronics-hero-actions {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+}
+
+.al-btn-hero-shop {
+  background-color: #FF7A00;
+  color: #ffffff;
+  font-weight: 700;
+  font-size: 0.88rem;
+  padding: 0.7rem 1.4rem;
+  border-radius: 6px;
+  text-decoration: none;
+  border: none;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  box-shadow: 0 4px 14px rgba(255, 122, 0, 0.35);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.al-btn-hero-shop:hover {
+  background-color: #e56d00;
+  transform: translateY(-1px);
+}
+
+.al-btn-hero-details {
+  background: rgba(12, 35, 64, 0.6);
+  color: #ffffff;
+  font-weight: 600;
+  font-size: 0.88rem;
+  padding: 0.7rem 1.4rem;
+  border-radius: 6px;
+  border: 1.5px solid rgba(255, 255, 255, 0.6);
+  text-decoration: none;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  backdrop-filter: blur(4px);
+}
+
+.al-btn-hero-details:hover {
+  border-color: #ffffff;
+  background: rgba(255, 255, 255, 0.15);
+}
+
+/* ==========================================================================
+   2. CATEGORY PILL TABS
+   ========================================================================== */
+.al-electronics-tabs-bar {
+  background: #ffffff;
+  border-bottom: 1px solid #e2e8f0;
+  position: sticky;
+  top: 64px;
+  z-index: 90;
+}
+
+.al-electronics-tabs-scroll {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  overflow-x: auto;
+  padding: 0.85rem 1rem;
+  scrollbar-width: none;
+}
+
+.al-electronics-tabs-scroll::-webkit-scrollbar {
+  display: none;
+}
+
+.al-electronics-tab-pill {
+  flex-shrink: 0;
+  padding: 0.45rem 1.1rem;
+  border-radius: 20px;
+  border: 1.5px solid #e2e8f0;
+  background: #ffffff;
+  color: #475569;
+  font-size: 0.82rem;
+  font-weight: 600;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: all 0.15s ease;
+}
+
+.al-electronics-tab-pill:hover {
+  border-color: #0C2340;
+  color: #0C2340;
+}
+
+.al-electronics-tab-pill.active {
+  background-color: #0C2340;
+  border-color: #0C2340;
+  color: #ffffff;
+}
+
+/* ==========================================================================
+   3. PRODUCTS SECTION
+   ========================================================================== */
+.al-electronics-products-section {
+  padding: 1.5rem 0 5rem;
+  background: #f8fafc;
+  flex: 1;
+}
+
+.al-electronics-section-heading {
+  font-size: 1.25rem;
+  font-weight: 800;
+  color: #0C2340;
+  letter-spacing: -0.02em;
+  margin-bottom: 1rem;
+}
+
+.al-electronics-grid-2col {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 0.85rem;
+}
+
+/* Product Card */
+.al-elec-card {
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 10px;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.03);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.al-elec-card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08);
+}
+
+.al-elec-card-img-wrap {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 1 / 1;
+  background-color: #f8fafc;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.al-elec-card-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  transition: transform 0.35s ease;
+}
+
+.al-elec-card:hover .al-elec-card-img {
+  transform: scale(1.05);
+}
+
+/* Assured Badge */
+.al-elec-assured-pill {
+  position: absolute;
+  top: 0.5rem;
+  left: 0.5rem;
+  background: #ffffff;
+  color: #0C2340;
+  border: 1px solid #cbd5e1;
+  font-size: 0.65rem;
+  font-weight: 700;
+  padding: 0.18rem 0.45rem;
+  border-radius: 4px;
+  display: flex;
+  align-items: center;
+  gap: 3px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+  z-index: 2;
+}
+
+.al-elec-assured-pill svg {
+  color: #2563eb;
+}
+
+/* Wishlist Button */
+.al-elec-wish-btn {
+  position: absolute;
+  top: 0.5rem;
+  right: 0.5rem;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #64748b;
+  cursor: pointer;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.08);
+  transition: all 0.15s ease;
+  z-index: 2;
+}
+
+.al-elec-wish-btn:hover {
+  transform: scale(1.1);
+  color: #e11d48;
+}
+
+.al-elec-wish-btn.active {
+  background: #fee2e2;
+  color: #e11d48;
+  border-color: #fca5a5;
+}
+
+/* Info */
+.al-elec-card-info {
+  padding: 0.75rem 0.85rem 0.85rem;
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+}
+
+.al-elec-card-subcat {
+  font-size: 0.68rem;
+  font-weight: 700;
+  color: #64748b;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  margin-bottom: 0.2rem;
+}
+
+.al-elec-card-title {
+  font-size: 0.88rem;
+  font-weight: 700;
+  color: #0C2340;
+  line-height: 1.3;
+  margin-bottom: 0.4rem;
+  text-decoration: none;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  transition: color 0.15s ease;
+}
+
+.al-elec-card-title:hover {
+  color: #FF7A00;
+}
+
+.al-elec-card-bottom {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: auto;
+  padding-top: 0.25rem;
+}
+
+.al-elec-card-price {
+  font-size: 1rem;
+  font-weight: 900;
+  color: #0C2340;
+}
+
+.al-elec-card-cart-btn {
+  width: 32px;
+  height: 32px;
+  border-radius: 6px;
+  background: #f1f5f9;
+  border: 1px solid #e2e8f0;
+  color: #0C2340;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.al-elec-card-cart-btn:hover {
+  background: #0C2340;
+  color: #ffffff;
+  border-color: #0C2340;
+}
+
+.al-elec-card-cart-btn.added {
+  background: #16a34a;
+  color: #ffffff;
+  border-color: #16a34a;
+}
+
+/* Desktop sizing adjustments */
+@media (min-width: 769px) {
+  .al-electronics-hero {
+    min-height: 440px;
+  }
+
+  .al-electronics-hero-content {
+    padding: 3.5rem 0 4rem;
+  }
+
+  .al-electronics-grid-2col {
+    grid-template-columns: repeat(4, 1fr);
+    gap: 1.25rem;
+  }
+}

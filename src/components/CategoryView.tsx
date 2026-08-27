@@ -1,8 +1,9 @@
 "use client";
 
 import { useState, useMemo } from "react";
-import { ChevronUp, ChevronDown, ChevronLeft, ChevronRight, SlidersHorizontal, X } from "lucide-react";
-import { products, Product, Category } from "@/data/products";
+import Link from "next/link";
+import { ChevronDown, ChevronUp, ChevronRight, SlidersHorizontal, X } from "lucide-react";
+import { Product, Category } from "@/data/products";
 import ProductCard from "@/components/ProductCard";
 import "@/styles/category-page.css";
 
@@ -15,21 +16,34 @@ export default function CategoryView({ category, initialProducts }: CategoryView
   // Mobile filter drawer state
   const [isMobileFilterOpen, setIsMobileFilterOpen] = useState(false);
 
-  // Filter & Accordion States
-  const [openSections, setOpenSections] = useState({
-    brand: true,
-    price: true,
-    rating: true,
-    discount: false,
-  });
+  // Accordion open/close states
+  const [isCategoryOpen, setIsCategoryOpen] = useState(true);
+  const [isBrandOpen, setIsBrandOpen] = useState(true);
 
+  // Filter criteria - all subcategories shown by default
+  const [selectedSubCats, setSelectedSubCats] = useState<string[]>([]);
   const [selectedBrands, setSelectedBrands] = useState<string[]>([]);
-  const [selectedPriceRange, setSelectedPriceRange] = useState<string>("all");
-  const [selectedRatings, setSelectedRatings] = useState<number[]>([]);
-  const [sortBy, setSortBy] = useState<string>("featured");
+  const [sortBy, setSortBy] = useState<string>("recommended");
+  const [visibleCount, setVisibleCount] = useState<number>(12);
 
-  const toggleSection = (sectionKey: keyof typeof openSections) => {
-    setOpenSections((prev) => ({ ...prev, [sectionKey]: !prev[sectionKey] }));
+  const subCategoriesList = [
+    "Headphones",
+    "Wearables",
+    "Keyboards",
+    "Laptops",
+    "Smartphones",
+  ];
+
+  const brandsList = [
+    "Aura",
+    "Chronox",
+    "Keychron",
+  ];
+
+  const handleSubCatChange = (subCat: string) => {
+    setSelectedSubCats((prev) =>
+      prev.includes(subCat) ? prev.filter((s) => s !== subCat) : [...prev, subCat]
+    );
   };
 
   const handleBrandChange = (brand: string) => {
@@ -38,37 +52,39 @@ export default function CategoryView({ category, initialProducts }: CategoryView
     );
   };
 
-  const handleRatingChange = (rating: number) => {
-    setSelectedRatings((prev) =>
-      prev.includes(rating) ? prev.filter((r) => r !== rating) : [...prev, rating]
-    );
-  };
-
   const handleClearAll = () => {
+    setSelectedSubCats([]);
     setSelectedBrands([]);
-    setSelectedPriceRange("all");
-    setSelectedRatings([]);
-    setSortBy("featured");
+    setSortBy("recommended");
   };
 
   const filteredProducts = useMemo<Product[]>(() => {
     return initialProducts
       .filter((p: Product) => {
-        if (selectedBrands.length > 0) {
-          const productBrand = p.brand || (p.title.includes("Aura") ? "Aura" : p.title.includes("Pulse") ? "Pulse" : p.title.includes("Vortex") ? "Vortex" : "Sony");
-          if (!selectedBrands.includes(productBrand)) {
+        // Subcategory filter
+        if (selectedSubCats.length > 0) {
+          const productSubCat = p.subCategory || (
+            p.title.toLowerCase().includes("headphone") || p.title.toLowerCase().includes("buds") ? "Headphones" :
+            p.title.toLowerCase().includes("watch") ? "Wearables" :
+            p.title.toLowerCase().includes("keyboard") ? "Keyboards" :
+            p.title.toLowerCase().includes("laptop") || p.title.toLowerCase().includes("ultrabook") ? "Laptops" :
+            p.title.toLowerCase().includes("phone") ? "Smartphones" : "Headphones"
+          );
+          if (!selectedSubCats.includes(productSubCat)) {
             return false;
           }
         }
 
-        if (selectedPriceRange === "under-50" && p.price >= 50) return false;
-        if (selectedPriceRange === "50-100" && (p.price < 50 || p.price > 100)) return false;
-        if (selectedPriceRange === "100-250" && (p.price < 100 || p.price > 250)) return false;
-        if (selectedPriceRange === "over-250" && p.price <= 250) return false;
-
-        if (selectedRatings.length > 0) {
-          const minRating = Math.min(...selectedRatings);
-          if (p.rating < minRating) return false;
+        // Brand filter
+        if (selectedBrands.length > 0) {
+          const productBrand = p.brand || (
+            p.title.includes("Aura") ? "Aura" :
+            p.title.includes("Chronox") ? "Chronox" :
+            p.title.includes("Keychron") ? "Keychron" : "Aura"
+          );
+          if (!selectedBrands.includes(productBrand)) {
+            return false;
+          }
         }
 
         return true;
@@ -77,406 +93,229 @@ export default function CategoryView({ category, initialProducts }: CategoryView
         if (sortBy === "price-low") return a.price - b.price;
         if (sortBy === "price-high") return b.price - a.price;
         if (sortBy === "rating") return b.rating - a.rating;
-        return 0;
+        return 0; // recommended
       });
-  }, [initialProducts, selectedBrands, selectedPriceRange, selectedRatings, sortBy]);
+  }, [initialProducts, selectedSubCats, selectedBrands, sortBy]);
 
-  const availableBrands = [
-    { name: "Sony", count: 12 },
-    { name: "JBL", count: 8 },
-    { name: "Keychron", count: 6 },
-    { name: "Apple", count: 14 },
-    { name: "AURA AUDIO", count: 24 },
-    { name: "Pulse", count: 18 },
-  ];
+  const displayedProducts = filteredProducts.slice(0, visibleCount);
 
   return (
-    <div className="al-catalog-page">
-      {/* Mobile Top Sub-Toolbar: Filter on Left, Sort on Right (Matching Reference Screenshot) */}
-      <div className="al-mobile-filter-toolbar">
-        <div className="container al-mobile-toolbar-flex">
-          <button
-            type="button"
-            className="al-mobile-filter-trigger"
-            onClick={() => setIsMobileFilterOpen(true)}
-            aria-label="Filter products"
-          >
-            <SlidersHorizontal size={15} className="filter-icon" />
-            <span>Filter</span>
-          </button>
+    <div className="al-catalog-wrapper">
+      <div className="container">
+        {/* Top Breadcrumb & Sort Bar */}
+        <div className="al-catalog-top-bar">
+          <div className="al-breadcrumbs">
+            <Link href="/" className="al-breadcrumb-link">Home</Link>
+            <ChevronRight size={14} className="al-breadcrumb-arrow" />
+            <span className="al-breadcrumb-current">{category?.name || "Electronics"}</span>
+          </div>
 
-          <div className="al-mobile-sort-wrap">
-            <span className="al-sort-prefix">Sort</span>
-            <select
-              value={sortBy}
-              onChange={(e) => setSortBy(e.target.value)}
-              className="al-mobile-sort-select"
-              aria-label="Sort products"
+          <div className="al-sort-container">
+            <div className="al-sort-box">
+              <span className="al-sort-label">Sort by:</span>
+              <select
+                value={sortBy}
+                onChange={(e) => setSortBy(e.target.value)}
+                className="al-sort-select"
+                aria-label="Sort products"
+              >
+                <option value="recommended">Recommended</option>
+                <option value="price-low">Price: Low to High</option>
+                <option value="price-high">Price: High to Low</option>
+                <option value="rating">Highest Rated</option>
+              </select>
+              <ChevronDown size={14} className="al-sort-chevron" />
+            </div>
+
+            {/* Mobile Filter Toggle */}
+            <button 
+              type="button" 
+              className="al-mobile-filter-btn"
+              onClick={() => setIsMobileFilterOpen(true)}
             >
-              <option value="featured">Featured</option>
-              <option value="price-low">Price: Low to High</option>
-              <option value="price-high">Price: High to Low</option>
-              <option value="rating">Highest Rated</option>
-            </select>
-            <ChevronDown size={14} className="al-sort-chevron" />
+              <SlidersHorizontal size={15} />
+              <span>Filters</span>
+            </button>
           </div>
         </div>
-      </div>
 
-      <div className="container">
+        {/* Main 2-Column Catalog Layout */}
         <div className="al-catalog-layout">
-          {/* Left Sidebar Filters (Desktop) */}
-          <aside className="al-filter-sidebar desktop-filter-sidebar">
-            <div className="al-filter-top-row">
-              <span className="al-filter-heading">Filters</span>
-              <button onClick={handleClearAll} className="al-clear-all-btn">
+          {/* Left Sidebar: Filters */}
+          <aside className="al-filter-sidebar">
+            <div className="al-filter-header">
+              <h2 className="al-filter-title">Filters</h2>
+              <button 
+                type="button" 
+                onClick={handleClearAll} 
+                className="al-clear-all-link"
+              >
                 Clear All
               </button>
             </div>
 
-            {/* Brand Filter */}
-            <div className="al-filter-section">
+            {/* Section 1: Category */}
+            <div className="al-filter-group">
               <button
                 type="button"
-                className="al-section-toggle-btn"
-                onClick={() => toggleSection("brand")}
+                className="al-group-toggle-btn"
+                onClick={() => setIsCategoryOpen(!isCategoryOpen)}
               >
-                <span>Brand</span>
-                {openSections.brand ? <ChevronUp size={16} className="toggle-chevron" /> : <ChevronDown size={16} className="toggle-chevron" />}
+                <span>Category</span>
+                {isCategoryOpen ? <ChevronUp size={16} /> : <ChevronDown size={16} />}
               </button>
 
-              {openSections.brand && (
-                <div className="al-filter-options-list">
-                  {availableBrands.map((b) => (
-                    <label key={b.name} className="al-checkbox-label">
+              {isCategoryOpen && (
+                <div className="al-options-list">
+                  {subCategoriesList.map((item) => (
+                    <label key={item} className="al-checkbox-row">
                       <input
                         type="checkbox"
-                        checked={selectedBrands.includes(b.name)}
-                        onChange={() => handleBrandChange(b.name)}
-                        className="al-custom-checkbox"
+                        checked={selectedSubCats.includes(item)}
+                        onChange={() => handleSubCatChange(item)}
+                        className="al-checkbox-input"
                       />
-                      <span>{b.name} <span className="al-count-tag">({b.count})</span></span>
+                      <span className="al-checkbox-text">{item}</span>
                     </label>
                   ))}
                 </div>
               )}
             </div>
 
-            {/* Price Filter */}
-            <div className="al-filter-section">
+            {/* Section 2: Brand */}
+            <div className="al-filter-group">
               <button
                 type="button"
-                className="al-section-toggle-btn"
-                onClick={() => toggleSection("price")}
+                className="al-group-toggle-btn"
+                onClick={() => setIsBrandOpen(!isBrandOpen)}
               >
-                <span>Price</span>
-                {openSections.price ? <ChevronUp size={16} className="toggle-chevron" /> : <ChevronDown size={16} className="toggle-chevron" />}
+                <span>Brand</span>
+                {isBrandOpen ? <ChevronUp size={16} /> : <ChevronDown size={16} />}
               </button>
 
-              {openSections.price && (
-                <div className="al-filter-options-list">
-                  <label className="al-radio-label">
-                    <input
-                      type="radio"
-                      name="cat-price"
-                      checked={selectedPriceRange === "all"}
-                      onChange={() => setSelectedPriceRange("all")}
-                      className="al-custom-radio"
-                    />
-                    <span>All Prices</span>
-                  </label>
-                  <label className="al-radio-label">
-                    <input
-                      type="radio"
-                      name="cat-price"
-                      checked={selectedPriceRange === "under-50"}
-                      onChange={() => setSelectedPriceRange("under-50")}
-                      className="al-custom-radio"
-                    />
-                    <span>Under $50</span>
-                  </label>
-                  <label className="al-radio-label">
-                    <input
-                      type="radio"
-                      name="cat-price"
-                      checked={selectedPriceRange === "50-100"}
-                      onChange={() => setSelectedPriceRange("50-100")}
-                      className="al-custom-radio"
-                    />
-                    <span>$50 - $100</span>
-                  </label>
-                  <label className="al-radio-label">
-                    <input
-                      type="radio"
-                      name="cat-price"
-                      checked={selectedPriceRange === "100-250"}
-                      onChange={() => setSelectedPriceRange("100-250")}
-                      className="al-custom-radio"
-                    />
-                    <span>$100 - $250</span>
-                  </label>
-                  <label className="al-radio-label">
-                    <input
-                      type="radio"
-                      name="cat-price"
-                      checked={selectedPriceRange === "over-250"}
-                      onChange={() => setSelectedPriceRange("over-250")}
-                      className="al-custom-radio"
-                    />
-                    <span>Over $250</span>
-                  </label>
-                </div>
-              )}
-            </div>
-
-            {/* Customer Rating Filter */}
-            <div className="al-filter-section">
-              <button
-                type="button"
-                className="al-section-toggle-btn"
-                onClick={() => toggleSection("rating")}
-              >
-                <span>Customer Rating</span>
-                {openSections.rating ? <ChevronUp size={16} className="toggle-chevron" /> : <ChevronDown size={16} className="toggle-chevron" />}
-              </button>
-
-              {openSections.rating && (
-                <div className="al-filter-options-list">
-                  <label className="al-checkbox-label">
-                    <input
-                      type="checkbox"
-                      checked={selectedRatings.includes(4)}
-                      onChange={() => handleRatingChange(4)}
-                      className="al-custom-checkbox"
-                    />
-                    <span>4 ★ & Up</span>
-                  </label>
-                  <label className="al-checkbox-label">
-                    <input
-                      type="checkbox"
-                      checked={selectedRatings.includes(3)}
-                      onChange={() => handleRatingChange(3)}
-                      className="al-custom-checkbox"
-                    />
-                    <span>3 ★ & Up</span>
-                  </label>
-                </div>
-              )}
-            </div>
-
-            {/* Discount Filter */}
-            <div className="al-filter-section">
-              <button
-                type="button"
-                className="al-section-toggle-btn"
-                onClick={() => toggleSection("discount")}
-              >
-                <span>Discount</span>
-                {openSections.discount ? <ChevronUp size={16} className="toggle-chevron" /> : <ChevronDown size={16} className="toggle-chevron" />}
-              </button>
-
-              {openSections.discount && (
-                <div className="al-filter-options-list">
-                  <label className="al-checkbox-label">
-                    <input type="checkbox" className="al-custom-checkbox" />
-                    <span>10% or more</span>
-                  </label>
-                  <label className="al-checkbox-label">
-                    <input type="checkbox" className="al-custom-checkbox" />
-                    <span>20% or more</span>
-                  </label>
+              {isBrandOpen && (
+                <div className="al-options-list">
+                  {brandsList.map((brand) => (
+                    <label key={brand} className="al-checkbox-row">
+                      <input
+                        type="checkbox"
+                        checked={selectedBrands.includes(brand)}
+                        onChange={() => handleBrandChange(brand)}
+                        className="al-checkbox-input"
+                      />
+                      <span className="al-checkbox-text">{brand}</span>
+                    </label>
+                  ))}
                 </div>
               )}
             </div>
           </aside>
 
-          {/* Right Product Grid Area */}
-          <main className="al-catalog-main">
-            {/* Desktop Header: Title on Left, Sort by on Right */}
-            <div className="al-catalog-header-row desktop-only-row">
-              <h1 className="al-category-main-title">{category.name}</h1>
+          {/* Right Area: Products Grid & Load More */}
+          <main className="al-catalog-content">
+            {displayedProducts.length > 0 ? (
+              <>
+                <div className="al-products-grid">
+                  {displayedProducts.map((prod) => (
+                    <ProductCard key={prod.id} product={prod} />
+                  ))}
+                </div>
 
-              <div className="al-sort-control">
-                <span className="al-sort-label">Sort by:</span>
-                <select
-                  value={sortBy}
-                  onChange={(e) => setSortBy(e.target.value)}
-                  className="al-sort-select"
-                >
-                  <option value="featured">Featured</option>
-                  <option value="price-low">Price: Low to High</option>
-                  <option value="price-high">Price: High to Low</option>
-                  <option value="rating">Highest Rated</option>
-                </select>
-              </div>
-            </div>
-
-            {/* Product Grid (2 columns on mobile, 4 columns on desktop) */}
-            {filteredProducts.length > 0 ? (
-              <div className="al-products-grid-4">
-                {filteredProducts.map((prod: Product) => (
-                  <ProductCard key={prod.id} product={prod} />
-                ))}
-              </div>
+                {visibleCount < filteredProducts.length && (
+                  <div className="al-load-more-wrap">
+                    <button
+                      type="button"
+                      onClick={() => setVisibleCount((prev) => prev + 4)}
+                      className="al-load-more-btn"
+                    >
+                      Load More Products
+                    </button>
+                  </div>
+                )}
+              </>
             ) : (
               <div className="al-empty-catalog">
-                <h3>No products found</h3>
-                <p>Try clearing some filters to view available items.</p>
-                <button onClick={handleClearAll} className="al-clear-all-btn" style={{ fontSize: "0.95rem" }}>
+                <h3>No products match the selected filters</h3>
+                <p>Try unchecking some filter categories or brands.</p>
+                <button 
+                  type="button" 
+                  onClick={handleClearAll} 
+                  className="al-load-more-btn"
+                  style={{ marginTop: "1rem" }}
+                >
                   Reset Filters
                 </button>
               </div>
             )}
-
-            {/* Pagination: < [1] 2 3 ... 8 > */}
-            <div className="al-pagination-bar">
-              <button className="al-page-btn" disabled aria-label="Previous Page">
-                <ChevronLeft size={16} />
-              </button>
-              <button className="al-page-btn active">1</button>
-              <button className="al-page-btn">2</button>
-              <button className="al-page-btn">3</button>
-              <span className="al-page-ellipsis">...</span>
-              <button className="al-page-btn">8</button>
-              <button className="al-page-btn" aria-label="Next Page">
-                <ChevronRight size={16} />
-              </button>
-            </div>
           </main>
         </div>
       </div>
 
-      {/* Mobile Filter Modal / Drawer */}
+      {/* Mobile Filters Modal */}
       {isMobileFilterOpen && (
-        <div className="mobile-filter-modal-backdrop" onClick={() => setIsMobileFilterOpen(false)}>
-          <div className="mobile-filter-drawer" onClick={(e) => e.stopPropagation()}>
-            <div className="mobile-filter-header">
+        <div className="al-mobile-modal-backdrop" onClick={() => setIsMobileFilterOpen(false)}>
+          <div className="al-mobile-modal-content" onClick={(e) => e.stopPropagation()}>
+            <div className="al-mobile-modal-header">
               <h3>Filters</h3>
-              <button
-                type="button"
-                className="mobile-filter-close-btn"
+              <button 
+                type="button" 
                 onClick={() => setIsMobileFilterOpen(false)}
+                className="al-modal-close"
               >
                 <X size={20} />
               </button>
             </div>
 
-            <div className="mobile-filter-body">
-              {/* Brand Filter */}
-              <div className="al-filter-section">
-                <div className="mobile-section-heading">Brand</div>
-                <div className="al-filter-options-list">
-                  {availableBrands.map((b) => (
-                    <label key={b.name} className="al-checkbox-label">
+            <div className="al-mobile-modal-body">
+              <div className="al-filter-group">
+                <div className="al-modal-section-title">Category</div>
+                <div className="al-options-list">
+                  {subCategoriesList.map((item) => (
+                    <label key={item} className="al-checkbox-row">
                       <input
                         type="checkbox"
-                        checked={selectedBrands.includes(b.name)}
-                        onChange={() => handleBrandChange(b.name)}
-                        className="al-custom-checkbox"
+                        checked={selectedSubCats.includes(item)}
+                        onChange={() => handleSubCatChange(item)}
+                        className="al-checkbox-input"
                       />
-                      <span>{b.name} <span className="al-count-tag">({b.count})</span></span>
+                      <span className="al-checkbox-text">{item}</span>
                     </label>
                   ))}
                 </div>
               </div>
 
-              {/* Price Filter */}
-              <div className="al-filter-section">
-                <div className="mobile-section-heading">Price</div>
-                <div className="al-filter-options-list">
-                  <label className="al-radio-label">
-                    <input
-                      type="radio"
-                      name="m-cat-price"
-                      checked={selectedPriceRange === "all"}
-                      onChange={() => setSelectedPriceRange("all")}
-                      className="al-custom-radio"
-                    />
-                    <span>All Prices</span>
-                  </label>
-                  <label className="al-radio-label">
-                    <input
-                      type="radio"
-                      name="m-cat-price"
-                      checked={selectedPriceRange === "under-50"}
-                      onChange={() => setSelectedPriceRange("under-50")}
-                      className="al-custom-radio"
-                    />
-                    <span>Under $50</span>
-                  </label>
-                  <label className="al-radio-label">
-                    <input
-                      type="radio"
-                      name="m-cat-price"
-                      checked={selectedPriceRange === "50-100"}
-                      onChange={() => setSelectedPriceRange("50-100")}
-                      className="al-custom-radio"
-                    />
-                    <span>$50 - $100</span>
-                  </label>
-                  <label className="al-radio-label">
-                    <input
-                      type="radio"
-                      name="m-cat-price"
-                      checked={selectedPriceRange === "100-250"}
-                      onChange={() => setSelectedPriceRange("100-250")}
-                      className="al-custom-radio"
-                    />
-                    <span>$100 - $250</span>
-                  </label>
-                  <label className="al-radio-label">
-                    <input
-                      type="radio"
-                      name="m-cat-price"
-                      checked={selectedPriceRange === "over-250"}
-                      onChange={() => setSelectedPriceRange("over-250")}
-                      className="al-custom-radio"
-                    />
-                    <span>Over $250</span>
-                  </label>
-                </div>
-              </div>
-
-              {/* Customer Rating Filter */}
-              <div className="al-filter-section">
-                <div className="mobile-section-heading">Customer Rating</div>
-                <div className="al-filter-options-list">
-                  <label className="al-checkbox-label">
-                    <input
-                      type="checkbox"
-                      checked={selectedRatings.includes(4)}
-                      onChange={() => handleRatingChange(4)}
-                      className="al-custom-checkbox"
-                    />
-                    <span>4 ★ & Up</span>
-                  </label>
-                  <label className="al-checkbox-label">
-                    <input
-                      type="checkbox"
-                      checked={selectedRatings.includes(3)}
-                      onChange={() => handleRatingChange(3)}
-                      className="al-custom-checkbox"
-                    />
-                    <span>3 ★ & Up</span>
-                  </label>
+              <div className="al-filter-group" style={{ marginTop: "1.5rem" }}>
+                <div className="al-modal-section-title">Brand</div>
+                <div className="al-options-list">
+                  {brandsList.map((brand) => (
+                    <label key={brand} className="al-checkbox-row">
+                      <input
+                        type="checkbox"
+                        checked={selectedBrands.includes(brand)}
+                        onChange={() => handleBrandChange(brand)}
+                        className="al-checkbox-input"
+                      />
+                      <span className="al-checkbox-text">{brand}</span>
+                    </label>
+                  ))}
                 </div>
               </div>
             </div>
 
-            <div className="mobile-filter-footer">
-              <button
-                type="button"
-                className="mobile-filter-reset-btn"
-                onClick={handleClearAll}
+            <div className="al-mobile-modal-footer">
+              <button 
+                type="button" 
+                onClick={handleClearAll} 
+                className="al-modal-clear-btn"
               >
                 Clear All
               </button>
-              <button
-                type="button"
-                className="mobile-filter-apply-btn"
-                onClick={() => setIsMobileFilterOpen(false)}
+              <button 
+                type="button" 
+                onClick={() => setIsMobileFilterOpen(false)} 
+                className="al-modal-apply-btn"
               >
-                View Results ({filteredProducts.length})
+                Apply Filters
               </button>
             </div>
           </div>

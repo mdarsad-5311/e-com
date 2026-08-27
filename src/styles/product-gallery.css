@@ -1,157 +1,100 @@
-/* Product Gallery Styles */
+/* Product Detail Gallery Styles - Matching Attachment 1 */
 
 .al-product-gallery-layout {
-  display: flex;
-  gap: 1rem;
-  align-items: flex-start;
+  position: relative;
   width: 100%;
 }
 
-/* Mobile Detail Topbar (hidden on desktop) */
-.al-mobile-detail-topbar {
+.al-mobile-gallery-top-bar {
   display: none;
   align-items: center;
   justify-content: space-between;
-  width: 100%;
-  padding: 0.5rem 0.25rem 0.75rem;
+  padding: 0.5rem 0 1rem;
 }
 
-.al-topbar-right {
-  display: flex;
-  align-items: center;
-  gap: 0.85rem;
-}
-
-.al-topbar-btn {
-  background: transparent;
+.al-gallery-nav-btn {
+  background: none;
   border: none;
-  color: #0f172a;
+  color: #475569;
+  cursor: pointer;
+  padding: 0.35rem;
   display: flex;
   align-items: center;
   justify-content: center;
-  cursor: pointer;
-  padding: 0.25rem;
 }
 
-.al-cart-icon-btn {
-  position: relative;
-}
-
-.al-topbar-badge {
-  position: absolute;
-  top: -6px;
-  right: -8px;
-  background-color: #dc2626;
-  color: #ffffff;
-  font-size: 0.65rem;
-  font-weight: 800;
-  min-width: 17px;
-  height: 17px;
-  border-radius: 9999px;
+.al-gallery-top-right {
   display: flex;
   align-items: center;
-  justify-content: center;
-  padding: 0 3px;
+  gap: 0.75rem;
 }
 
-/* Vertical Thumbnails Stack */
-.al-thumbnails-vertical {
-  display: flex;
-  flex-direction: column;
-  gap: 0.65rem;
-  flex-shrink: 0;
-}
-
-.al-thumb-btn {
-  width: 58px;
-  height: 58px;
-  border-radius: 6px;
-  overflow: hidden;
-  border: 1.5px solid #e2e8f0;
-  background: #ffffff;
-  padding: 2px;
-  cursor: pointer;
-  transition: border-color 0.15s ease, box-shadow 0.15s ease;
-}
-
-.al-thumb-btn:hover {
-  border-color: #cbd5e1;
-}
-
-.al-thumb-btn.active {
-  border-color: #0f172a;
-  box-shadow: 0 0 0 1.5px #0f172a;
-}
-
-.al-thumb-img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  border-radius: 4px;
-}
-
-/* Main Image Container */
 .al-main-image-container {
-  position: relative;
-  flex: 1;
-  border: 1px solid #f1f5f9;
+  width: 100%;
+  aspect-ratio: 1 / 1;
+  background-color: #EEF2FF;
   border-radius: 12px;
-  background: #ffffff;
-  padding: 1.25rem;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  min-height: 340px;
   overflow: hidden;
-}
-
-/* Floating Wishlist Button */
-.al-floating-wishlist-btn {
-  position: absolute;
-  top: 0.85rem;
-  right: 0.85rem;
-  width: 36px;
-  height: 36px;
-  border-radius: 50%;
-  background: #ffffff;
-  border: 1px solid #e2e8f0;
   display: flex;
   align-items: center;
   justify-content: center;
-  cursor: pointer;
-  z-index: 5;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
-  transition: all 0.15s ease;
+  position: relative;
+  border: 1px solid #E0E7FF;
 }
 
-.al-floating-wishlist-btn:hover {
-  transform: scale(1.05);
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12);
+.al-gallery-assured-badge {
+  position: absolute;
+  top: 1rem;
+  left: 1rem;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  background: #ffffff;
+  border: 1px solid rgba(255, 122, 0, 0.4);
+  color: #FF7A00;
+  font-size: 0.72rem;
+  font-weight: 700;
+  padding: 0.25rem 0.65rem;
+  border-radius: 4px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+  z-index: 5;
+}
+
+.al-assured-badge-icon {
+  color: #FF7A00;
 }
 
 .al-main-img-frame {
   width: 100%;
-  height: 260px;
+  height: 100%;
   display: flex;
   align-items: center;
   justify-content: center;
+  padding: 2.5rem;
 }
 
 .al-main-img {
-  max-width: 100%;
-  max-height: 100%;
+  max-width: 90%;
+  max-height: 90%;
   object-fit: contain;
+  filter: drop-shadow(0 15px 25px rgba(12, 35, 64, 0.1));
   transition: transform 0.3s ease;
 }
 
-/* Pagination Dots */
+.al-main-image-container:hover .al-main-img {
+  transform: scale(1.04);
+}
+
 .al-gallery-dots {
+  position: absolute;
+  bottom: 0.75rem;
+  left: 0;
+  right: 0;
   display: flex;
   align-items: center;
   justify-content: center;
   gap: 6px;
-  margin-top: 1rem;
+  z-index: 5;
 }
 
 .al-dot {
@@ -160,33 +103,17 @@
   border-radius: 50%;
   background-color: #cbd5e1;
   border: none;
-  padding: 0;
   cursor: pointer;
-  transition: background-color 0.15s ease, transform 0.15s ease;
+  padding: 0;
+  transition: background-color 0.15s ease;
 }
 
 .al-dot.active {
-  background-color: #1e3a8a;
-  transform: scale(1.15);
+  background-color: #0C2340;
 }
 
 @media (max-width: 768px) {
-  .al-product-gallery-layout {
-    flex-direction: column;
-    gap: 0;
-  }
-  .al-mobile-detail-topbar {
+  .al-mobile-gallery-top-bar {
     display: flex;
-  }
-  .al-thumbnails-vertical {
-    display: none;
-  }
-  .al-main-image-container {
-    border: none;
-    padding: 0.5rem 0 1rem;
-    min-height: auto;
-  }
-  .al-main-img-frame {
-    height: 240px;
   }
 }

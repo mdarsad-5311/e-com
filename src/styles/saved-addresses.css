@@ -1,0 +1,354 @@
+/* Saved Addresses Page Styles - Exact Match to Attachment 2 */
+
+.al-saved-addresses-page {
+  background-color: #f8fafc;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.al-addresses-top-bar {
+  background: #ffffff;
+  border-bottom: 1px solid #e2e8f0;
+  padding: 0.85rem 1rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
+
+.al-addresses-back-btn {
+  background: none;
+  border: none;
+  color: #0C2340;
+  cursor: pointer;
+  padding: 0.25rem;
+  display: flex;
+  align-items: center;
+}
+
+.al-addresses-header-title {
+  font-size: 1.15rem;
+  font-weight: 800;
+  color: #0C2340;
+}
+
+.al-addresses-search-link {
+  color: #0C2340;
+  display: flex;
+  align-items: center;
+  padding: 0.25rem;
+}
+
+/* Page Content */
+.al-addresses-content {
+  flex: 1;
+  padding: 1.25rem 1rem 7rem;
+  max-width: 600px;
+  margin: 0 auto;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.al-addresses-heading {
+  font-size: 1.35rem;
+  font-weight: 800;
+  color: #0C2340;
+  letter-spacing: -0.02em;
+  margin-bottom: 0.25rem;
+}
+
+/* Address Card */
+.al-address-card {
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 12px;
+  padding: 1.25rem;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.03);
+  display: flex;
+  flex-direction: column;
+  gap: 0.65rem;
+  position: relative;
+  transition: all 0.15s ease;
+}
+
+/* Default Address Highlight with Left Orange Stripe */
+.al-address-card.default {
+  border-left: 4px solid #FF7A00;
+}
+
+.al-addr-top-row {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.al-addr-icon-box {
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  background-color: #EFF6FF;
+  color: #1E3A8A;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.al-addr-type-title {
+  font-size: 0.98rem;
+  font-weight: 800;
+  color: #0C2340;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.al-addr-default-pill {
+  font-size: 0.65rem;
+  font-weight: 700;
+  color: #64748b;
+  background-color: #f1f5f9;
+  border: 1px solid #e2e8f0;
+  padding: 0.15rem 0.45rem;
+  border-radius: 4px;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.al-addr-body-text {
+  font-size: 0.85rem;
+  line-height: 1.5;
+  color: #475569;
+  padding-left: 0.2rem;
+}
+
+.al-addr-phone-row {
+  display: flex;
+  align-items: center;
+  gap: 0.45rem;
+  font-size: 0.82rem;
+  color: #475569;
+  font-weight: 500;
+  padding-left: 0.2rem;
+}
+
+.al-addr-actions-row {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 0.85rem;
+  margin-top: 0.25rem;
+  padding-top: 0.35rem;
+}
+
+.al-addr-btn-delete {
+  background: none;
+  border: none;
+  color: #dc2626;
+  font-size: 0.85rem;
+  font-weight: 600;
+  cursor: pointer;
+  padding: 0.35rem 0.5rem;
+  transition: opacity 0.15s ease;
+}
+
+.al-addr-btn-delete:hover {
+  opacity: 0.8;
+  text-decoration: underline;
+}
+
+.al-addr-btn-edit {
+  background: #ffffff;
+  border: 1.5px solid #cbd5e1;
+  color: #0C2340;
+  font-size: 0.82rem;
+  font-weight: 700;
+  padding: 0.38rem 1rem;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.al-addr-btn-edit:hover {
+  border-color: #0C2340;
+  background: #f8fafc;
+}
+
+/* Bottom Fixed Floating Add Button */
+.al-addresses-bottom-bar {
+  position: fixed;
+  bottom: 62px;
+  left: 0;
+  right: 0;
+  padding: 0.75rem 1rem;
+  background: #ffffff;
+  border-top: 1px solid #e2e8f0;
+  z-index: 99;
+  display: flex;
+  justify-content: center;
+}
+
+.al-btn-add-address {
+  width: 100%;
+  max-width: 580px;
+  height: 48px;
+  background-color: #FF7A00;
+  color: #ffffff;
+  font-size: 0.95rem;
+  font-weight: 700;
+  border-radius: 30px;
+  border: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.45rem;
+  box-shadow: 0 4px 14px rgba(255, 122, 0, 0.35);
+  transition: background-color 0.15s ease;
+}
+
+.al-btn-add-address:hover {
+  background-color: #e56d00;
+}
+
+/* Address Modal Form */
+.al-addr-modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(12, 35, 64, 0.6);
+  backdrop-filter: blur(4px);
+  z-index: 1050;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1rem;
+}
+
+.al-addr-modal-box {
+  background: #ffffff;
+  border-radius: 14px;
+  width: 100%;
+  max-width: 480px;
+  padding: 1.5rem;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+  max-height: 90vh;
+  overflow-y: auto;
+}
+
+.al-addr-modal-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.al-addr-modal-title {
+  font-size: 1.15rem;
+  font-weight: 800;
+  color: #0C2340;
+}
+
+.al-addr-modal-close {
+  background: none;
+  border: none;
+  color: #64748b;
+  cursor: pointer;
+  font-size: 1.2rem;
+  padding: 0.25rem;
+}
+
+.al-addr-modal-form {
+  display: flex;
+  flex-direction: column;
+  gap: 0.85rem;
+}
+
+.al-addr-type-selector {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.al-addr-type-btn {
+  flex: 1;
+  padding: 0.5rem;
+  border-radius: 6px;
+  border: 1.5px solid #e2e8f0;
+  background: #ffffff;
+  color: #475569;
+  font-size: 0.85rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.al-addr-type-btn.active {
+  border-color: #0C2340;
+  background: #0C2340;
+  color: #ffffff;
+}
+
+.al-addr-input-field {
+  width: 100%;
+  height: 42px;
+  border-radius: 6px;
+  border: 1.5px solid #cbd5e1;
+  padding: 0 0.85rem;
+  font-size: 0.88rem;
+  color: #0C2340;
+  outline: none;
+  transition: border-color 0.15s ease;
+}
+
+.al-addr-input-field:focus {
+  border-color: #0C2340;
+}
+
+.al-addr-textarea {
+  width: 100%;
+  border-radius: 6px;
+  border: 1.5px solid #cbd5e1;
+  padding: 0.75rem 0.85rem;
+  font-size: 0.88rem;
+  color: #0C2340;
+  outline: none;
+  font-family: inherit;
+  resize: vertical;
+  min-height: 70px;
+}
+
+.al-addr-textarea:focus {
+  border-color: #0C2340;
+}
+
+.al-addr-checkbox-row {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.85rem;
+  color: #334155;
+  cursor: pointer;
+}
+
+.al-addr-btn-save {
+  height: 46px;
+  background-color: #FF7A00;
+  color: #ffffff;
+  font-size: 0.95rem;
+  font-weight: 700;
+  border-radius: 8px;
+  border: none;
+  cursor: pointer;
+  transition: background-color 0.15s ease;
+  margin-top: 0.5rem;
+}
+
+.al-addr-btn-save:hover {
+  background-color: #e56d00;
+}

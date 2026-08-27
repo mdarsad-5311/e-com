@@ -34,6 +34,16 @@ import "@/styles/wishlist.css";
 import "@/styles/track-order.css";
 import "@/styles/faq.css";
 import "@/styles/admin.css";
+import "@/styles/fashion-page.css";
+import "@/styles/home-goods.css";
+import "@/styles/product-detail-extra.css";
+import "@/styles/search-page.css";
+import "@/styles/order-success.css";
+import "@/styles/electronics-page.css";
+import "@/styles/saved-addresses.css";
+import "@/styles/payment-methods.css";
+
+
 
 import AppProviders from "@/components/AppProviders";
 import { Metadata } from "next";

@@ -1,0 +1,330 @@
+/* Product Detail Enhancements - Matching Attachments 1 & 2 */
+
+/* Thumbnail Strip */
+.al-gallery-thumb-strip {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  margin-top: 0.85rem;
+  overflow-x: auto;
+  scrollbar-width: none;
+  padding-bottom: 2px;
+}
+
+.al-gallery-thumb-strip::-webkit-scrollbar {
+  display: none;
+}
+
+.al-gallery-thumb-btn {
+  flex-shrink: 0;
+  width: 70px;
+  height: 70px;
+  border-radius: 8px;
+  overflow: hidden;
+  border: 2px solid #e2e8f0;
+  background: #f8fafc;
+  cursor: pointer;
+  padding: 0;
+  transition: border-color 0.15s ease;
+  position: relative;
+}
+
+.al-gallery-thumb-btn.active {
+  border-color: #0C2340;
+}
+
+.al-gallery-thumb-btn img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+/* "+N more" overflow thumb */
+.al-gallery-thumb-more {
+  flex-shrink: 0;
+  width: 70px;
+  height: 70px;
+  border-radius: 8px;
+  border: 1px solid #e2e8f0;
+  background: rgba(12, 35, 64, 0.06);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: #0C2340;
+  cursor: pointer;
+}
+
+/* Bestseller badge (top-left of image) */
+.al-gallery-bestseller-badge {
+  position: absolute;
+  top: 0.75rem;
+  left: 0.75rem;
+  z-index: 5;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  background-color: #FF7A00;
+  color: #ffffff;
+  font-size: 0.7rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  padding: 0.25rem 0.6rem;
+  border-radius: 4px;
+}
+
+/* Two badges stacked */
+.al-gallery-badge-stack {
+  position: absolute;
+  top: 0.75rem;
+  left: 0.75rem;
+  z-index: 5;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+/* Size Selector */
+.al-detail-size-section {
+  margin-bottom: 1.25rem;
+}
+
+.al-size-header-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 0.65rem;
+}
+
+.al-size-label {
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: #475569;
+}
+
+.al-size-guide-link {
+  font-size: 0.8rem;
+  color: #FF7A00;
+  font-weight: 600;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.al-size-buttons {
+  display: flex;
+  gap: 0.6rem;
+  flex-wrap: wrap;
+}
+
+.al-size-btn {
+  min-width: 42px;
+  height: 42px;
+  padding: 0 0.85rem;
+  border-radius: 6px;
+  border: 1.5px solid #e2e8f0;
+  background: #ffffff;
+  color: #334155;
+  font-size: 0.88rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.al-size-btn:hover {
+  border-color: #0C2340;
+  color: #0C2340;
+}
+
+.al-size-btn.active {
+  background-color: #0C2340;
+  border-color: #0C2340;
+  color: #ffffff;
+}
+
+.al-size-btn.unavailable {
+  opacity: 0.38;
+  text-decoration: line-through;
+  cursor: not-allowed;
+}
+
+/* Technical Specifications Section */
+.al-tech-specs-section {
+  margin-bottom: 1.75rem;
+}
+
+.al-tech-specs-title {
+  font-size: 1.05rem;
+  font-weight: 800;
+  color: #0C2340;
+  margin-bottom: 1rem;
+  letter-spacing: -0.01em;
+}
+
+.al-tech-specs-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.85rem;
+}
+
+.al-tech-spec-card {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.85rem;
+  padding: 0.85rem 1rem;
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  border-radius: 10px;
+}
+
+.al-tech-spec-icon-box {
+  width: 38px;
+  height: 38px;
+  border-radius: 8px;
+  background: linear-gradient(135deg, #0C2340 0%, #1E3A5F 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  color: #ffffff;
+}
+
+.al-tech-spec-text {
+  display: flex;
+  flex-direction: column;
+  gap: 0.15rem;
+}
+
+.al-tech-spec-name {
+  font-size: 0.9rem;
+  font-weight: 700;
+  color: #0C2340;
+}
+
+.al-tech-spec-desc {
+  font-size: 0.8rem;
+  color: #64748b;
+  line-height: 1.45;
+}
+
+/* Material Options */
+.al-material-options-section {
+  margin-bottom: 1.5rem;
+}
+
+.al-material-options-title {
+  font-size: 0.92rem;
+  font-weight: 700;
+  color: #0C2340;
+  margin-bottom: 0.75rem;
+}
+
+.al-material-options-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.75rem;
+}
+
+.al-material-option-card {
+  border: 1.5px solid #e2e8f0;
+  border-radius: 8px;
+  padding: 0.85rem;
+  background: #ffffff;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+  text-align: left;
+  width: 100%;
+}
+
+.al-material-option-card:hover {
+  border-color: #0C2340;
+}
+
+.al-material-option-card.active {
+  border-color: #0C2340;
+  background: #f0f4f8;
+}
+
+.al-material-option-name {
+  font-size: 0.88rem;
+  font-weight: 700;
+  color: #0C2340;
+}
+
+.al-material-option-sub {
+  font-size: 0.76rem;
+  color: #64748b;
+}
+
+/* Mobile add-to-cart: full-width orange button (attachment 1 style) */
+.al-mobile-sticky-action-bar--single {
+  display: none;
+  position: fixed;
+  bottom: 62px;
+  left: 0;
+  right: 0;
+  padding: 0.75rem 1rem;
+  background: #ffffff;
+  border-top: 1px solid #e2e8f0;
+  z-index: 999;
+}
+
+.al-mobile-btn-add-full {
+  width: 100%;
+  height: 50px;
+  background-color: #FF7A00;
+  color: #ffffff;
+  border: none;
+  border-radius: 8px;
+  font-size: 0.95rem;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  cursor: pointer;
+  transition: background-color 0.15s ease;
+  box-shadow: 0 4px 14px rgba(255, 122, 0, 0.3);
+}
+
+.al-mobile-btn-add-full:hover {
+  background-color: #e56d00;
+}
+
+.al-mobile-btn-add-full.added {
+  background-color: #16a34a;
+}
+
+@media (max-width: 768px) {
+  .al-mobile-sticky-action-bar--single {
+    display: block;
+  }
+
+  /* Hide 2-button bar when using single button mode */
+  .al-mobile-sticky-action-bar.hide-on-fashion {
+    display: none;
+  }
+
+  .al-gallery-thumb-strip {
+    gap: 0.5rem;
+  }
+
+  .al-gallery-thumb-btn {
+    width: 58px;
+    height: 58px;
+  }
+
+  .al-gallery-thumb-more {
+    width: 58px;
+    height: 58px;
+    font-size: 0.78rem;
+  }
+}

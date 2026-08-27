@@ -6,17 +6,14 @@ import { useRouter, usePathname } from "next/navigation";
 import { 
   Search, 
   ShoppingCart, 
-  ChevronDown, 
-  MapPin, 
   User, 
-  PackageCheck, 
-  LogOut, 
+  Heart,
   Menu, 
   X, 
-  TrendingUp, 
-  Heart,
+  LogOut, 
+  PackageCheck, 
   HelpCircle,
-  Truck,
+  TrendingUp,
   Lock
 } from "lucide-react";
 import SearchBar from "./SearchBar";
@@ -29,10 +26,6 @@ import "@/styles/navbar.css";
 export default function Navbar() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState<boolean>(false);
   const [isUserDropdownOpen, setIsUserDropdownOpen] = useState<boolean>(false);
-  const [isLocationModalOpen, setIsLocationModalOpen] = useState<boolean>(false);
-  const [selectedCategory, setSelectedCategory] = useState<string>("All");
-  const [locationText, setLocationText] = useState<string>("Dubai, UAE");
-  const [pincodeInput, setPincodeInput] = useState<string>("");
   const [searchInput, setSearchInput] = useState<string>("");
 
   const { totalItemsCount } = useCart();
@@ -56,42 +49,27 @@ export default function Navbar() {
   const handleSearchSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (searchInput.trim()) {
-      const catQuery = selectedCategory !== "All" ? `&category=${encodeURIComponent(selectedCategory.toLowerCase())}` : "";
-      router.push(`/products?q=${encodeURIComponent(searchInput.trim())}${catQuery}`);
+      router.push(`/products?q=${encodeURIComponent(searchInput.trim())}`);
     } else {
       openSearch();
     }
   };
 
-  const handleSetPincode = (e: React.FormEvent) => {
-    e.preventDefault();
-    if (pincodeInput.trim()) {
-      setLocationText(pincodeInput.trim());
-      setIsLocationModalOpen(false);
-      setPincodeInput("");
-    }
-  };
-
-  const handleSelectCity = (cityName: string, code: string) => {
-    setLocationText(`${cityName}, ${code}`);
-    setIsLocationModalOpen(false);
-  };
-
-  const subNavLinks = [
-    { name: "Mobiles", href: "/category/mobiles" },
+  const navLinks = [
     { name: "Electronics", href: "/category/electronics" },
     { name: "Fashion", href: "/category/fashion" },
-    { name: "Home", href: "/category/home-living" },
-    { name: "Beauty", href: "/category/beauty" },
+    { name: "Home Goods", href: "/category/home-goods" },
     { name: "Deals", href: "/products?featured=true" },
+    { name: "New Arrivals", href: "/category/new-arrivals" },
+    { name: "Support", href: "/faq" },
   ];
 
-  if (pathname === "/cart" || pathname === "/checkout") {
+  if (pathname === "/checkout") {
     return (
       <header className="al-cart-secure-header">
         <div className="header-container al-cart-header-flex">
-          <Link href="/" className="al-cart-brand-title">
-            Al-Umaima
+          <Link href="/" className="al-brand-logo">
+            AL-UMAIMA
           </Link>
           <div className="al-secure-badge">
             <Lock size={16} className="al-lock-icon" />
@@ -102,273 +80,209 @@ export default function Navbar() {
     );
   }
 
-  const searchPlaceholder = pathname.includes("electronics")
-    ? "Search Electronics..."
-    : pathname.includes("mobiles")
-    ? "Search Mobiles..."
-    : pathname.includes("fashion")
-    ? "Search Fashion..."
-    : pathname.includes("home")
-    ? "Search Home..."
-    : pathname.includes("beauty")
-    ? "Search Beauty..."
-    : "Search Electronics...";
-
   return (
-    <header className="al-umaima-header">
-      {/* Tier 1: Utility Top Bar (Desktop Only) */}
-      <div className="utility-top-bar desktop-only-bar">
-        <div className="header-container utility-flex">
-          {/* Deliver to location */}
+    <header className="al-header">
+      <div className="header-container al-header-inner">
+        {/* Brand Logo */}
+        <div className="al-brand-col">
           <button 
             type="button" 
-            className="deliver-location-btn" 
-            onClick={() => setIsLocationModalOpen(true)}
-            title="Choose delivery location"
+            className="al-mobile-menu-btn"
+            onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+            aria-label="Toggle navigation menu"
           >
-            <MapPin size={13} className="pin-icon" />
-            <span className="deliver-text">
-              Deliver to <span className="deliver-highlight">{locationText}</span>
-            </span>
-            <ChevronDown size={11} className="pin-chevron" />
+            {isMobileMenuOpen ? <X size={22} /> : <Menu size={22} />}
           </button>
-
-          {/* Quick Utility Links */}
-          <div className="utility-quick-links">
-            <Link href="/faq" className="utility-link">Customer Service</Link>
-            <Link href="/wishlist" className="utility-link">Registry</Link>
-            <Link href="/products?featured=true" className="utility-link">Gift Cards</Link>
-            <Link href="/admin" className="utility-link">Sell</Link>
-          </div>
+          <Link href="/" className="al-brand-logo">
+            AL-UMAIMA
+          </Link>
+          {/* Mobile-only: search icon (links to /search page) */}
+          <Link
+            href="/search"
+            className="al-action-btn al-mobile-search-icon"
+            aria-label="Search"
+            title="Search"
+          >
+            <Search size={20} strokeWidth={1.8} />
+          </Link>
         </div>
-      </div>
 
-      {/* Main Header Container */}
-      <div className="header-container main-nav-wrap-box">
-        {/* Top Row on Mobile: Logo on Left, Cart on Right */}
-        <div className="main-nav-top-row">
-          <div className="brand-location-col">
-            <Link href="/" className="brand-logo-link">
-              <span className="brand-name-text">Al-Umaima</span>
-            </Link>
-            <button 
-              type="button" 
-              className="mobile-deliver-btn desktop-only-bar" 
-              onClick={() => setIsLocationModalOpen(true)}
-              title="Choose delivery location"
-            >
-              <MapPin size={11} className="pin-icon-mobile" />
-              <span className="mobile-deliver-label">Deliver to Dubai, U...</span>
-              <ChevronDown size={10} className="pin-chevron-mobile" />
-            </button>
-          </div>
 
-          {/* Right Action Icons */}
-          <div className="header-actions">
-            {/* Cart Button */}
-            <button 
-              type="button" 
-              className="cart-action-btn nav-icon-link" 
-              onClick={openCart}
-              title="Shopping Cart"
-              aria-label="Cart"
-            >
-              <div className="cart-icon-container">
-                <ShoppingCart size={22} className="nav-top-icon" />
-              </div>
-            </button>
+        {/* Desktop Navigation Links */}
+        <nav className="al-nav-menu">
+          {navLinks.map((item) => {
+            const isActive = pathname === item.href || 
+              (item.name === "Electronics" && (pathname === "/category/electronics" || pathname.startsWith("/products")));
 
-            {/* Profile (Desktop) */}
-            <div 
-              className="user-nav-wrap desktop-only-bar"
-              onMouseEnter={() => setIsUserDropdownOpen(true)}
-              onMouseLeave={() => setIsUserDropdownOpen(false)}
-            >
-              <Link href={user ? "/profile" : "/login"} className="user-action-link nav-icon-link" aria-label="Profile">
-                <div className="user-icon-circle">
-                  <User size={19} className="nav-top-icon" />
-                </div>
+            return (
+              <Link
+                key={item.name}
+                href={item.href}
+                className={`al-nav-link ${isActive ? "active" : ""}`}
+              >
+                <span>{item.name}</span>
+                {isActive && <span className="al-active-indicator" />}
               </Link>
+            );
+          })}
+        </nav>
 
-              {isUserDropdownOpen && (
-                <div className="user-dropdown-menu">
-                  {user ? (
-                    <>
-                      <div className="user-drop-header">
-                        <div className="user-drop-name">{user.name}</div>
-                        <div className="user-drop-email">{user.email}</div>
-                      </div>
-                      <div className="drop-divider" />
-                      <Link href="/profile" className="drop-item"><User size={15} /> Your Account</Link>
-                      <Link href="/orders" className="drop-item"><PackageCheck size={15} /> Your Orders</Link>
-                      <Link href="/wishlist" className="drop-item"><Heart size={15} /> Your Wishlist ({wishlistCount})</Link>
-                      <Link href="/admin" className="drop-item"><TrendingUp size={15} /> Seller Dashboard</Link>
-                      <div className="drop-divider" />
-                      <button onClick={logout} className="drop-item drop-logout"><LogOut size={15} /> Sign Out</button>
-                    </>
-                  ) : (
-                    <>
-                      <div className="drop-guest-header">
-                        <Link href="/login" className="drop-signin-btn">Sign in</Link>
-                        <div className="drop-new-text">
-                          New customer? <Link href="/register" className="drop-start-link">Start here.</Link>
-                        </div>
-                      </div>
-                      <div className="drop-divider" />
-                      <Link href="/orders" className="drop-item"><PackageCheck size={15} /> Your Orders</Link>
-                      <Link href="/wishlist" className="drop-item"><Heart size={15} /> Your Wishlist ({wishlistCount})</Link>
-                      <Link href="/faq" className="drop-item"><HelpCircle size={15} /> Customer Service</Link>
-                    </>
-                  )}
-                </div>
-              )}
-            </div>
-          </div>
-        </div>
-
-        {/* Row 2: Search Bar Row */}
-        <div className="main-search-row">
-          <form className="nav-search-form" onSubmit={handleSearchSubmit}>
-            <div className="search-group">
-              <div className="search-select-wrap">
-                <select 
-                  className="search-cat-dropdown"
-                  value={selectedCategory}
-                  onChange={(e) => setSelectedCategory(e.target.value)}
-                  aria-label="Select category"
-                >
-                  <option value="All">All</option>
-                  <option value="mobiles">Mobiles</option>
-                  <option value="electronics">Electronics</option>
-                  <option value="fashion">Fashion</option>
-                  <option value="home">Home</option>
-                  <option value="beauty">Beauty</option>
-                </select>
-                <ChevronDown size={12} className="select-chevron" />
-              </div>
-
-              <input 
-                type="text"
-                placeholder={searchPlaceholder}
-                value={searchInput}
-                onChange={(e) => setSearchInput(e.target.value)}
-                className="search-input"
-              />
-
-              <button type="submit" className="search-submit-btn" aria-label="Search">
-                <Search size={18} strokeWidth={2.5} color="#ffffff" />
-              </button>
-            </div>
+        {/* Search Bar matching Reference Screenshot */}
+        <div className="al-search-col">
+          <form className="al-search-form" onSubmit={handleSearchSubmit}>
+            <input 
+              type="text"
+              placeholder="Search..."
+              value={searchInput}
+              onChange={(e) => setSearchInput(e.target.value)}
+              className="al-search-input"
+            />
+            <button type="submit" className="al-search-icon-btn" aria-label="Submit search">
+              <Search size={16} className="al-search-icon" />
+            </button>
           </form>
         </div>
-      </div>
 
-      {/* Tier 3: Sub-Navigation Bar (Desktop) */}
-      <nav className="sub-nav-bar desktop-sub-nav">
-        <div className="header-container sub-nav-flex">
-          <div className="sub-nav-links">
-            {subNavLinks.map((item) => {
-              const isActive = item.name === "Home" 
-                ? pathname === "/" 
-                : (item.name === "Electronics" && (pathname.includes("electronics") || pathname.startsWith("/products")))
-                  || (item.href !== "/" && pathname === item.href);
-              return (
-                <Link
-                  key={item.name}
-                  href={item.href}
-                  className={`sub-nav-item ${isActive ? "active" : ""}`}
-                >
-                  {item.name}
-                </Link>
-              );
-            })}
+        {/* Right Icon Actions (Cart, Wishlist, Profile) */}
+        <div className="al-actions-col">
+          {/* Shopping Cart Button */}
+          <button 
+            type="button" 
+            className="al-action-btn"
+            onClick={openCart}
+            title="Shopping Cart"
+            aria-label="Shopping Cart"
+          >
+            <ShoppingCart size={20} strokeWidth={1.8} />
+            {totalItemsCount > 0 && (
+              <span className="al-badge-count">{totalItemsCount}</span>
+            )}
+          </button>
+
+          {/* Wishlist Link */}
+          <Link 
+            href="/wishlist" 
+            className="al-action-btn" 
+            title="Wishlist"
+            aria-label="Wishlist"
+          >
+            <Heart size={20} strokeWidth={1.8} />
+            {wishlistCount > 0 && (
+              <span className="al-badge-count">{wishlistCount}</span>
+            )}
+          </Link>
+
+          {/* User Profile / Dropdown */}
+          <div 
+            className="al-user-dropdown-wrap"
+            onMouseEnter={() => setIsUserDropdownOpen(true)}
+            onMouseLeave={() => setIsUserDropdownOpen(false)}
+          >
+            <Link 
+              href={user ? "/profile" : "/login"} 
+              className="al-action-btn" 
+              title="Account"
+              aria-label="User Account"
+            >
+              <User size={20} strokeWidth={1.8} />
+            </Link>
+
+            {isUserDropdownOpen && (
+              <div className="al-user-menu">
+                {user ? (
+                  <>
+                    <div className="al-user-menu-header">
+                      <div className="al-user-name">{user.name}</div>
+                      <div className="al-user-email">{user.email}</div>
+                    </div>
+                    <div className="al-menu-divider" />
+                    <Link href="/profile" className="al-menu-item"><User size={15} /> Your Account</Link>
+                    <Link href="/orders" className="al-menu-item"><PackageCheck size={15} /> Your Orders</Link>
+                    <Link href="/wishlist" className="al-menu-item"><Heart size={15} /> Wishlist ({wishlistCount})</Link>
+                    <Link href="/admin" className="al-menu-item"><TrendingUp size={15} /> Seller Dashboard</Link>
+                    <div className="al-menu-divider" />
+                    <button onClick={logout} className="al-menu-item al-menu-logout"><LogOut size={15} /> Sign Out</button>
+                  </>
+                ) : (
+                  <>
+                    <div className="al-user-menu-guest">
+                      <Link href="/login" className="al-menu-signin-btn">Sign In</Link>
+                      <div className="al-menu-new-text">
+                        New here? <Link href="/register" className="al-menu-link-orange">Create account</Link>
+                      </div>
+                    </div>
+                    <div className="al-menu-divider" />
+                    <Link href="/orders" className="al-menu-item"><PackageCheck size={15} /> Track Order</Link>
+                    <Link href="/wishlist" className="al-menu-item"><Heart size={15} /> Wishlist ({wishlistCount})</Link>
+                    <Link href="/faq" className="al-menu-item"><HelpCircle size={15} /> Help & FAQ</Link>
+                  </>
+                )}
+              </div>
+            )}
           </div>
         </div>
-      </nav>
+      </div>
 
-      {/* Mobile Drawer */}
+      {/* Mobile Drawer Navigation */}
       {isMobileMenuOpen && (
-        <div className="mobile-menu-backdrop" onClick={() => setIsMobileMenuOpen(false)}>
-          <div className="mobile-menu-drawer" onClick={(e) => e.stopPropagation()}>
-            <div className="mobile-drawer-top">
-              <div className="mobile-logo">Al-Umaima</div>
-              <button className="mobile-close-btn" onClick={() => setIsMobileMenuOpen(false)}>
+        <div className="al-mobile-backdrop" onClick={() => setIsMobileMenuOpen(false)}>
+          <div className="al-mobile-drawer" onClick={(e) => e.stopPropagation()}>
+            <div className="al-drawer-header">
+              <span className="al-brand-logo">AL-UMAIMA</span>
+              <button 
+                type="button" 
+                className="al-drawer-close"
+                onClick={() => setIsMobileMenuOpen(false)}
+              >
                 <X size={20} />
               </button>
             </div>
 
-            <div className="mobile-drawer-content">
-              <div className="mobile-nav-list">
-                {subNavLinks.map((item) => (
-                  <Link
-                    key={item.name}
-                    href={item.href}
-                    className="mobile-nav-link"
-                    onClick={() => setIsMobileMenuOpen(false)}
-                  >
-                    {item.name}
-                  </Link>
-                ))}
-              </div>
+            <div className="al-drawer-search">
+              <form className="al-search-form" onSubmit={handleSearchSubmit}>
+                <input 
+                  type="text"
+                  placeholder="Search..."
+                  value={searchInput}
+                  onChange={(e) => setSearchInput(e.target.value)}
+                  className="al-search-input"
+                />
+                <button type="submit" className="al-search-icon-btn">
+                  <Search size={16} />
+                </button>
+              </form>
+            </div>
 
-              <div className="mobile-divider" />
+            <nav className="al-drawer-nav">
+              {navLinks.map((item) => (
+                <Link
+                  key={item.name}
+                  href={item.href}
+                  className="al-drawer-link"
+                  onClick={() => setIsMobileMenuOpen(false)}
+                >
+                  {item.name}
+                </Link>
+              ))}
+            </nav>
 
-              <div className="mobile-quick-links">
-                <Link href="/wishlist" className="mobile-nav-link" onClick={() => setIsMobileMenuOpen(false)}>
-                  <Heart size={16} /> Wishlist ({wishlistCount})
-                </Link>
-                <Link href="/orders" className="mobile-nav-link" onClick={() => setIsMobileMenuOpen(false)}>
-                  <PackageCheck size={16} /> My Orders
-                </Link>
-                <Link href="/faq" className="mobile-nav-link" onClick={() => setIsMobileMenuOpen(false)}>
-                  <HelpCircle size={16} /> Help & Customer Service
-                </Link>
-              </div>
+            <div className="al-drawer-footer">
+              <Link href="/wishlist" className="al-drawer-link" onClick={() => setIsMobileMenuOpen(false)}>
+                <Heart size={16} /> Wishlist ({wishlistCount})
+              </Link>
+              <Link href="/orders" className="al-drawer-link" onClick={() => setIsMobileMenuOpen(false)}>
+                <PackageCheck size={16} /> My Orders
+              </Link>
+              <Link href="/faq" className="al-drawer-link" onClick={() => setIsMobileMenuOpen(false)}>
+                <HelpCircle size={16} /> Customer Service
+              </Link>
             </div>
           </div>
         </div>
       )}
 
-      {/* Global Search Overlay (Ctrl+K) */}
+      {/* Global Quick Search Modal */}
       {isSearchOpen && <SearchBar onClose={closeSearch} />}
-
-      {/* Location Picker Modal */}
-      {isLocationModalOpen && (
-        <div className="modal-backdrop" onClick={() => setIsLocationModalOpen(false)}>
-          <div className="location-modal-card" onClick={(e) => e.stopPropagation()}>
-            <div className="modal-header">
-              <h3>Choose your location</h3>
-              <button onClick={() => setIsLocationModalOpen(false)} className="close-modal-btn">
-                <X size={18} />
-              </button>
-            </div>
-            <p className="modal-sub">Select a delivery location to see product availability and delivery options.</p>
-
-            <form onSubmit={handleSetPincode} className="pincode-form">
-              <input 
-                type="text" 
-                placeholder="Enter ZIP code or City" 
-                value={pincodeInput}
-                onChange={(e) => setPincodeInput(e.target.value)}
-                className="pincode-input"
-              />
-              <button type="submit" className="pincode-submit-btn" disabled={!pincodeInput}>
-                Apply
-              </button>
-            </form>
-
-            <div className="city-pills-title">Popular Cities</div>
-            <div className="city-pills-grid">
-              <button type="button" onClick={() => handleSelectCity("New York", "10001")} className="city-pill">New York 10001</button>
-              <button type="button" onClick={() => handleSelectCity("Los Angeles", "90001")} className="city-pill">Los Angeles 90001</button>
-              <button type="button" onClick={() => handleSelectCity("Chicago", "60601")} className="city-pill">Chicago 60601</button>
-              <button type="button" onClick={() => handleSelectCity("Houston", "77001")} className="city-pill">Houston 77001</button>
-              <button type="button" onClick={() => handleSelectCity("Miami", "33101")} className="city-pill">Miami 33101</button>
-              <button type="button" onClick={() => handleSelectCity("San Francisco", "94101")} className="city-pill">San Francisco 94101</button>
-            </div>
-          </div>
-        </div>
-      )}
     </header>
   );
 }

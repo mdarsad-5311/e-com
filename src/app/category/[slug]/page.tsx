@@ -1,6 +1,9 @@
 import { notFound } from "next/navigation";
 import { categories, products, Product, Category } from "@/data/products";
 import CategoryView from "@/components/CategoryView";
+import FashionView from "@/components/FashionView";
+import HomeGoodsView from "@/components/HomeGoodsView";
+import ElectronicsView from "@/components/ElectronicsView";
 
 interface CategoryPageProps {
   params: {
@@ -24,5 +27,18 @@ export default function CategoryPage({ params }: CategoryPageProps) {
 
   const categoryProducts = products.filter((p: Product) => p.category === slug);
 
+  if (slug === "electronics") {
+    return <ElectronicsView products={categoryProducts} />;
+  }
+
+  if (slug === "fashion") {
+    return <FashionView products={categoryProducts} />;
+  }
+
+  if (slug === "home-goods" || slug === "home-living") {
+    return <HomeGoodsView />;
+  }
+
   return <CategoryView category={category} initialProducts={categoryProducts} />;
 }
+

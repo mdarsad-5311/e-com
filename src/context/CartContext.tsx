@@ -44,10 +44,10 @@ function hydrateCart(raw: string): CartItem[] {
 }
 
 export function CartProvider({ children }: { children: ReactNode }) {
-  // Pre-seed with sample products for realistic initial store preview if uninitialized
+  // Pre-seed with matching sample products from reference attachment
   const [cart, setCart] = useState<CartItem[]>([
     { product: products[0], quantity: 1 },
-    { product: products[1], quantity: 1 }
+    { product: products[1], quantity: 2 }
   ]);
   const [savedForLater, setSavedForLater] = useState<CartItem[]>([]);
   const [hydrated, setHydrated] = useState(false);

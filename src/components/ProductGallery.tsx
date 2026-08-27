@@ -2,19 +2,20 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { ArrowLeft, Share2, ShoppingCart, Heart, Check } from "lucide-react";
-import { useCart } from "@/context/CartContext";
+import { ArrowLeft, Share2, Heart, ShieldCheck, Award } from "lucide-react";
 import { useWishlist } from "@/context/WishlistContext";
 import { useToast } from "@/context/ToastContext";
-import { useUI } from "@/context/UIContext";
 import { Product } from "@/data/products";
 import "@/styles/product-gallery.css";
+import "@/styles/product-detail-extra.css";
 
 interface ProductGalleryProps {
   images: string[];
   title: string;
   product?: Product;
 }
+
+const MAX_THUMBS = 3; // show 3 thumbnails, then "+N" pill
 
 export default function ProductGallery({ images, title, product }: ProductGalleryProps) {
   const router = useRouter();
@@ -24,20 +25,17 @@ export default function ProductGallery({ images, title, product }: ProductGaller
     "https://images.unsplash.com/photo-1546435770-a3e426bf472b?auto=format&fit=crop&w=800&q=80"
   ];
   const [activeImageIndex, setActiveImageIndex] = useState<number>(0);
-  const [isCopied, setIsCopied] = useState<boolean>(false);
-  const { totalItemsCount } = useCart();
   const { isInWishlist, toggleWishlist } = useWishlist();
-  const { openCart } = useUI();
   const { showToast } = useToast();
 
   const isWishlisted = product ? isInWishlist(product.id) : false;
+  const isBestSeller = product?.isBestSeller;
+  const isAssured = product?.isAssured;
 
   const handleShare = () => {
     if (typeof window !== "undefined") {
       navigator.clipboard?.writeText(window.location.href);
-      setIsCopied(true);
       showToast("Product link copied to clipboard!");
-      setTimeout(() => setIsCopied(false), 2500);
     }
   };
 
@@ -48,75 +46,73 @@ export default function ProductGallery({ images, title, product }: ProductGaller
     }
   };
 
+  // Thumbnails: show MAX_THUMBS, then overflow pill
+  const visibleThumbs = galleryList.slice(0, MAX_THUMBS);
+  const extraCount = galleryList.length > MAX_THUMBS ? galleryList.length - MAX_THUMBS : 0;
+
   return (
     <div className="al-product-gallery-layout">
-      {/* Mobile Top Navigation Bar (Back, Share, Cart) */}
-      <div className="al-mobile-detail-topbar">
+      {/* Mobile Top Actions (Back, Share, Heart) */}
+      <div className="al-mobile-gallery-top-bar">
         <button 
           type="button" 
           onClick={() => router.back()} 
-          className="al-topbar-btn"
-          aria-label="Go back"
+          className="al-gallery-nav-btn"
+          aria-label="Back"
         >
-          <ArrowLeft size={22} />
+          <ArrowLeft size={20} />
         </button>
 
-        <div className="al-topbar-right">
+        <div className="al-gallery-top-right">
           <button 
             type="button" 
             onClick={handleShare} 
-            className="al-topbar-btn"
+            className="al-gallery-nav-btn"
             aria-label="Share"
-            title="Share product"
           >
-            {isCopied ? <Check size={20} className="text-success" /> : <Share2 size={20} />}
+            <Share2 size={18} />
           </button>
 
           <button 
             type="button" 
-            onClick={openCart} 
-            className="al-topbar-btn al-cart-icon-btn"
-            aria-label="Shopping Cart"
+            onClick={handleToggleWishlist} 
+            className="al-gallery-nav-btn"
+            aria-label="Wishlist"
           >
-            <ShoppingCart size={22} />
-            <span className="al-topbar-badge">{totalItemsCount > 0 ? totalItemsCount : 2}</span>
+            <Heart size={18} fill={isWishlisted ? "#FF7A00" : "none"} color={isWishlisted ? "#FF7A00" : "#64748B"} />
           </button>
         </div>
       </div>
 
-      {/* Desktop Vertical Thumbnails */}
-      <div className="al-thumbnails-vertical">
-        {galleryList.map((img, idx) => (
-          <button
-            key={idx}
-            type="button"
-            className={`al-thumb-btn ${activeImageIndex === idx ? "active" : ""}`}
-            onMouseEnter={() => setActiveImageIndex(idx)}
-            onClick={() => setActiveImageIndex(idx)}
-            aria-label={`View image ${idx + 1}`}
-          >
-            <img src={img} alt={`Thumbnail ${idx + 1}`} className="al-thumb-img" />
-          </button>
-        ))}
-      </div>
-
-      {/* Main Image Box */}
+      {/* Main Showcase Frame */}
       <div className="al-main-image-container">
-        {/* Floating Wishlist Button on Top Right */}
-        <button
-          type="button"
-          className={`al-floating-wishlist-btn ${isWishlisted ? "wishlisted" : ""}`}
-          onClick={handleToggleWishlist}
-          title="Add to Wishlist"
-          aria-label="Wishlist"
-        >
-          <Heart 
-            size={19} 
-            fill={isWishlisted ? "#dc2626" : "none"} 
-            color={isWishlisted ? "#dc2626" : "#475569"} 
-          />
-        </button>
+        {/* Stacked Badges: Bestseller + Assured */}
+        {(isBestSeller || isAssured) && (
+          <div className="al-gallery-badge-stack">
+            {isBestSeller && (
+              <div className="al-gallery-bestseller-badge">
+                <Award size={12} />
+                Bestseller
+              </div>
+            )}
+            {isAssured && (
+              <div className="al-gallery-assured-badge" style={{ position: "relative", top: "auto", left: "auto" }}>
+                <ShieldCheck size={12} className="al-assured-badge-icon" />
+                <span>Al-Umaima Assured</span>
+              </div>
+            )}
+          </div>
+        )}
 
+        {/* When only assured (no bestseller) */}
+        {!isBestSeller && !isAssured && (
+          <div className="al-gallery-assured-badge">
+            <ShieldCheck size={14} className="al-assured-badge-icon" />
+            <span>Al-Umaima Assured</span>
+          </div>
+        )}
+
+        {/* Product Image */}
         <div className="al-main-img-frame">
           <img
             src={galleryList[activeImageIndex]}
@@ -125,7 +121,7 @@ export default function ProductGallery({ images, title, product }: ProductGaller
           />
         </div>
 
-        {/* Mobile Pagination Dots Indicator */}
+        {/* Pagination Dots */}
         <div className="al-gallery-dots">
           {galleryList.map((_, idx) => (
             <button
@@ -133,10 +129,28 @@ export default function ProductGallery({ images, title, product }: ProductGaller
               type="button"
               className={`al-dot ${activeImageIndex === idx ? "active" : ""}`}
               onClick={() => setActiveImageIndex(idx)}
-              aria-label={`Go to slide ${idx + 1}`}
+              aria-label={`Image slide ${idx + 1}`}
             />
           ))}
         </div>
+      </div>
+
+      {/* Thumbnail Strip */}
+      <div className="al-gallery-thumb-strip">
+        {visibleThumbs.map((img, idx) => (
+          <button
+            key={idx}
+            type="button"
+            className={`al-gallery-thumb-btn ${activeImageIndex === idx ? "active" : ""}`}
+            onClick={() => setActiveImageIndex(idx)}
+            aria-label={`View image ${idx + 1}`}
+          >
+            <img src={img} alt={`${title} view ${idx + 1}`} />
+          </button>
+        ))}
+        {extraCount > 0 && (
+          <div className="al-gallery-thumb-more">+{extraCount}</div>
+        )}
       </div>
     </div>
   );

@@ -1,33 +1,316 @@
-/* FAQ Page Styles */
+/* Support / FAQ Page Styles - Matching Attachment 4 with Patterned Dark Shader Banner */
 
-.faq-list {
-  margin-top: 1.5rem;
-  max-width: 760px;
+.al-support-page-wrapper {
+  background-color: #F8FAFC;
+  min-height: 100vh;
+  padding-bottom: 5rem;
+}
+
+/* ==========================================================================
+   1. HERO BANNER (Patterned Dark Navy Shader Background)
+   ========================================================================== */
+.al-support-hero {
+  position: relative;
+  background: 
+    radial-gradient(ellipse at 50% 30%, rgba(26, 60, 99, 0.6) 0%, rgba(6, 26, 48, 0.98) 75%),
+    repeating-radial-gradient(circle at 50% 50%, rgba(255, 255, 255, 0.025) 0, rgba(255, 255, 255, 0.025) 20px, transparent 20px, transparent 40px),
+    #06182D;
+  color: #ffffff;
+  padding: 4.5rem 0 5.5rem;
+  text-align: center;
+  overflow: hidden;
+}
+
+/* Subtle scalloped wave shader pattern overlay matching Attachment 4 */
+.al-support-hero::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background-image: radial-gradient(circle at 12px 0, transparent 0, transparent 10px, rgba(255, 255, 255, 0.04) 11px, rgba(255, 255, 255, 0.04) 12px, transparent 13px);
+  background-size: 24px 20px;
+  opacity: 0.7;
+  pointer-events: none;
+}
+
+.al-support-hero-content {
+  position: relative;
+  z-index: 3;
+  max-width: 680px;
+  margin: 0 auto;
+  padding: 0 1rem;
+}
+
+.al-support-hero-title {
+  font-size: clamp(2rem, 3.8vw, 3rem);
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  color: #ffffff;
+  margin-bottom: 0.85rem;
+}
+
+.al-support-hero-subtitle {
+  font-size: 1.05rem;
+  color: #cbd5e1;
+  margin-bottom: 2.25rem;
+  font-weight: 400;
+}
+
+/* Search Bar (Attachment 4 Floating White Pill) */
+.al-support-search-wrap {
+  position: relative;
+  max-width: 580px;
+  margin: 0 auto;
+}
+
+.al-support-search-bar {
+  display: flex;
+  align-items: center;
+  background: #ffffff;
+  border-radius: 50px;
+  padding: 0.55rem 1.25rem;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.25);
+  border: 1px solid rgba(255, 255, 255, 0.4);
+  transition: all 0.2s ease;
+}
+
+.al-support-search-bar:focus-within {
+  box-shadow: 0 12px 35px rgba(0, 0, 0, 0.35);
+  border-color: #FF7A00;
+}
+
+.al-support-search-icon {
+  color: #64748b;
+  margin-right: 0.75rem;
+  flex-shrink: 0;
+}
+
+.al-support-search-input {
+  width: 100%;
+  border: none;
+  background: transparent;
+  font-size: 0.95rem;
+  color: #0C2340;
+  outline: none;
+  font-family: inherit;
+}
+
+.al-support-search-input::placeholder {
+  color: #64748b;
+}
+
+/* ==========================================================================
+   2. 4 QUICK ACTION SUPPORT CARDS (Attachment 4)
+   ========================================================================== */
+.al-support-cards-section {
+  position: relative;
+  z-index: 10;
+  margin-top: -2.25rem;
+}
+
+.al-support-cards-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 1.25rem;
+}
+
+.al-support-card-item {
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 12px;
+  padding: 1.75rem 1rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.85rem;
+  text-decoration: none;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.04);
+  transition: all 0.2s ease;
+  cursor: pointer;
+}
+
+.al-support-card-item:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08);
+  border-color: #cbd5e1;
+}
+
+.al-support-card-icon-wrap {
+  color: #0C2340;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: transform 0.2s ease, color 0.2s ease;
+}
+
+.al-support-card-item:hover .al-support-card-icon-wrap {
+  color: #FF7A00;
+  transform: scale(1.1);
+}
+
+.al-support-card-label {
+  color: #0C2340;
+  font-size: 0.95rem;
+  font-weight: 700;
+  text-align: center;
+}
+
+/* ==========================================================================
+   3. FAQ ACCORDION SECTION
+   ========================================================================== */
+.al-support-faqs-section {
+  margin-top: 3.5rem;
+}
+
+.al-faq-container {
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+.al-faq-section-title {
+  font-size: 1.6rem;
+  font-weight: 800;
+  color: #0C2340;
+  text-align: center;
+  margin-bottom: 0.5rem;
+  letter-spacing: -0.02em;
+}
+
+.al-faq-section-subtitle {
+  color: #64748b;
+  font-size: 0.95rem;
+  text-align: center;
+  margin-bottom: 2rem;
+}
+
+.al-faq-items-list {
   display: flex;
   flex-direction: column;
   gap: 0.75rem;
 }
 
-.faq-item {
-  text-align: left;
+.al-faq-accordion-card {
   background: #ffffff;
-  border: 1px solid var(--borders);
-  border-radius: 12px;
-  padding: 1rem 1.15rem;
-  cursor: pointer;
+  border: 1px solid #e2e8f0;
+  border-radius: 10px;
+  overflow: hidden;
+  transition: border-color 0.15s ease, box-shadow 0.15s ease;
+}
+
+.al-faq-accordion-card:hover {
+  border-color: #cbd5e1;
+}
+
+.al-faq-accordion-card.open {
+  border-color: #0C2340;
+  box-shadow: 0 4px 14px rgba(12, 35, 64, 0.05);
+}
+
+.al-faq-btn-trigger {
   width: 100%;
-}
-
-.faq-q {
+  padding: 1.15rem 1.35rem;
   display: flex;
-  justify-content: space-between;
   align-items: center;
-  font-weight: 800;
+  justify-content: space-between;
   gap: 1rem;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  text-align: left;
+  font-family: inherit;
 }
 
-.faq-a {
-  margin-top: 0.7rem;
-  font-size: 0.92rem;
+.al-faq-q-text {
+  color: #0C2340;
+  font-size: 0.98rem;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+}
+
+.al-faq-chevron {
+  color: #64748b;
+  transition: transform 0.2s ease, color 0.2s ease;
+  flex-shrink: 0;
+}
+
+.al-faq-accordion-card.open .al-faq-chevron {
+  transform: rotate(180deg);
+  color: #FF7A00;
+}
+
+.al-faq-answer-body {
+  padding: 0 1.35rem 1.25rem;
+  color: #475569;
+  font-size: 0.9rem;
   line-height: 1.6;
+  border-top: 1px solid #f1f5f9;
+  padding-top: 0.85rem;
+}
+
+/* ==========================================================================
+   4. CONTACT SUPPORT BANNER
+   ========================================================================== */
+.al-support-contact-box {
+  margin-top: 3.5rem;
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 12px;
+  padding: 2.25rem 2rem;
+  text-align: center;
+  max-width: 800px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.al-contact-box-title {
+  color: #0C2340;
+  font-size: 1.25rem;
+  font-weight: 800;
+  margin-bottom: 0.4rem;
+}
+
+.al-contact-box-desc {
+  color: #64748b;
+  font-size: 0.9rem;
+  margin-bottom: 1.5rem;
+}
+
+.al-contact-methods-row {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+.al-btn-contact-action {
+  background: #F8FAFC;
+  border: 1px solid #cbd5e1;
+  border-radius: 8px;
+  padding: 0.65rem 1.25rem;
+  color: #0C2340;
+  font-size: 0.85rem;
+  font-weight: 700;
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  transition: all 0.15s ease;
+}
+
+.al-btn-contact-action:hover {
+  background: #0C2340;
+  color: #ffffff;
+  border-color: #0C2340;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .al-support-cards-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .al-support-hero {
+    padding: 3.5rem 0 4.5rem;
+  }
 }

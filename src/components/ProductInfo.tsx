@@ -6,339 +6,337 @@ import {
   Star, 
   ShieldCheck, 
   Truck, 
-  MapPin, 
   Tag, 
   CreditCard, 
-  Lock, 
-  Store, 
-  RotateCcw, 
-  Heart, 
+  ShoppingCart,
+  Droplets,
+  Wind,
+  Leaf,
+  Zap,
   ChevronDown,
-  Check
+  ChevronUp
 } from "lucide-react";
 import { Product } from "@/data/products";
 import { useCart } from "@/context/CartContext";
-import { useWishlist } from "@/context/WishlistContext";
 import { useToast } from "@/context/ToastContext";
-import { useUI } from "@/context/UIContext";
 import "@/styles/product-info.css";
+import "@/styles/product-detail-extra.css";
 
 interface ProductInfoProps {
   product: Product;
 }
 
+const SIZES = ["S", "M", "L", "XL"];
+
+const TECH_SPECS = [
+  {
+    icon: <Droplets size={18} />,
+    name: "Water Resistant",
+    desc: "Treated with a highly durable DWR finish that repels light rain and spills without compromising breathability.",
+  },
+  {
+    icon: <Wind size={18} />,
+    name: "Breathable Core",
+    desc: "Micro-perforated inner lining ensures optimal airflow, keeping you comfortable during active city commuting.",
+  },
+  {
+    icon: <Leaf size={18} />,
+    name: "Sustainable Materials",
+    desc: "Constructed from 85% recycled nylon, reducing environmental impact while maintaining premium performance standards.",
+  },
+];
+
+const MATERIAL_OPTIONS = [
+  { id: "mesh", name: "Breathable Mesh", sub: "Optimal cooling" },
+  { id: "leather", name: "Premium Leather", sub: "+$50 Executive feel" },
+];
+
+// Categories that show the fashion-style tech specs (single orange CTA)
+const FASHION_CATEGORIES = ["fashion", "clothing", "apparel", "outerwear"];
+// Categories that show material options (home goods / office chairs)
+const HOME_OFFICE_CATEGORIES = ["home-goods", "office", "furniture", "chairs"];
+
 export default function ProductInfo({ product }: ProductInfoProps) {
   const router = useRouter();
-  const [selectedColor, setSelectedColor] = useState<string>("Matte Black");
-  const [quantity, setQuantity] = useState<number>(1);
+  const [selectedColor, setSelectedColor] = useState<string>("Charcoal Gray");
+  const [selectedSize, setSelectedSize] = useState<string>("M");
+  const [selectedMaterial, setSelectedMaterial] = useState<string>("mesh");
   const [isAdded, setIsAdded] = useState<boolean>(false);
-  const { addToCart } = useCart();
-  const { isInWishlist, toggleWishlist } = useWishlist();
-  const { showToast } = useToast();
-  const { openCart } = useUI();
+  const [isOffersOpen, setIsOffersOpen] = useState<boolean>(false);
+  const [isDescOpen, setIsDescOpen] = useState<boolean>(false);
+  const [isReviewsOpen, setIsReviewsOpen] = useState<boolean>(false);
 
-  const isWishlisted = isInWishlist(product.id);
+  const { addToCart } = useCart();
+  const { showToast } = useToast();
 
   const handleAddToCart = () => {
-    addToCart(product, quantity);
+    addToCart(product, 1);
     setIsAdded(true);
-    showToast(`${product.title} added to cart`);
-    openCart();
+    showToast(`${product.title} added to cart!`);
     setTimeout(() => setIsAdded(false), 2000);
   };
 
   const handleBuyNow = () => {
-    addToCart(product, quantity);
+    addToCart(product, 1);
     router.push("/checkout");
   };
 
-  // Price formatting
-  const priceParts = product.price.toFixed(2).split(".");
-  const dollars = priceParts[0];
-  const cents = priceParts[1] || "00";
-
-  const originalPriceVal = product.originalPrice || (product.price + 50);
-  const savingsVal = (originalPriceVal - product.price).toFixed(2);
-  const discountPct = product.discountPercentage || Math.round(((originalPriceVal - product.price) / originalPriceVal) * 100);
-
-  // Render 5 stars based on rating
-  const renderStars = (rating: number) => {
-    return Array.from({ length: 5 }).map((_, index) => {
-      const isFilled = index < Math.floor(rating || 5);
-      return (
-        <Star
-          key={index}
-          size={14}
-          fill={isFilled ? "#F59E0B" : "none"}
-          color={isFilled ? "#F59E0B" : "#D1D5DB"}
-          className="star-icon"
-        />
-      );
-    });
-  };
-
-  // Color options
   const colorOptions = [
-    { name: "Matte Black", img: "https://images.unsplash.com/photo-1505740420928-5e560c06d30e?auto=format&fit=crop&w=120&q=80" },
-    { name: "Silver White", img: "https://images.unsplash.com/photo-1484704849700-f032a568e944?auto=format&fit=crop&w=120&q=80" },
-    { name: "Midnight Navy", img: "https://images.unsplash.com/photo-1546435770-a3e426bf472b?auto=format&fit=crop&w=120&q=80" }
+    { name: "Charcoal Gray", hex: "#4B5563" },
+    { name: "Midnight Black", hex: "#111827" },
+    { name: "Slate Navy", hex: "#1E3A5F" },
   ];
 
-  // Specific high quality bullet points matching attachment
-  const bulletPoints = [
-    { 
-      title: "Industry-Leading ANC", 
-      text: "Block out distractions with advanced active noise cancellation that adapts to your environment." 
-    },
-    { 
-      title: "Immersive Audio", 
-      text: "Custom 40mm drivers deliver high-fidelity sound with deep bass and crisp highs." 
-    },
-    { 
-      title: "30-Hour Battery Life", 
-      text: "Enjoy uninterrupted listening all day, with a quick 10-minute charge providing 5 hours of playback." 
-    },
-    { 
-      title: "Multipoint Connectivity", 
-      text: "Seamlessly switch between two Bluetooth devices without reconnecting." 
-    },
-    { 
-      title: "All-Day Comfort", 
-      text: "Memory foam earcups and a lightweight headband design ensure maximum comfort during extended wear." 
-    }
-  ];
+  const currentPrice = product.price || 295.00;
+  const originalPrice = product.originalPrice || (currentPrice * 1.18);
+  const savingsPct = product.discountPercentage || Math.round(((originalPrice - currentPrice) / originalPrice) * 100) || 14;
+
+  const isFashion = FASHION_CATEGORIES.includes(product.category?.toLowerCase() || "");
+  const isHomeOffice = HOME_OFFICE_CATEGORIES.some(c => (product.category?.toLowerCase() || "").includes(c));
+  const showMaterialOptions = isHomeOffice || product.subCategory?.toLowerCase().includes("chair");
+
+  // Determine if we're showing "home-style" (big $499 price with strikethrough) 
+  const showBigPriceWithStrike = currentPrice >= 200;
 
   return (
-    <div className="al-product-details-columns">
-      {/* Center Column: Product Specs, Offers, Description */}
-      <div className="al-center-product-info">
-        {/* Brand Tag + Assured Badge */}
-        <div className="al-brand-assured-row">
-          <span className="al-brand-title-badge">
-            {product.brand?.toUpperCase() || "AURA AUDIO"}
-          </span>
-          <div className="al-assured-pill">
-            <ShieldCheck size={13} className="assured-shield" />
-            <span>Al-Umaima Assured</span>
-          </div>
+    <div className="al-detail-info-wrapper">
+      {/* Product Title */}
+      <h1 className="al-detail-product-title">{product.title || "The Essential Minimalist Jacket"}</h1>
+
+      {/* 5-Star Rating Row */}
+      <div className="al-detail-rating-row">
+        <div className="al-detail-stars">
+          {Array.from({ length: 5 }).map((_, index) => (
+            <Star
+              key={index}
+              size={15}
+              fill={index < Math.round(product.rating || 4.8) ? "#FF7A00" : "none"}
+              color={index < Math.round(product.rating || 4.8) ? "#FF7A00" : "#CBD5E1"}
+              className="al-detail-star"
+            />
+          ))}
         </div>
+        <span className="al-detail-rating-text">
+          {product.rating || 4.8} ({product.reviewsCount || 312} Reviews)
+        </span>
+      </div>
 
-        {/* Product Title */}
-        <h1 className="al-product-title">{product.title}</h1>
+      {/* Description (below title on mobile – matching attachment 1) */}
+      {product.description && (
+        <p className="al-detail-inline-desc">{product.description}</p>
+      )}
 
-        {/* Rating Line */}
-        <div className="al-rating-row">
-          <div className="al-stars-container">
-            {renderStars(product.rating)}
-          </div>
-          <button type="button" className="al-ratings-link">
-            {(product.reviewsCount || 4821).toLocaleString()} ratings
-          </button>
+      {/* Pricing Row */}
+      <div className="al-detail-price-main-row">
+        <span className="al-detail-curr-price">${currentPrice.toFixed(2)}</span>
+        {showBigPriceWithStrike && originalPrice > currentPrice && (
+          <span className="al-detail-orig-price">${originalPrice.toFixed(2)}</span>
+        )}
+        {savingsPct > 0 && !showMaterialOptions && (
+          <span className="al-detail-save-badge">{savingsPct}% OFF</span>
+        )}
+      </div>
+
+      {/* Free Delivery Row */}
+      <div className="al-detail-delivery-banner">
+        <Truck size={16} className="al-delivery-truck-icon" />
+        <span>
+          {showMaterialOptions ? "Free White Glove Delivery included" : "Free delivery by Tomorrow, 9 AM"}
+        </span>
+      </div>
+
+      {/* Color Swatch Selector */}
+      <div className="al-detail-colors-section">
+        <div className="al-color-label">
+          <span>Color:</span>
+          <strong>{selectedColor}</strong>
         </div>
-
-        {/* Price Block */}
-        <div className="al-detail-price-block">
-          <div className="al-price-row-main">
-            <span className="al-price-currency">$</span>
-            <span className="al-current-price-red">{dollars}</span>
-            <span className="al-price-cents">{cents}</span>
-          </div>
-
-          <div className="al-savings-row">
-            <span className="al-original-price-gray">${originalPriceVal.toFixed(2)}</span>
-            <span className="al-save-highlight">You save ${savingsVal} ({discountPct}%)</span>
-          </div>
+        <div className="al-color-swatches">
+          {colorOptions.map((c) => (
+            <button
+              key={c.name}
+              type="button"
+              onClick={() => setSelectedColor(c.name)}
+              className={`al-swatch-circle ${selectedColor === c.name ? "active" : ""}`}
+              style={{ backgroundColor: c.hex }}
+              title={c.name}
+              aria-label={c.name}
+            />
+          ))}
         </div>
+      </div>
 
-        {/* Delivery Box */}
-        <div className="al-delivery-card">
-          <div className="al-del-row-main">
-            <Truck size={17} className="al-del-icon" />
-            <div className="al-del-content">
-              <div>
-                <strong>FREE Delivery</strong> Tomorrow, Oct 24
-              </div>
-              <div className="al-del-timer">
-                Order within <strong>5 hrs 30 mins</strong>
-              </div>
-            </div>
+      {/* Size Selector (for fashion / clothing) */}
+      {(isFashion || !showMaterialOptions) && (
+        <div className="al-detail-size-section">
+          <div className="al-size-header-row">
+            <span className="al-size-label">Size</span>
+            <span className="al-size-guide-link">All Size Guide</span>
           </div>
-
-          <div className="al-del-location-row">
-            <MapPin size={15} className="al-del-pin" />
-            <span className="al-del-location-link">Deliver to New York 10001</span>
-          </div>
-        </div>
-
-        {/* Stock Status */}
-        <div className="al-stock-status-line">
-          In Stock
-        </div>
-
-        {/* Color Selector */}
-        <div className="al-color-selector-section">
-          <div className="al-color-label-row">
-            <span className="al-color-label-title">Color:</span>
-            <span className="al-color-label-val">{selectedColor}</span>
-          </div>
-
-          <div className="al-color-thumbnails-row">
-            {colorOptions.map((opt) => (
+          <div className="al-size-buttons">
+            {SIZES.map((s) => (
               <button
-                key={opt.name}
+                key={s}
                 type="button"
-                className={`al-color-thumb-box ${selectedColor === opt.name ? "active" : ""}`}
-                onClick={() => setSelectedColor(opt.name)}
-                title={opt.name}
+                className={`al-size-btn ${selectedSize === s ? "active" : ""}`}
+                onClick={() => setSelectedSize(s)}
               >
-                <img src={opt.img} alt={opt.name} className="al-color-thumb-img" />
+                {s}
               </button>
             ))}
           </div>
         </div>
+      )}
 
-        {/* Available Offers */}
-        <div className="al-offers-card">
-          <h2 className="al-offers-heading">Available Offers</h2>
-
-          <div className="al-offers-list">
-            <div className="al-offer-item">
-              <Tag size={17} className="offer-tag-icon" />
-              <div>
-                <strong className="offer-type">Bank Offer</strong>
-                <p className="offer-desc">
-                  5% Unlimited Cashback on Al-Umaima Axis Bank Credit Card.
-                </p>
-              </div>
-            </div>
-
-            <div className="al-offer-item">
-              <CreditCard size={17} className="offer-card-icon" />
-              <div>
-                <strong className="offer-type">No Cost EMI</strong>
-                <p className="offer-desc">
-                  Available on orders above $3,000.
-                </p>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        {/* About this item */}
-        <div className="al-about-item-section">
-          <h2 className="about-item-heading">About this item</h2>
-          <ul className="about-item-bullets">
-            {bulletPoints.map((item, idx) => (
-              <li key={idx} className="about-bullet-li">
-                <strong>{item.title}:</strong> {item.text}
-              </li>
-            ))}
-          </ul>
-        </div>
-      </div>
-
-      {/* Right Column (Desktop Buy Box) */}
-      <div className="al-right-buy-box">
-        <div className="al-buy-box-card">
-          <div className="buy-box-price">${product.price.toFixed(2)}</div>
-
-          <div className="buy-box-delivery">
-            <div className="delivery-free-line">
-              <strong>FREE delivery</strong> Tomorrow, Oct 24.
-            </div>
-            <div className="delivery-timer-line">
-              Order within <strong>5 hrs 30 mins.</strong>
-            </div>
-          </div>
-
-          <div className="buy-box-stock">
-            <Check size={16} className="stock-check-icon" />
-            <span className="stock-in-text">In Stock</span>
-          </div>
-
-          <div className="buy-box-qty-row">
-            <label htmlFor="qty-select" className="qty-label">Quantity:</label>
-            <div className="qty-select-wrapper">
-              <select
-                id="qty-select"
-                value={quantity}
-                onChange={(e) => setQuantity(Number(e.target.value))}
-                className="qty-dropdown"
+      {/* Material Options (for home/office products) */}
+      {showMaterialOptions && (
+        <div className="al-material-options-section">
+          <div className="al-material-options-title">Material Options</div>
+          <div className="al-material-options-grid">
+            {MATERIAL_OPTIONS.map(opt => (
+              <button
+                key={opt.id}
+                type="button"
+                className={`al-material-option-card ${selectedMaterial === opt.id ? "active" : ""}`}
+                onClick={() => setSelectedMaterial(opt.id)}
               >
-                {[1, 2, 3, 4, 5].map((num) => (
-                  <option key={num} value={num}>{num}</option>
-                ))}
-              </select>
-              <ChevronDown size={14} className="qty-chevron" />
-            </div>
+                <span className="al-material-option-name">{opt.name}</span>
+                <span className="al-material-option-sub">{opt.sub}</span>
+              </button>
+            ))}
           </div>
+        </div>
+      )}
 
-          <button
-            type="button"
-            className={`buy-box-cart-btn ${isAdded ? "added" : ""}`}
-            onClick={handleAddToCart}
-          >
-            {isAdded ? "Added to Cart" : "Add to Cart"}
-          </button>
-
-          <button
-            type="button"
-            className="buy-box-buy-now-btn"
-            onClick={handleBuyNow}
-          >
-            Buy Now
-          </button>
-
-          <div className="buy-box-trust-list">
-            <div className="trust-list-item">
-              <Lock size={15} className="trust-item-icon" />
-              <span>Secure transaction</span>
-            </div>
-            <div className="trust-list-item">
-              <Truck size={15} className="trust-item-icon" />
-              <span>Ships from Al-Umaima Express</span>
-            </div>
-            <div className="trust-list-item">
-              <Store size={15} className="trust-item-icon" />
-              <span>Sold by Al-Umaima Retail</span>
-            </div>
-            <div className="trust-list-item">
-              <RotateCcw size={15} className="trust-item-icon" />
-              <span>30-day returns</span>
-            </div>
+      {/* Technical Specifications (for fashion products) */}
+      {!showMaterialOptions && (
+        <div className="al-tech-specs-section">
+          <div className="al-tech-specs-title">Technical Specifications</div>
+          <div className="al-tech-specs-list">
+            {TECH_SPECS.map(spec => (
+              <div key={spec.name} className="al-tech-spec-card">
+                <div className="al-tech-spec-icon-box">{spec.icon}</div>
+                <div className="al-tech-spec-text">
+                  <span className="al-tech-spec-name">{spec.name}</span>
+                  <span className="al-tech-spec-desc">{spec.desc}</span>
+                </div>
+              </div>
+            ))}
           </div>
+        </div>
+      )}
 
-          <button
-            type="button"
-            className={`buy-box-wishlist-btn ${isWishlisted ? "wishlisted" : ""}`}
-            onClick={() => toggleWishlist(product)}
+      {/* Accordion Sections */}
+      <div className="al-detail-accordions">
+        {/* Available Offers */}
+        <div className="al-detail-accordion-item">
+          <button 
+            type="button" 
+            className="al-accordion-toggle"
+            onClick={() => setIsOffersOpen(!isOffersOpen)}
           >
-            <Heart 
-              size={16} 
-              fill={isWishlisted ? "#dc2626" : "none"} 
-              color={isWishlisted ? "#dc2626" : "#475569"} 
-            />
-            <span>{isWishlisted ? "In Wishlist" : "Add to Wishlist"}</span>
+            <div className="al-accordion-title-left">
+              <Tag size={18} className="al-tag-icon-orange" />
+              <span>Available Offers</span>
+            </div>
+            {isOffersOpen ? <ChevronUp size={18} /> : <ChevronDown size={18} />}
           </button>
+          {isOffersOpen && (
+            <div className="al-accordion-content">
+              <div className="al-offer-row">
+                <Tag size={15} className="al-offer-icon" />
+                <span>Get 5% Instant Discount on Al-Umaima Platinum Card</span>
+              </div>
+              <div className="al-offer-row">
+                <CreditCard size={15} className="al-offer-icon" />
+                <span>No Cost EMI starts at ${(currentPrice / 6).toFixed(2)}/month</span>
+              </div>
+            </div>
+          )}
+        </div>
+
+        {/* Description & Features */}
+        <div className="al-detail-accordion-item">
+          <button 
+            type="button" 
+            className="al-accordion-toggle"
+            onClick={() => setIsDescOpen(!isDescOpen)}
+          >
+            <div className="al-accordion-title-left">
+              <span>Description & Features</span>
+            </div>
+            {isDescOpen ? <ChevronUp size={18} /> : <ChevronDown size={18} />}
+          </button>
+          {isDescOpen && (
+            <div className="al-accordion-content">
+              <p className="al-desc-paragraph">
+                {product.description || "Engineered for the modern urban landscape. This jacket combines a sleek, understated silhouette with high-performance, weather-resistant technical fabric. Lightweight yet incredibly insulating."}
+              </p>
+              {product.specifications && product.specifications.length > 0 && (
+                <ul className="al-features-bullet-list">
+                  {product.specifications.map((spec, i) => (
+                    <li key={i}>{spec}</li>
+                  ))}
+                </ul>
+              )}
+            </div>
+          )}
+        </div>
+
+        {/* Customer Reviews */}
+        <div className="al-detail-accordion-item">
+          <button 
+            type="button" 
+            className="al-accordion-toggle"
+            onClick={() => setIsReviewsOpen(!isReviewsOpen)}
+          >
+            <div className="al-accordion-title-left">
+              <span>Customer Reviews ({product.reviewsCount || 312})</span>
+            </div>
+            {isReviewsOpen ? <ChevronUp size={18} /> : <ChevronDown size={18} />}
+          </button>
+          {isReviewsOpen && (
+            <div className="al-accordion-content">
+              <div className="al-review-sample">
+                <div className="al-sample-stars">★★★★★</div>
+                <p>&ldquo;Exceptional quality and a perfect fit. The material is exactly as described — premium and long-lasting.&rdquo;</p>
+                <span>— Verified Buyer</span>
+              </div>
+            </div>
+          )}
         </div>
       </div>
 
-      {/* Mobile Fixed Sticky Bottom Action Bar */}
-      <div className="al-mobile-bottom-actions">
+      {/* Desktop Action CTA Buttons */}
+      <div className="al-detail-desktop-cta">
         <button
           type="button"
-          className="al-mobile-add-cart-btn"
           onClick={handleAddToCart}
+          className={`al-detail-btn-cart ${isAdded ? "added" : ""}`}
         >
-          {isAdded ? "Added" : "Add to Cart"}
+          <ShoppingCart size={18} />
+          <span>{isAdded ? "Added to Cart" : "Add to Cart"}</span>
         </button>
 
         <button
           type="button"
-          className="al-mobile-buy-now-btn"
           onClick={handleBuyNow}
+          className="al-detail-btn-buy"
         >
-          Buy Now
+          <Zap size={18} />
+          <span>Buy Now</span>
+        </button>
+      </div>
+
+      {/* Mobile: Single Full-Width Orange "Add to Cart" button */}
+      <div className="al-mobile-sticky-action-bar--single">
+        <button
+          type="button"
+          onClick={handleAddToCart}
+          className={`al-mobile-btn-add-full ${isAdded ? "added" : ""}`}
+        >
+          <ShoppingCart size={18} />
+          <span>{isAdded ? "Added to Cart!" : "Add to Cart"}</span>
         </button>
       </div>
     </div>

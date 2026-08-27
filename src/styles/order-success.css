@@ -1,0 +1,251 @@
+/* Order Confirmation / Success Page - Matching Attachment 4 */
+
+.al-order-success-wrapper {
+  background: #f8fafc;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  padding: 3rem 1.25rem 5rem;
+}
+
+/* ==========================================================================
+   1. SUCCESS ICON
+   ========================================================================== */
+.al-success-icon-circle {
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #FF7A00 0%, #FF9A40 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 1.5rem;
+  box-shadow: 0 8px 24px rgba(255, 122, 0, 0.35);
+  animation: popIn 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+@keyframes popIn {
+  from { transform: scale(0.4); opacity: 0; }
+  to   { transform: scale(1);   opacity: 1; }
+}
+
+.al-success-check-icon {
+  color: #ffffff;
+}
+
+/* ==========================================================================
+   2. HEADING + SUBTEXT
+   ========================================================================== */
+.al-success-heading {
+  font-size: 1.75rem;
+  font-weight: 900;
+  color: #0C2340;
+  letter-spacing: -0.02em;
+  margin-bottom: 0.65rem;
+  text-align: center;
+}
+
+.al-success-subtext {
+  font-size: 0.88rem;
+  color: #64748b;
+  text-align: center;
+  line-height: 1.55;
+  max-width: 340px;
+  margin-bottom: 2rem;
+}
+
+.al-success-order-number {
+  font-weight: 700;
+  color: #0C2340;
+}
+
+/* ==========================================================================
+   3. DELIVERY CARD
+   ========================================================================== */
+.al-success-delivery-card {
+  width: 100%;
+  max-width: 420px;
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 12px;
+  padding: 1.15rem 1.25rem;
+  display: flex;
+  align-items: center;
+  gap: 0.85rem;
+  margin-bottom: 1.75rem;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+}
+
+.al-success-truck-icon {
+  color: #FF7A00;
+  flex-shrink: 0;
+}
+
+.al-success-delivery-info {
+  display: flex;
+  flex-direction: column;
+  gap: 0.1rem;
+}
+
+.al-success-delivery-label {
+  font-size: 0.78rem;
+  color: #64748b;
+  font-weight: 500;
+}
+
+.al-success-delivery-date {
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: #FF7A00;
+}
+
+/* ==========================================================================
+   4. ORDER DETAILS TABLE
+   ========================================================================== */
+.al-success-order-details {
+  width: 100%;
+  max-width: 420px;
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 12px;
+  overflow: hidden;
+  margin-bottom: 2rem;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+}
+
+.al-success-order-details-title {
+  font-size: 0.78rem;
+  font-weight: 700;
+  color: #94a3b8;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  padding: 0.85rem 1.25rem;
+  border-bottom: 1px solid #f1f5f9;
+}
+
+.al-success-detail-rows {
+  display: flex;
+  flex-direction: column;
+}
+
+.al-success-detail-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.85rem 1.25rem;
+  border-bottom: 1px solid #f1f5f9;
+  font-size: 0.88rem;
+}
+
+.al-success-detail-row:last-child {
+  border-bottom: none;
+}
+
+.al-success-detail-label {
+  color: #64748b;
+  font-weight: 500;
+}
+
+.al-success-detail-value {
+  font-weight: 600;
+  color: #334155;
+}
+
+.al-success-detail-value.free {
+  color: #16a34a;
+  font-weight: 700;
+}
+
+/* Total row */
+.al-success-detail-row.total-row {
+  background: #f8fafc;
+}
+
+.al-success-detail-row.total-row .al-success-detail-label {
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: #0C2340;
+}
+
+.al-success-detail-row.total-row .al-success-detail-value {
+  font-size: 1.15rem;
+  font-weight: 900;
+  color: #0C2340;
+}
+
+/* ==========================================================================
+   5. ACTION BUTTONS
+   ========================================================================== */
+.al-success-actions {
+  width: 100%;
+  max-width: 420px;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.al-success-btn-track {
+  width: 100%;
+  height: 52px;
+  background-color: #FF7A00;
+  color: #ffffff;
+  border: none;
+  border-radius: 8px;
+  font-size: 1rem;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  cursor: pointer;
+  text-decoration: none;
+  transition: background-color 0.15s ease;
+  box-shadow: 0 4px 14px rgba(255, 122, 0, 0.3);
+}
+
+.al-success-btn-track:hover {
+  background-color: #e56d00;
+}
+
+.al-success-btn-continue {
+  width: 100%;
+  height: 52px;
+  background-color: #ffffff;
+  color: #0C2340;
+  border: 1.5px solid #e2e8f0;
+  border-radius: 8px;
+  font-size: 0.95rem;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  cursor: pointer;
+  text-decoration: none;
+  transition: all 0.15s ease;
+}
+
+.al-success-btn-continue:hover {
+  border-color: #0C2340;
+  background: #f8fafc;
+}
+
+/* ==========================================================================
+   6. RESPONSIVE
+   ========================================================================== */
+@media (max-width: 480px) {
+  .al-order-success-wrapper {
+    padding: 2.5rem 1rem 5rem;
+  }
+
+  .al-success-icon-circle {
+    width: 72px;
+    height: 72px;
+  }
+
+  .al-success-heading {
+    font-size: 1.5rem;
+  }
+}

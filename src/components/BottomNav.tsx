@@ -2,43 +2,51 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { Home, Search, Package, User } from "lucide-react";
-import { useAuth } from "@/context/AuthContext";
+import { Home, Search, ShoppingBag, User } from "lucide-react";
+import { useCart } from "@/context/CartContext";
 import "@/styles/bottom-nav.css";
 
 export default function BottomNav() {
   const pathname = usePathname();
-  const { user } = useAuth();
+  const { totalItemsCount } = useCart();
 
   const isHome = pathname === "/";
-  const isSearch = pathname.startsWith("/products") || pathname.startsWith("/category");
-  const isOrders = pathname.startsWith("/orders");
-  const isAccount = pathname.startsWith("/profile") || pathname.startsWith("/login") || pathname.startsWith("/register");
-  const isProductPage = pathname.startsWith("/products/") && pathname !== "/products";
+  const isShop = pathname.startsWith("/category") || pathname === "/products";
+  const isCart = pathname === "/cart";
+  const isProfile = pathname.startsWith("/profile") || pathname === "/login" || pathname === "/register" || pathname.startsWith("/orders") || pathname.startsWith("/track-order");
   const isCheckout = pathname.startsWith("/checkout");
 
-  if (isProductPage || isCheckout) return null;
+  if (isCheckout) return null;
 
   return (
     <nav className="al-bottom-nav">
+      {/* 1. Home Tab */}
       <Link href="/" className={`al-bottom-tab ${isHome ? "active" : ""}`}>
         <Home size={22} strokeWidth={isHome ? 2.5 : 1.8} />
         <span className="al-bottom-label">Home</span>
       </Link>
 
-      <Link href="/products" className={`al-bottom-tab ${isSearch ? "active" : ""}`}>
-        <Search size={22} strokeWidth={isSearch ? 2.5 : 1.8} />
-        <span className="al-bottom-label">Search</span>
+      {/* 2. Shop Tab */}
+      <Link href="/category/electronics" className={`al-bottom-tab ${isShop ? "active" : ""}`}>
+        <Search size={22} strokeWidth={isShop ? 2.5 : 1.8} />
+        <span className="al-bottom-label">Shop</span>
       </Link>
 
-      <Link href="/orders" className={`al-bottom-tab ${isOrders ? "active" : ""}`}>
-        <Package size={22} strokeWidth={isOrders ? 2.5 : 1.8} />
-        <span className="al-bottom-label">Orders</span>
+      {/* 3. Cart Tab */}
+      <Link href="/cart" className={`al-bottom-tab ${isCart ? "active" : ""}`}>
+        <div className="al-bottom-cart-wrap">
+          <ShoppingBag size={22} strokeWidth={isCart ? 2.5 : 1.8} />
+          {totalItemsCount > 0 && (
+            <span className="al-bottom-cart-badge">{totalItemsCount}</span>
+          )}
+        </div>
+        <span className="al-bottom-label">Cart</span>
       </Link>
 
-      <Link href={user ? "/profile" : "/login"} className={`al-bottom-tab ${isAccount ? "active" : ""}`}>
-        <User size={22} strokeWidth={isAccount ? 2.5 : 1.8} />
-        <span className="al-bottom-label">Account</span>
+      {/* 4. Profile Tab */}
+      <Link href="/profile" className={`al-bottom-tab ${isProfile ? "active" : ""}`}>
+        <User size={22} strokeWidth={isProfile ? 2.5 : 1.8} />
+        <span className="al-bottom-label">Profile</span>
       </Link>
     </nav>
   );

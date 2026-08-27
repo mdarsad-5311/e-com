@@ -1,0 +1,246 @@
+/* Payment Methods Page Styles - Exact Match to Attachment 3 */
+
+.al-payment-methods-page {
+  background-color: #ffffff;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Header */
+.al-pay-header {
+  background: #ffffff;
+  border-bottom: 1px solid #e2e8f0;
+  padding: 0.85rem 1rem;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
+
+.al-pay-back-btn {
+  background: none;
+  border: none;
+  color: #0C2340;
+  cursor: pointer;
+  padding: 0.25rem;
+  display: flex;
+  align-items: center;
+}
+
+.al-pay-title {
+  font-size: 1.15rem;
+  font-weight: 800;
+  color: #0C2340;
+  letter-spacing: -0.01em;
+}
+
+/* Content Container */
+.al-pay-content {
+  flex: 1;
+  padding: 1.25rem 1rem 5rem;
+  max-width: 600px;
+  margin: 0 auto;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+/* 1. Security Banner */
+.al-pay-security-banner {
+  background-color: #EFF6FF;
+  border: 1px solid #DBEAFE;
+  border-radius: 8px;
+  padding: 0.75rem 1rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  color: #0C2340;
+  font-size: 0.85rem;
+  font-weight: 700;
+}
+
+.al-pay-security-icon {
+  color: #0C2340;
+}
+
+/* 2. Sections */
+.al-pay-section {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.al-pay-section-heading {
+  font-size: 1.05rem;
+  font-weight: 800;
+  color: #0C2340;
+  letter-spacing: -0.01em;
+}
+
+/* Payment Method Card */
+.al-pay-card {
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 12px;
+  padding: 1rem 1.15rem;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.03);
+  position: relative;
+  transition: all 0.15s ease;
+}
+
+.al-pay-card:hover {
+  border-color: #cbd5e1;
+}
+
+/* Card Chip / Logo */
+.al-pay-card-logo-box {
+  width: 48px;
+  height: 32px;
+  border-radius: 6px;
+  background: linear-gradient(135deg, #1E3A8A 0%, #3B82F6 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #ffffff;
+  font-weight: 900;
+  font-size: 0.75rem;
+  letter-spacing: 0.04em;
+  flex-shrink: 0;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.al-pay-card-logo-box.visa {
+  background: linear-gradient(135deg, #0f172a 0%, #1e3a8a 100%);
+}
+
+.al-pay-card-logo-box.mastercard {
+  background: linear-gradient(135deg, #eb001b 0%, #f79e1b 100%);
+}
+
+.al-pay-card-logo-box.upi {
+  background-color: #EFF6FF;
+  border: 1px solid #DBEAFE;
+  color: #2563EB;
+}
+
+.al-pay-card-info {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 0.15rem;
+}
+
+.al-pay-card-name {
+  font-size: 0.92rem;
+  font-weight: 700;
+  color: #0C2340;
+}
+
+.al-pay-card-sub {
+  font-size: 0.78rem;
+  color: #64748b;
+  font-weight: 500;
+}
+
+.al-pay-card-menu-btn {
+  background: none;
+  border: none;
+  color: #94a3b8;
+  cursor: pointer;
+  padding: 0.35rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 4px;
+  transition: color 0.15s ease;
+}
+
+.al-pay-card-menu-btn:hover {
+  color: #0C2340;
+  background: #f1f5f9;
+}
+
+/* 3. Add New Payment Method Dashed Button */
+.al-btn-add-payment-dashed {
+  background: #ffffff;
+  border: 1.5px dashed #cbd5e1;
+  border-radius: 12px;
+  padding: 1.15rem 1rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.65rem;
+  color: #0C2340;
+  font-size: 0.95rem;
+  font-weight: 700;
+  cursor: pointer;
+  width: 100%;
+  transition: all 0.15s ease;
+}
+
+.al-btn-add-payment-dashed:hover {
+  border-color: #FF7A00;
+  background: #fffaf5;
+  color: #FF7A00;
+}
+
+.al-pay-plus-icon-orange {
+  color: #FF7A00;
+}
+
+/* Modal */
+.al-pay-modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(12, 35, 64, 0.6);
+  backdrop-filter: blur(4px);
+  z-index: 1050;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1rem;
+}
+
+.al-pay-modal-box {
+  background: #ffffff;
+  border-radius: 14px;
+  width: 100%;
+  max-width: 460px;
+  padding: 1.5rem;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+
+.al-pay-tab-toggle {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.al-pay-tab-btn {
+  flex: 1;
+  padding: 0.6rem;
+  border-radius: 6px;
+  border: 1.5px solid #e2e8f0;
+  background: #ffffff;
+  color: #475569;
+  font-size: 0.85rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.al-pay-tab-btn.active {
+  background: #0C2340;
+  color: #ffffff;
+  border-color: #0C2340;
+}

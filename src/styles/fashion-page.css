@@ -1,0 +1,1049 @@
+/* Fashion Category Landing Page Styles - Exact Match to Design Attachment */
+
+.al-fashion-page-wrapper {
+  background-color: #ffffff;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+/* ==========================================================================
+   1. HERO SECTION
+   ========================================================================== */
+.al-fashion-hero {
+  background: linear-gradient(135deg, #05162B 0%, #08203E 60%, #0A294F 100%);
+  color: #ffffff;
+  padding: 4.5rem 0 5rem;
+  position: relative;
+  overflow: hidden;
+}
+
+.al-fashion-hero-grid {
+  display: grid;
+  grid-template-columns: 1.15fr 0.85fr;
+  gap: 3.5rem;
+  align-items: center;
+}
+
+.al-fashion-hero-content {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  max-width: 600px;
+}
+
+.al-fashion-hero-tag {
+  color: #FF7A00;
+  font-size: 0.78rem;
+  font-weight: 800;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  margin-bottom: 1.25rem;
+}
+
+.al-fashion-hero-title {
+  font-size: clamp(2.3rem, 4.2vw, 3.35rem);
+  font-weight: 800;
+  line-height: 1.12;
+  letter-spacing: -0.03em;
+  color: #ffffff;
+  margin-bottom: 1.25rem;
+}
+
+.al-fashion-hero-desc {
+  font-size: 1.05rem;
+  line-height: 1.6;
+  color: #cbd5e1;
+  margin-bottom: 2.25rem;
+  max-width: 480px;
+}
+
+.al-fashion-hero-ctas {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+.al-btn-hero-primary {
+  background-color: #FF7A00;
+  color: #ffffff;
+  font-weight: 700;
+  font-size: 0.95rem;
+  padding: 0.85rem 1.65rem;
+  border-radius: 6px;
+  text-decoration: none;
+  border: none;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 4px 14px rgba(255, 122, 0, 0.25);
+}
+
+.al-btn-hero-primary:hover {
+  background-color: #e56d00;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(255, 122, 0, 0.35);
+}
+
+.al-btn-hero-secondary {
+  background: transparent;
+  color: #ffffff;
+  font-weight: 600;
+  font-size: 0.95rem;
+  padding: 0.85rem 1.65rem;
+  border-radius: 6px;
+  text-decoration: none;
+  border: 1.5px solid rgba(255, 255, 255, 0.35);
+  cursor: pointer;
+  transition: all 0.2s ease;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.al-btn-hero-secondary:hover {
+  border-color: #ffffff;
+  background-color: rgba(255, 255, 255, 0.08);
+  transform: translateY(-2px);
+}
+
+/* Right Angled Image Card with Floating Pill */
+.al-fashion-hero-media {
+  position: relative;
+  display: flex;
+  justify-content: center;
+}
+
+.al-fashion-card-wrapper {
+  position: relative;
+  width: 100%;
+  max-width: 420px;
+  aspect-ratio: 4 / 4.7;
+  border-radius: 18px;
+  overflow: hidden;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.35);
+  transform: rotate(1deg);
+  transition: transform 0.3s ease;
+}
+
+.al-fashion-card-wrapper:hover {
+  transform: rotate(0deg) scale(1.02);
+}
+
+.al-fashion-hero-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.al-fashion-floating-badge {
+  position: absolute;
+  bottom: 1.25rem;
+  left: 1.25rem;
+  right: 1.25rem;
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(8px);
+  border-radius: 10px;
+  padding: 0.75rem 1.15rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  text-decoration: none;
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.15);
+  transition: all 0.2s ease;
+}
+
+.al-fashion-floating-badge:hover {
+  background: #ffffff;
+  transform: translateY(-2px);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.22);
+}
+
+.al-floating-badge-text {
+  display: flex;
+  flex-direction: column;
+  gap: 0.15rem;
+}
+
+.al-floating-product-title {
+  color: #0C2340;
+  font-size: 0.88rem;
+  font-weight: 700;
+}
+
+.al-floating-product-price {
+  color: #475569;
+  font-size: 0.85rem;
+  font-weight: 700;
+}
+
+.al-floating-badge-arrow {
+  color: #0C2340;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: transform 0.2s ease;
+}
+
+.al-fashion-floating-badge:hover .al-floating-badge-arrow {
+  transform: translateX(4px);
+}
+
+/* ==========================================================================
+   2. FILTER & SORT STRIP
+   ========================================================================== */
+.al-fashion-filter-strip {
+  background: #ffffff;
+  border-bottom: 1px solid #e2e8f0;
+  padding: 0.85rem 0;
+  position: sticky;
+  top: 72px;
+  z-index: 90;
+}
+
+.al-fashion-filter-inner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1.5rem;
+  flex-wrap: wrap;
+}
+
+.al-filter-pills-group {
+  display: flex;
+  align-items: center;
+  gap: 0.65rem;
+  flex-wrap: wrap;
+}
+
+.al-filter-pill-dropdown {
+  position: relative;
+}
+
+.al-filter-pill-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  background: #ffffff;
+  border: 1px solid #cbd5e1;
+  border-radius: 6px;
+  padding: 0.42rem 0.85rem;
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: #334155;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.al-filter-pill-btn:hover,
+.al-filter-pill-btn.active {
+  border-color: #0C2340;
+  color: #0C2340;
+  background: #F8FAFC;
+}
+
+.al-filter-pill-menu {
+  position: absolute;
+  top: calc(100% + 6px);
+  left: 0;
+  min-width: 170px;
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08);
+  padding: 0.4rem;
+  z-index: 200;
+}
+
+.al-filter-pill-option {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  padding: 0.5rem 0.75rem;
+  font-size: 0.82rem;
+  color: #334155;
+  background: none;
+  border: none;
+  border-radius: 4px;
+  text-align: left;
+  cursor: pointer;
+  transition: background-color 0.15s ease;
+}
+
+.al-filter-pill-option:hover {
+  background-color: #F1F5F9;
+  color: #0C2340;
+}
+
+.al-filter-pill-option.selected {
+  background-color: #E2E8F0;
+  font-weight: 700;
+  color: #0C2340;
+}
+
+/* Sort dropdown */
+.al-fashion-sort-wrap {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.al-fashion-sort-label {
+  font-size: 0.82rem;
+  color: #64748b;
+  font-weight: 500;
+}
+
+.al-fashion-sort-select-box {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+}
+
+.al-fashion-sort-select {
+  appearance: none;
+  background: transparent;
+  border: none;
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: #0C2340;
+  cursor: pointer;
+  padding-right: 1.25rem;
+  outline: none;
+  font-family: inherit;
+}
+
+.al-fashion-sort-chevron {
+  position: absolute;
+  right: 0;
+  pointer-events: none;
+  color: #64748b;
+}
+
+/* ==========================================================================
+   3. CURATED COLLECTIONS (Bento Grid)
+   ========================================================================== */
+.al-curated-collections-section {
+  padding: 3.5rem 0 4rem;
+  background: #ffffff;
+}
+
+.al-section-header-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 1.75rem;
+}
+
+.al-fashion-section-heading {
+  font-size: 1.5rem;
+  font-weight: 800;
+  color: #0C2340;
+  letter-spacing: -0.02em;
+}
+
+.al-view-all-fashion-link {
+  color: #FF7A00;
+  font-size: 0.9rem;
+  font-weight: 700;
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  transition: transform 0.15s ease;
+}
+
+.al-view-all-fashion-link:hover {
+  transform: translateX(3px);
+  text-decoration: underline;
+}
+
+/* Bento Grid */
+.al-bento-grid {
+  display: grid;
+  grid-template-columns: 1.35fr 1fr;
+  gap: 1.5rem;
+  height: 480px;
+}
+
+/* Left Large Card: Urban Utility */
+.al-bento-left-card {
+  position: relative;
+  border-radius: 14px;
+  overflow: hidden;
+  text-decoration: none;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  padding: 2.25rem;
+}
+
+.al-bento-bg-img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+  z-index: 1;
+}
+
+.al-bento-left-card:hover .al-bento-bg-img {
+  transform: scale(1.04);
+}
+
+.al-bento-gradient-overlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg, rgba(0, 0, 0, 0.05) 0%, rgba(5, 22, 43, 0.75) 100%);
+  z-index: 2;
+}
+
+.al-bento-left-content {
+  position: relative;
+  z-index: 3;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 0.65rem;
+}
+
+.al-bento-trending-pill {
+  background: #ffffff;
+  color: #0C2340;
+  font-size: 0.72rem;
+  font-weight: 700;
+  padding: 0.25rem 0.65rem;
+  border-radius: 20px;
+  letter-spacing: 0.02em;
+}
+
+.al-bento-main-title {
+  color: #ffffff;
+  font-size: 2rem;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  margin-bottom: 0.5rem;
+}
+
+.al-bento-shop-btn {
+  background: #ffffff;
+  color: #0C2340;
+  font-weight: 700;
+  font-size: 0.85rem;
+  padding: 0.65rem 1.25rem;
+  border-radius: 6px;
+  border: none;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  display: inline-flex;
+  align-items: center;
+}
+
+.al-bento-left-card:hover .al-bento-shop-btn {
+  background: #FF7A00;
+  color: #ffffff;
+}
+
+/* Right Column (Stacked Cards) */
+.al-bento-right-col {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  height: 100%;
+}
+
+.al-bento-mini-card {
+  position: relative;
+  flex: 1;
+  border-radius: 14px;
+  overflow: hidden;
+  text-decoration: none;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  padding: 1.75rem;
+}
+
+.al-bento-mini-card:hover .al-bento-bg-img {
+  transform: scale(1.04);
+}
+
+.al-bento-mini-content {
+  position: relative;
+  z-index: 3;
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.al-bento-mini-title {
+  color: #ffffff;
+  font-size: 1.35rem;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+}
+
+.al-bento-mini-subtitle {
+  color: rgba(255, 255, 255, 0.85);
+  font-size: 0.85rem;
+  font-weight: 600;
+  transition: color 0.15s ease;
+}
+
+.al-bento-mini-card:hover .al-bento-mini-subtitle {
+  color: #FF7A00;
+}
+
+/* ==========================================================================
+   4. LATEST ARRIVALS SECTION
+   ========================================================================== */
+.al-latest-arrivals-section {
+  background-color: #F1F5F9;
+  padding: 4rem 0 5rem;
+}
+
+.al-fashion-products-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 1.5rem;
+}
+
+/* Individual Product Card */
+.al-fashion-product-card {
+  background: #ffffff;
+  border-radius: 12px;
+  overflow: hidden;
+  border: 1px solid #e2e8f0;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.03);
+  display: flex;
+  flex-direction: column;
+  transition: all 0.2s ease;
+  position: relative;
+}
+
+.al-fashion-product-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 12px 24px rgba(0, 0, 0, 0.08);
+  border-color: #cbd5e1;
+}
+
+.al-product-card-img-wrap {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 4 / 4.6;
+  background-color: #f8fafc;
+  overflow: hidden;
+}
+
+.al-product-card-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  transition: transform 0.4s ease;
+}
+
+.al-fashion-product-card:hover .al-product-card-img {
+  transform: scale(1.04);
+}
+
+/* Orange Al-Umaima Assured Badge */
+.al-product-assured-badge {
+  position: absolute;
+  top: 0.75rem;
+  left: 0.75rem;
+  background: rgba(255, 247, 237, 0.95);
+  border: 1px solid #fed7aa;
+  color: #ea580c;
+  font-size: 0.68rem;
+  font-weight: 800;
+  padding: 0.2rem 0.5rem;
+  border-radius: 4px;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  z-index: 2;
+}
+
+/* Floating Wishlist Heart Button */
+.al-card-wishlist-btn {
+  position: absolute;
+  bottom: 0.75rem;
+  right: 0.75rem;
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #64748b;
+  cursor: pointer;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+  transition: all 0.15s ease;
+  z-index: 2;
+}
+
+.al-card-wishlist-btn:hover {
+  color: #e11d48;
+  transform: scale(1.1);
+}
+
+.al-card-wishlist-btn.active {
+  background: #fee2e2;
+  color: #e11d48;
+  border-color: #fca5a5;
+}
+
+/* Card Info */
+.al-product-card-info {
+  padding: 1.15rem 1.15rem 1.35rem;
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+}
+
+.al-fashion-card-title {
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: #0C2340;
+  text-decoration: none;
+  margin-bottom: 0.35rem;
+  line-height: 1.35;
+  transition: color 0.15s ease;
+}
+
+.al-fashion-card-title:hover {
+  color: #FF7A00;
+}
+
+.al-fashion-card-price {
+  font-size: 1rem;
+  font-weight: 800;
+  color: #0C2340;
+  margin-bottom: 0.5rem;
+}
+
+/* Color Swatches Row */
+.al-color-swatches-row {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  margin-top: auto;
+  padding-top: 0.35rem;
+}
+
+.al-color-dot {
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  border: 1.5px solid #ffffff;
+  box-shadow: 0 0 0 1px #cbd5e1;
+  cursor: pointer;
+  transition: transform 0.15s ease;
+}
+
+.al-color-dot:hover {
+  transform: scale(1.2);
+}
+
+/* ==========================================================================
+   5. HERO — MOBILE FULL-WIDTH IMAGE VARIANT
+   ========================================================================== */
+
+/* Hero: mobile full-width bg image */
+.al-fashion-hero--mobile {
+  position: relative;
+  min-height: 380px;
+  display: flex;
+  align-items: flex-end;
+  padding: 0;
+  overflow: hidden;
+}
+
+.al-fashion-hero-bg-img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center 20%;
+  z-index: 1;
+}
+
+.al-fashion-hero-overlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg, rgba(5, 22, 43, 0.18) 0%, rgba(5, 22, 43, 0.82) 100%);
+  z-index: 2;
+}
+
+.al-fashion-hero-mobile-content {
+  position: relative;
+  z-index: 3;
+  padding: 2rem 1.25rem 2.25rem;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  width: 100%;
+}
+
+/* Tag + title inside mobile hero */
+.al-fashion-hero--mobile .al-fashion-hero-tag {
+  background-color: #FF7A00;
+  color: #ffffff;
+  font-size: 0.7rem;
+  font-weight: 800;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  padding: 0.25rem 0.65rem;
+  border-radius: 4px;
+  margin-bottom: 0.85rem;
+}
+
+.al-fashion-hero--mobile .al-fashion-hero-title {
+  font-size: 2.5rem;
+  font-weight: 900;
+  line-height: 1.05;
+  letter-spacing: -0.03em;
+  color: #ffffff;
+  margin-bottom: 0.75rem;
+}
+
+.al-fashion-hero--mobile .al-fashion-hero-desc {
+  font-size: 0.92rem;
+  line-height: 1.55;
+  color: rgba(255,255,255,0.88);
+  margin-bottom: 1.5rem;
+  max-width: 320px;
+}
+
+/* Single CTA button in mobile hero */
+.al-btn-hero-collection {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  background: transparent;
+  color: #ffffff;
+  font-weight: 700;
+  font-size: 0.88rem;
+  padding: 0.7rem 1.35rem;
+  border-radius: 6px;
+  border: 1.5px solid rgba(255, 255, 255, 0.7);
+  text-decoration: none;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.al-btn-hero-collection:hover {
+  background: rgba(255,255,255,0.15);
+  border-color: #ffffff;
+}
+
+/* ==========================================================================
+   6. CATEGORY TABS (Horizontal Scrollable Pills)
+   ========================================================================== */
+.al-fashion-cat-tabs {
+  background: #ffffff;
+  border-bottom: 1px solid #e2e8f0;
+  position: sticky;
+  top: 64px;
+  z-index: 90;
+}
+
+.al-fashion-cat-tabs-inner {
+  display: flex;
+  align-items: center;
+  gap: 0;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;
+  padding: 0 1rem;
+}
+
+.al-fashion-cat-tabs-inner::-webkit-scrollbar {
+  display: none;
+}
+
+.al-fashion-cat-tab {
+  flex-shrink: 0;
+  padding: 0.8rem 1.15rem;
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: #64748b;
+  background: none;
+  border: none;
+  border-bottom: 2.5px solid transparent;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  white-space: nowrap;
+}
+
+.al-fashion-cat-tab:hover {
+  color: #0C2340;
+}
+
+.al-fashion-cat-tab.active {
+  color: #0C2340;
+  border-bottom-color: #0C2340;
+  font-weight: 700;
+}
+
+/* ==========================================================================
+   7. PRODUCT GRID — 2-COLUMN
+   ========================================================================== */
+.al-fashion-products-grid-2col {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 1rem;
+  margin-bottom: 1rem;
+}
+
+/* Subcategory label above title */
+.al-fashion-card-subcategory {
+  display: block;
+  font-size: 0.72rem;
+  font-weight: 700;
+  color: #64748b;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  margin-bottom: 0.2rem;
+}
+
+/* Bottom row: price + assured icon */
+.al-fashion-card-bottom-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: 0.4rem;
+}
+
+.al-fashion-card-assured-icon {
+  color: #FF7A00;
+  display: flex;
+  align-items: center;
+}
+
+/* ==========================================================================
+   8. FEATURED HORIZONTAL PRODUCT CARD
+   ========================================================================== */
+.al-fashion-featured-card {
+  display: flex;
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+  margin-bottom: 0.5rem;
+}
+
+.al-fashion-featured-img-wrap {
+  position: relative;
+  width: 130px;
+  min-width: 130px;
+  flex-shrink: 0;
+  background: #f8fafc;
+}
+
+.al-fashion-featured-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.al-fashion-featured-info {
+  flex: 1;
+  padding: 0.9rem 1rem;
+  display: flex;
+  flex-direction: column;
+}
+
+.al-fashion-featured-title {
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: #0C2340;
+  text-decoration: none;
+  line-height: 1.3;
+  margin-bottom: 0.4rem;
+}
+
+.al-fashion-featured-title:hover {
+  color: #FF7A00;
+}
+
+.al-fashion-featured-rating {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+  margin-bottom: 0.6rem;
+}
+
+.al-fashion-featured-reviews {
+  font-size: 0.78rem;
+  color: #64748b;
+  margin-left: 4px;
+}
+
+.al-fashion-featured-bottom {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: auto;
+}
+
+.al-fashion-featured-price {
+  font-size: 1.1rem;
+  font-weight: 800;
+  color: #0C2340;
+}
+
+.al-fashion-add-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  background-color: #0C2340;
+  color: #ffffff;
+  font-size: 0.8rem;
+  font-weight: 700;
+  padding: 0.45rem 0.85rem;
+  border-radius: 6px;
+  border: none;
+  cursor: pointer;
+  transition: background-color 0.15s ease;
+}
+
+.al-fashion-add-btn:hover {
+  background-color: #FF7A00;
+}
+
+/* ==========================================================================
+   9. AL-UMAIMA ASSURED STRIP
+   ========================================================================== */
+.al-fashion-assured-strip {
+  display: flex;
+  align-items: center;
+  gap: 0.65rem;
+  background: linear-gradient(90deg, #05162B 0%, #0C2340 100%);
+  color: #ffffff;
+  padding: 0.85rem 1.25rem;
+  margin-bottom: 0;
+}
+
+.al-fashion-assured-icon {
+  color: #FF7A00;
+  flex-shrink: 0;
+}
+
+.al-fashion-assured-text {
+  font-size: 0.88rem;
+  font-weight: 700;
+}
+
+.al-fashion-assured-sub {
+  font-size: 0.78rem;
+  color: rgba(255,255,255,0.65);
+  margin-left: auto;
+}
+
+/* ==========================================================================
+   10. DESKTOP-ONLY UTILITY
+   ========================================================================== */
+.al-desktop-only {
+  display: block;
+}
+
+/* ==========================================================================
+   11. RESPONSIVE DESIGN
+   ========================================================================== */
+@media (max-width: 1024px) {
+  .al-fashion-products-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .al-bento-grid {
+    height: auto;
+    grid-template-columns: 1fr;
+  }
+
+  .al-bento-left-card {
+    height: 360px;
+  }
+
+  .al-bento-mini-card {
+    height: 200px;
+  }
+}
+
+@media (max-width: 768px) {
+  /* Desktop hero grid becomes hidden on mobile since we use bg-image hero */
+  .al-fashion-hero-grid {
+    grid-template-columns: 1fr;
+    gap: 2.5rem;
+  }
+
+  /* Desktop hero default padding */
+  .al-fashion-hero:not(.al-fashion-hero--mobile) {
+    padding: 3rem 0;
+  }
+
+  .al-fashion-hero-title {
+    font-size: 2.2rem;
+  }
+
+  .al-fashion-card-wrapper {
+    max-width: 320px;
+    margin: 0 auto;
+  }
+
+  .al-fashion-filter-inner {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .al-fashion-products-grid {
+    grid-template-columns: 1fr;
+  }
+
+  /* Hide desktop-only sections on mobile */
+  .al-desktop-only {
+    display: none;
+  }
+
+  /* Mobile hero stays visible */
+  .al-fashion-hero--mobile {
+    min-height: 380px;
+  }
+
+  /* Mobile product grid: 2 columns */
+  .al-fashion-products-grid-2col {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 0.75rem;
+  }
+
+  /* Assured strip stays visible */
+  .al-fashion-assured-strip {
+    padding: 0.85rem 1rem;
+  }
+
+  .al-fashion-assured-sub {
+    display: none;
+  }
+
+  /* Latest arrivals section on mobile: lighter bg */
+  .al-latest-arrivals-section {
+    background-color: #f8fafc;
+    padding: 1.5rem 0 5rem;
+  }
+}

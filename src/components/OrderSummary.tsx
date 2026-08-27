@@ -1,78 +1,76 @@
 "use client";
 
-import { useRouter } from "next/navigation";
-import { Shield, RotateCcw, ArrowRight } from "lucide-react";
+import Link from "next/link";
+import { ShieldCheck, Award, ArrowRight } from "lucide-react";
 import { useCart } from "@/context/CartContext";
 import "@/styles/order-summary.css";
 
 export default function OrderSummary() {
-  const router = useRouter();
-  const { totalItemsCount, subtotal, totalOriginalPrice, totalSavings } = useCart();
+  const { totalItemsCount, subtotal } = useCart();
 
-  const handlePlaceOrder = () => {
-    router.push("/checkout");
-  };
+  const estimatedTax = subtotal * 0.08; // 8% tax
+  const finalTotal = subtotal + estimatedTax;
 
   return (
-    <aside className="al-price-details-card">
-      <h2 className="al-price-title">PRICE DETAILS</h2>
+    <aside className="al-order-summary-card">
+      <h2 className="al-summary-title">Order Summary</h2>
 
       {/* Breakdown Rows */}
-      <div className="al-price-breakdown">
-        <div className="al-price-row">
-          <span className="al-row-label">Price ({totalItemsCount} {totalItemsCount === 1 ? "item" : "items"})</span>
-          <span className="al-row-val">AED {totalOriginalPrice.toLocaleString()}</span>
+      <div className="al-summary-rows">
+        <div className="al-summary-row">
+          <span className="al-summary-label">Subtotal ({totalItemsCount} {totalItemsCount === 1 ? "item" : "items"})</span>
+          <span className="al-summary-value">${subtotal.toFixed(2)}</span>
         </div>
 
-        <div className="al-price-row">
-          <span className="al-row-label">Discount</span>
-          <span className="al-row-val al-val-green">-AED {totalSavings.toLocaleString()}</span>
+        <div className="al-summary-row">
+          <span className="al-summary-label">Estimated Tax</span>
+          <span className="al-summary-value">${estimatedTax.toFixed(2)}</span>
         </div>
 
-        <div className="al-price-row">
-          <span className="al-row-label">Delivery Charges</span>
-          <span className="al-row-val al-val-green">Free</span>
+        <div className="al-summary-row">
+          <span className="al-summary-label">Shipping</span>
+          <span className="al-summary-value al-val-orange">FREE</span>
         </div>
       </div>
 
-      {/* Dotted Divider & Total Amount */}
-      <div className="al-total-row">
-        <span className="al-total-label">Total Amount</span>
-        <span className="al-total-val">AED {subtotal.toLocaleString()}</span>
+      <div className="al-summary-divider" />
+
+      {/* Total Row */}
+      <div className="al-summary-total-row">
+        <span className="al-total-text">Total</span>
+        <span className="al-total-price">${finalTotal.toFixed(2)}</span>
       </div>
 
-      {/* Savings Highlight Banner */}
-      {totalSavings > 0 && (
-        <div className="al-savings-banner">
-          You will save AED {totalSavings.toLocaleString()} on this order
-        </div>
+      {/* Proceed to Checkout CTA */}
+      {totalItemsCount > 0 ? (
+        <Link href="/checkout" className="al-checkout-cta-btn">
+          <span>Proceed to Checkout</span>
+          <ArrowRight size={18} />
+        </Link>
+      ) : (
+        <button type="button" disabled className="al-checkout-cta-btn">
+          <span>Proceed to Checkout</span>
+          <ArrowRight size={18} />
+        </button>
       )}
 
-      {/* Place Order CTA Button */}
-      <button
-        type="button"
-        className="al-place-order-btn"
-        onClick={handlePlaceOrder}
-        disabled={totalItemsCount === 0}
-      >
-        Place Order <ArrowRight size={18} />
-      </button>
-
-      {/* Security & Return Trust Perks */}
-      <div className="al-trust-perks-section">
-        <div className="al-trust-item">
-          <Shield size={20} className="al-trust-icon" />
-          <div className="al-trust-texts">
-            <span className="al-trust-heading">Safe and Secure Payments</span>
-            <span className="al-trust-sub">256-Bit SSL Encryption applied to all transactions.</span>
+      {/* Trust & Guarantee Badges Matching Attachment */}
+      <div className="al-summary-trust-badges">
+        {/* Secure Checkout */}
+        <div className="al-trust-badge al-trust-secure">
+          <ShieldCheck size={20} className="al-trust-icon-blue" />
+          <div className="al-trust-text-group">
+            <span className="al-trust-name">Secure Checkout</span>
+            <span className="al-trust-desc">256-bit SSL encryption</span>
           </div>
         </div>
 
-        <div className="al-trust-item">
-          <RotateCcw size={20} className="al-trust-icon" />
-          <div className="al-trust-texts">
-            <span className="al-trust-heading">Easy Returns</span>
-            <span className="al-trust-sub">30-Day Hassle-free return policy.</span>
+        {/* Al-Umaima Assured */}
+        <div className="al-trust-badge al-trust-assured">
+          <Award size={20} className="al-trust-icon-orange" />
+          <div className="al-trust-text-group">
+            <span className="al-trust-name">Al-Umaima Assured</span>
+            <span className="al-trust-desc">Premium Quality Guarantee</span>
           </div>
         </div>
       </div>
