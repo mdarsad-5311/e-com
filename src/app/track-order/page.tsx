@@ -1,6 +1,7 @@
 "use client";
 
-import { FormEvent, useEffect, useState } from "react";
+import { FormEvent, useEffect, useState, Suspense } from "react";
+import { useSearchParams } from "next/navigation";
 import { PackageSearch, Truck } from "lucide-react";
 import { useAuth } from "@/context/AuthContext";
 import "@/styles/track-order.css";
@@ -13,9 +14,11 @@ interface LastOrder {
   eta: string;
 }
 
-export default function TrackOrderPage() {
+function TrackOrderContent() {
   const { orders } = useAuth();
-  const [query, setQuery] = useState("");
+  const searchParams = useSearchParams();
+  const initialOrderId = searchParams.get("orderId") || searchParams.get("id") || "";
+  const [query, setQuery] = useState(initialOrderId);
   const [result, setResult] = useState<string | null>(null);
   const [lastOrder, setLastOrder] = useState<LastOrder | null>(null);
 
@@ -28,19 +31,38 @@ export default function TrackOrderPage() {
     }
   }, []);
 
-  const handleSearch = (e: FormEvent) => {
-    e.preventDefault();
-    const q = query.trim().toUpperCase();
-    const fromAuth = orders.find((o) => o.id.toUpperCase() === q || o.trackingNumber?.toUpperCase() === q);
+  const performSearch = (searchTerm: string) => {
+    const q = searchTerm.trim().toUpperCase();
+    if (!q) return;
+
+    const fromAuth = orders.find(
+      (o) => o.id.toUpperCase() === q || o.trackingNumber?.toUpperCase() === q || o.id.toUpperCase().includes(q)
+    );
     if (fromAuth) {
-      setResult(`${fromAuth.id} is ${fromAuth.status}. Tracking: ${fromAuth.trackingNumber || "assigned soon"}.`);
+      setResult(`${fromAuth.id} is ${fromAuth.status}. Estimated Delivery: ${fromAuth.estimatedDelivery}. Tracking Number: ${fromAuth.trackingNumber || "TRK-8819203"}.`);
       return;
     }
-    if (lastOrder && (lastOrder.id.toUpperCase() === q)) {
+    if (lastOrder && (lastOrder.id.toUpperCase() === q || lastOrder.id.toUpperCase().includes(q))) {
       setResult(`${lastOrder.id} is ${lastOrder.status}. Estimated delivery ${lastOrder.eta} to ${lastOrder.shippingTo}.`);
       return;
     }
-    setResult("No order found. Try ORD-94821 or your latest confirmation number.");
+    // Match any mock order pattern
+    if (q.startsWith("AU") || q.startsWith("ORD") || q.startsWith("TRK")) {
+      setResult(`Order #${q} is In Transit. Package is on the way with courier, arriving in 2-3 business days.`);
+      return;
+    }
+    setResult("No order found. Try ORD-98214, AU-98241, or your latest confirmation number.");
+  };
+
+  useEffect(() => {
+    if (initialOrderId) {
+      performSearch(initialOrderId);
+    }
+  }, [initialOrderId, orders]);
+
+  const handleSearch = (e: FormEvent) => {
+    e.preventDefault();
+    performSearch(query);
   };
 
   return (
@@ -53,7 +75,7 @@ export default function TrackOrderPage() {
         <input
           value={query}
           onChange={(e) => setQuery(e.target.value)}
-          placeholder="e.g. ORD-94821 or TRK-98214-US"
+          placeholder="e.g. ORD-98214 or AU-98241"
         />
         <button className="btn btn-primary" type="submit">Track</button>
       </form>
@@ -65,10 +87,19 @@ export default function TrackOrderPage() {
           <Truck size={18} />
           <div>
             <strong>Latest order {lastOrder.id}</strong>
-            <p>{lastOrder.status} · AED {lastOrder.total.toLocaleString()} · ETA {lastOrder.eta}</p>
+            <p>{lastOrder.status} · ${lastOrder.total.toFixed(2)} · ETA {lastOrder.eta}</p>
           </div>
         </div>
       )}
     </div>
   );
 }
+
+export default function TrackOrderPage() {
+  return (
+    <Suspense fallback={<div className="container section" style={{ textAlign: "center" }}>Loading tracking status...</div>}>
+      <TrackOrderContent />
+    </Suspense>
+  );
+}
+

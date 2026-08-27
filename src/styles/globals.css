@@ -59,11 +59,7 @@
   --tertiary-container: #4A1A03;
   --on-tertiary-container: #FFDBC9;
 
-  /* Neutral: Slate Neutral #1E293B (Attachment 1) */
-  --neutral: #1E293B;
-
-
-  /* Neutral: Dark Slate #1E293B */
+  /* Neutral: Slate Neutral #1E293B */
   --neutral: #1E293B;
   --neutral-light: #F1F5F9;
   --neutral-dark: #0F172A;

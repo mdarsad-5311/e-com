@@ -27,7 +27,7 @@ export default function BottomNav() {
       </Link>
 
       {/* 2. Shop Tab */}
-      <Link href="/category/electronics" className={`al-bottom-tab ${isShop ? "active" : ""}`}>
+      <Link href="/products" className={`al-bottom-tab ${isShop ? "active" : ""}`}>
         <Search size={22} strokeWidth={isShop ? 2.5 : 1.8} />
         <span className="al-bottom-label">Shop</span>
       </Link>

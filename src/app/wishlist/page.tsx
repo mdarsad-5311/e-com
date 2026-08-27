@@ -65,9 +65,9 @@ export default function WishlistPage() {
                   </Link>
 
                   <div className="wishlist-price-row">
-                    <span className="current-price">AED {product.price.toLocaleString()}</span>
+                    <span className="current-price">${product.price.toFixed(2)}</span>
                     {product.originalPrice && (
-                      <span className="old-price">AED {product.originalPrice.toLocaleString()}</span>
+                      <span className="old-price">${product.originalPrice.toFixed(2)}</span>
                     )}
                   </div>
 

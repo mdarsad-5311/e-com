@@ -28,19 +28,21 @@ export default function CategoryView({ category, initialProducts }: CategoryView
   const [sortBy, setSortBy] = useState<string>("recommended");
   const [visibleCount, setVisibleCount] = useState<number>(12);
 
-  const subCategoriesList = [
-    "Headphones",
-    "Wearables",
-    "Keyboards",
-    "Laptops",
-    "Smartphones",
-  ];
+  const subCategoriesList = useMemo(() => {
+    const set = new Set<string>();
+    initialProducts.forEach((p) => {
+      if (p.subCategory) set.add(p.subCategory);
+    });
+    return set.size > 0 ? Array.from(set) : ["Headphones", "Wearables", "Keyboards", "Laptops", "Smartphones"];
+  }, [initialProducts]);
 
-  const brandsList = [
-    "Aura",
-    "Chronox",
-    "Keychron",
-  ];
+  const brandsList = useMemo(() => {
+    const set = new Set<string>();
+    initialProducts.forEach((p) => {
+      if (p.brand) set.add(p.brand);
+    });
+    return set.size > 0 ? Array.from(set) : ["Sony", "Bose", "Sennheiser", "Apple", "Aura"];
+  }, [initialProducts]);
 
   const handleSubCatChange = (subCat: string) => {
     setSelectedSubCats((prev) =>
@@ -65,26 +67,16 @@ export default function CategoryView({ category, initialProducts }: CategoryView
       .filter((p: Product) => {
         // Subcategory filter
         if (selectedSubCats.length > 0) {
-          const productSubCat = p.subCategory || (
-            p.title.toLowerCase().includes("headphone") || p.title.toLowerCase().includes("buds") ? "Headphones" :
-            p.title.toLowerCase().includes("watch") ? "Wearables" :
-            p.title.toLowerCase().includes("keyboard") ? "Keyboards" :
-            p.title.toLowerCase().includes("laptop") || p.title.toLowerCase().includes("ultrabook") ? "Laptops" :
-            p.title.toLowerCase().includes("phone") ? "Smartphones" : "Headphones"
-          );
-          if (!selectedSubCats.includes(productSubCat)) {
+          const productSubCat = p.subCategory || "";
+          if (!selectedSubCats.includes(productSubCat) && !selectedSubCats.some((s) => p.title.toLowerCase().includes(s.toLowerCase()))) {
             return false;
           }
         }
 
         // Brand filter
         if (selectedBrands.length > 0) {
-          const productBrand = p.brand || (
-            p.title.includes("Aura") ? "Aura" :
-            p.title.includes("Chronox") ? "Chronox" :
-            p.title.includes("Keychron") ? "Keychron" : "Aura"
-          );
-          if (!selectedBrands.includes(productBrand)) {
+          const productBrand = p.brand || "";
+          if (!selectedBrands.includes(productBrand) && !selectedBrands.some((b) => p.title.toLowerCase().includes(b.toLowerCase()))) {
             return false;
           }
         }
@@ -109,7 +101,7 @@ export default function CategoryView({ category, initialProducts }: CategoryView
           <div className="al-breadcrumbs">
             <Link href="/" className="al-breadcrumb-link">Home</Link>
             <ChevronRight size={14} className="al-breadcrumb-arrow" />
-            <span className="al-breadcrumb-current">{category?.name || "Electronics"}</span>
+            <span className="al-breadcrumb-current">{category?.name || "Catalog"}</span>
           </div>
 
           <div className="al-sort-container">
@@ -160,7 +152,7 @@ export default function CategoryView({ category, initialProducts }: CategoryView
             <div className="al-filter-group">
               <h3 className="al-filter-group-label">Category</h3>
               <div className="al-options-list">
-                {["Headphones", "Speakers", "Smart Home"].map((item) => (
+                {subCategoriesList.slice(0, 6).map((item) => (
                   <label key={item} className="al-checkbox-row">
                     <input
                       type="checkbox"
@@ -194,7 +186,7 @@ export default function CategoryView({ category, initialProducts }: CategoryView
             <div className="al-filter-group">
               <h3 className="al-filter-group-label">Brand</h3>
               <div className="al-brand-chips-row">
-                {["Sony", "Bose", "Sennheiser"].map((b) => (
+                {brandsList.slice(0, 6).map((b) => (
                   <button
                     key={b}
                     type="button"
@@ -222,8 +214,6 @@ export default function CategoryView({ category, initialProducts }: CategoryView
                   {displayedProducts.map((prod) => (
                     <ProductCard key={prod.id} product={prod} />
                   ))}
-                  {/* Skeleton Loader Card (Attachment 2) */}
-                  <SkeletonCard />
                 </div>
 
 

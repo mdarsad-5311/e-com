@@ -1,9 +1,9 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useMemo } from "react";
 import Link from "next/link";
 import { Star, Heart, ShoppingCart, Check, ShieldCheck, ChevronRight } from "lucide-react";
-import { Product } from "@/data/products";
+import { products as allProducts, Product } from "@/data/products";
 import { useWishlist } from "@/context/WishlistContext";
 import { useCart } from "@/context/CartContext";
 import { useToast } from "@/context/ToastContext";
@@ -26,51 +26,24 @@ export default function TrendingNow() {
   const { addToCart } = useCart();
   const { showToast } = useToast();
 
-  // Products from Attachments 1 & 4
-  const trendingProducts: Product[] = [
-    {
-      id: "acoustic-pro-headphones-anc",
-      title: "Acoustic Pro Headphones ANC",
-      slug: "acoustic-pro-headphones-anc",
-      category: "electronics",
-      categoryName: "Electronics",
-      subCategory: "Headphones",
-      price: 299.00,
-      originalPrice: 349.00,
-      rating: 4.8,
-      reviewsCount: 128,
-      isFeatured: true,
-      isBestSeller: true,
-      isAssured: true,
-      stock: 35,
-      brand: "Sennheiser",
-      image: "https://images.unsplash.com/photo-1505740420928-5e560c06d30e?auto=format&fit=crop&w=800&q=80",
-      description: "Studio reference active noise cancellation headphones.",
-      specifications: ["Hybrid ANC", "42mm Drivers", "35h Battery"],
-      reviews: []
-    },
-    {
-      id: "artisan-ceramic-mug-set",
-      title: "Artisan Ceramic Mug Set",
-      slug: "artisan-ceramic-mug-set",
-      category: "home-goods",
-      categoryName: "Home Goods",
-      subCategory: "Kitchen",
-      price: 45.00,
-      originalPrice: 55.00,
-      rating: 4.9,
-      reviewsCount: 84,
-      isFeatured: true,
-      isBestSeller: false,
-      isAssured: true,
-      stock: 60,
-      brand: "Al-Umaima Living",
-      image: "https://images.unsplash.com/photo-1514432324607-a09d9b4aefdd?auto=format&fit=crop&w=800&q=80",
-      description: "Hand-thrown stoneware ceramic mugs.",
-      specifications: ["Handmade Stoneware", "Microwave Safe", "Set of 2"],
-      reviews: []
+  const trendingProducts: Product[] = useMemo(() => {
+    let filtered = allProducts;
+    if (activeCategory === "Electronics") {
+      filtered = allProducts.filter((p) => p.category === "electronics");
+    } else if (activeCategory === "Fashion") {
+      filtered = allProducts.filter((p) => p.category === "fashion");
+    } else if (activeCategory === "Home") {
+      filtered = allProducts.filter((p) => p.category === "home-goods" || p.category === "home-living");
+    } else if (activeCategory === "Beauty") {
+      filtered = allProducts.filter((p) => p.category === "beauty" || p.category === "accessories");
+    } else if (activeCategory === "Offers") {
+      filtered = allProducts.filter((p) => (p.discountPercentage && p.discountPercentage > 0) || p.badge === "SALE" || p.isFeatured);
     }
-  ];
+    
+    // Sort by rating / best seller and take top items
+    const sorted = [...filtered].sort((a, b) => b.rating - a.rating);
+    return sorted.slice(0, 6);
+  }, [activeCategory]);
 
   const handleWishlist = (e: React.MouseEvent, p: Product) => {
     e.preventDefault();

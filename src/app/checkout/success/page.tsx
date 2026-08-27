@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect } from "react";
+import { useEffect, Suspense } from "react";
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 import { CheckCircle2, Truck, ArrowRight } from "lucide-react";
@@ -90,6 +90,9 @@ function OrderSuccessContent() {
 
 export default function CheckoutSuccessPage() {
   return (
-    <OrderSuccessContent />
+    <Suspense fallback={<div className="al-order-success-wrapper" style={{ textAlign: "center" }}>Loading confirmation...</div>}>
+      <OrderSuccessContent />
+    </Suspense>
   );
 }
+

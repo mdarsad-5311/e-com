@@ -11,7 +11,13 @@ import {
   Wifi,
   Sofa
 } from "lucide-react";
+import { Product, products as allProducts } from "@/data/products";
+import ProductCard from "@/components/ProductCard";
 import "@/styles/home-goods.css";
+
+interface HomeGoodsViewProps {
+  products?: Product[];
+}
 
 const EXPLORE_CATEGORIES = [
   {
@@ -34,7 +40,11 @@ const EXPLORE_CATEGORIES = [
   },
 ];
 
-export default function HomeGoodsView() {
+export default function HomeGoodsView({ products }: HomeGoodsViewProps) {
+  const homeProducts = products && products.length > 0 
+    ? products 
+    : allProducts.filter((p) => p.category === "home-goods" || p.category === "home-living");
+
   return (
     <div className="al-home-goods-wrapper">
       {/* 1. HERO BANNER */}
@@ -61,7 +71,26 @@ export default function HomeGoodsView() {
         </div>
       </section>
 
-      {/* 2. CURATED SPACES */}
+      {/* 2. PRODUCTS GRID */}
+      {homeProducts.length > 0 && (
+        <section className="section" style={{ paddingTop: "2rem", paddingBottom: "2rem" }}>
+          <div className="header-container">
+            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "1.5rem" }}>
+              <h2 className="al-spaces-heading">Featured Home Goods</h2>
+              <Link href="/products?category=home-goods" style={{ color: "#FF7A00", fontWeight: 600, fontSize: "0.9rem", display: "flex", alignItems: "center", gap: "0.25rem", textDecoration: "none" }}>
+                View All <ArrowRight size={15} />
+              </Link>
+            </div>
+            <div className="al-products-grid">
+              {homeProducts.map((prod) => (
+                <ProductCard key={prod.id} product={prod} />
+              ))}
+            </div>
+          </div>
+        </section>
+      )}
+
+      {/* 3. CURATED SPACES */}
       <section id="curated-spaces" className="al-curated-spaces-section">
         <div className="header-container">
           <div className="al-spaces-header-row">
@@ -107,7 +136,7 @@ export default function HomeGoodsView() {
         </div>
       </section>
 
-      {/* 3. EXPLORE CATEGORIES */}
+      {/* 4. EXPLORE CATEGORIES */}
       <section className="al-home-explore-cats-section">
         <div className="header-container">
           <h2 className="al-spaces-heading" style={{ marginBottom: "1rem" }}>Explore Categories</h2>
@@ -128,7 +157,7 @@ export default function HomeGoodsView() {
         </div>
       </section>
 
-      {/* 4. VALUE PROPS / TRUST BADGES STRIP (Desktop) */}
+      {/* 5. VALUE PROPS / TRUST BADGES STRIP (Desktop) */}
       <section className="al-home-trust-strip al-desktop-only">
         <div className="header-container">
           <div className="al-home-trust-grid">
@@ -159,3 +188,4 @@ export default function HomeGoodsView() {
     </div>
   );
 }
+

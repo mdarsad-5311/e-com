@@ -11,6 +11,7 @@ function ProductsContent() {
   const searchParams = useSearchParams();
   const initialCategory = searchParams.get("category") || "all";
   const initialQuery = searchParams.get("q") || "";
+  const isFeaturedQuery = searchParams.get("featured") === "true";
 
   // Mobile filter drawer state
   const [isMobileFilterOpen, setIsMobileFilterOpen] = useState(false);
@@ -57,16 +58,19 @@ function ProductsContent() {
   const filteredProducts = useMemo<Product[]>(() => {
     return products
       .filter((p: Product) => {
+        if (isFeaturedQuery && !p.isFeatured && !p.isBestSeller && !p.isDealOfTheDay && (!p.discountPercentage || p.discountPercentage <= 0)) {
+          return false;
+        }
         if (selectedCategory !== "all" && p.category !== selectedCategory) {
           return false;
         }
         if (initialQuery.trim()) {
           const q = initialQuery.toLowerCase();
-          const match = p.title.toLowerCase().includes(q) || p.categoryName.toLowerCase().includes(q);
+          const match = p.title.toLowerCase().includes(q) || p.categoryName.toLowerCase().includes(q) || p.description.toLowerCase().includes(q);
           if (!match) return false;
         }
         if (selectedBrands.length > 0) {
-          const productBrand = p.brand || (p.title.includes("Aura") ? "Aura" : p.title.includes("Pulse") ? "Pulse" : p.title.includes("Vortex") ? "Vortex" : "Sony");
+          const productBrand = p.brand || "Al-Umaima";
           if (!selectedBrands.includes(productBrand)) {
             return false;
           }
@@ -89,21 +93,23 @@ function ProductsContent() {
         if (sortBy === "rating") return b.rating - a.rating;
         return 0;
       });
-  }, [selectedCategory, initialQuery, selectedBrands, selectedPriceRange, selectedRatings, sortBy]);
+  }, [isFeaturedQuery, selectedCategory, initialQuery, selectedBrands, selectedPriceRange, selectedRatings, sortBy]);
 
-  const availableBrands = [
-    { name: "Sony", count: 12 },
-    { name: "JBL", count: 8 },
-    { name: "Keychron", count: 6 },
-    { name: "Apple", count: 14 },
-    { name: "AURA AUDIO", count: 24 },
-    { name: "Pulse", count: 18 },
-  ];
+  const availableBrands = useMemo(() => {
+    const brandMap = new Map<string, number>();
+    products.forEach((p) => {
+      const b = p.brand || "Al-Umaima";
+      brandMap.set(b, (brandMap.get(b) || 0) + 1);
+    });
+    return Array.from(brandMap.entries()).map(([name, count]) => ({ name, count }));
+  }, []);
 
   const currentCategoryObj = categories.find((c) => c.slug === selectedCategory);
-  const pageHeading = selectedCategory === "all" 
-    ? (initialQuery ? `Search Results for "${initialQuery}"` : "All Products") 
-    : (currentCategoryObj ? currentCategoryObj.name : "Products");
+  const pageHeading = isFeaturedQuery 
+    ? "Featured Deals & Offers"
+    : selectedCategory === "all" 
+      ? (initialQuery ? `Search Results for "${initialQuery}"` : "All Products") 
+      : (currentCategoryObj ? currentCategoryObj.name : "Products");
 
   return (
     <div className="al-catalog-page">

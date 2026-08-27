@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, Suspense } from "react";
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
 import {
@@ -56,10 +56,10 @@ const SAMPLE_ORDER = {
   payment: { brand: "VISA", last4: "4242" },
 };
 
-export default function OrderDetailPage() {
+function OrderDetailContent() {
   const searchParams = useSearchParams();
   const orderId = searchParams.get("id") || SAMPLE_ORDER.id;
-  const order = SAMPLE_ORDER;
+  const order = { ...SAMPLE_ORDER, id: orderId };
   const grandTotal = order.summary.subtotal + order.summary.shipping + order.summary.tax;
 
   // Accordion state
@@ -343,3 +343,12 @@ export default function OrderDetailPage() {
     </div>
   );
 }
+
+export default function OrderDetailPage() {
+  return (
+    <Suspense fallback={<div className="container" style={{ padding: "4rem 0", textAlign: "center" }}>Loading order details...</div>}>
+      <OrderDetailContent />
+    </Suspense>
+  );
+}
+
