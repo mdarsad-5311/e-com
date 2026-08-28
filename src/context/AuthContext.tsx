@@ -75,7 +75,7 @@ interface AuthContextType {
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 const DEMO_USER: UserProfile = {
-  id: "usr-flipkart-101",
+  id: "usr-al-umaima-101",
   name: "Alexander Vance",
   firstName: "Alexander",
   lastName: "Vance",
@@ -89,11 +89,11 @@ const DEMO_USER: UserProfile = {
 };
 
 const DEMO_ADMIN: UserProfile = {
-  id: "admin-flipkart-999",
-  name: "Flipkart SuperAdmin",
+  id: "admin-al-umaima-999",
+  name: "Al-Umaima SuperAdmin",
   firstName: "Super",
   lastName: "Admin",
-  email: "admin@flipkart.com",
+  email: "admin@al-umaima.com",
   phone: "9999988888",
   gender: "Male",
   avatar: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?auto=format&fit=crop&w=200&q=80",
@@ -184,7 +184,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   // Initialize with demo user logged in for fast development experience
   useEffect(() => {
-    const savedUser = localStorage.getItem("flipkart_user");
+    const savedUser = localStorage.getItem("al_umaima_user");
     if (savedUser) {
       try {
         setUser(JSON.parse(savedUser));
@@ -199,9 +199,9 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const saveUserToState = (u: UserProfile | null) => {
     setUser(u);
     if (u) {
-      localStorage.setItem("flipkart_user", JSON.stringify(u));
+      localStorage.setItem("al_umaima_user", JSON.stringify(u));
     } else {
-      localStorage.removeItem("flipkart_user");
+      localStorage.removeItem("al_umaima_user");
     }
   };
 
@@ -219,7 +219,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         name: `${fName} ${lName}`,
         firstName: fName,
         lastName: lName,
-        email: emailOrPhone.includes("@") ? emailOrPhone : `${emailOrPhone}@flipkart.com`,
+        email: emailOrPhone.includes("@") ? emailOrPhone : `${emailOrPhone}@al-umaima.com`,
         phone: emailOrPhone.match(/^\d+$/) ? emailOrPhone : "9876543210",
         gender: "Male",
         avatar: "https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?auto=format&fit=crop&w=200&q=80",
@@ -261,7 +261,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         name: name,
         firstName: fName,
         lastName: lName,
-        email: email || `${phone}@flipkart.com`,
+        email: email || `${phone}@al-umaima.com`,
         phone: phone || "9876543210",
         gender: "Male",
         avatar: "https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?auto=format&fit=crop&w=200&q=80",
@@ -365,4 +365,3 @@ export function useAuth() {
   }
   return context;
 }
-

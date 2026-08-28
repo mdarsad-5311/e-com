@@ -67,11 +67,11 @@ export default function AdminDashboardPage() {
       rating: 4.8,
       reviewCount: 1,
       image: newImage || "https://images.unsplash.com/photo-1505740420928-5e560c06d30e?auto=format&fit=crop&w=400&q=80",
-      description: newDesc || "High quality product on Flipkart Store.",
+      description: newDesc || "High quality product on Al-Umaima Store.",
       inStock: true,
       stock: parseInt(newStock) || 50,
       isBestSeller: true,
-      features: ["Verified Flipkart Quality"]
+      features: ["Verified Al-Umaima Quality"]
     };
 
     setProductList([newProd, ...productList]);
@@ -86,7 +86,7 @@ export default function AdminDashboardPage() {
   };
 
   const handleDeleteProduct = (id: string) => {
-    if (confirm("Are you sure you want to remove this product from Flipkart catalog?")) {
+    if (confirm("Are you sure you want to remove this product from Al-Umaima catalog?")) {
       setProductList(productList.filter((p) => p.id !== id));
     }
   };
@@ -97,17 +97,17 @@ export default function AdminDashboardPage() {
         <div className="container py-8" style={{ textAlign: "center", minHeight: "60vh" }}>
             <div className="card" style={{ maxWidth: 500, margin: "3rem auto", padding: "3rem 2rem", borderRadius: 4 }}>
               <Shield size={56} style={{ color: "#E5530B", margin: "0 auto 1rem auto" }} />
-              <h2 style={{ fontSize: "1.6rem", fontWeight: 800 }}>Flipkart Admin Control Panel</h2>
+              <h2 style={{ fontSize: "1.6rem", fontWeight: 800 }}>Al-Umaima Admin Control Panel</h2>
               <p style={{ color: "#878787", marginTop: "0.5rem" }}>
                 You are currently logged in as a standard user. Log in with an Admin account to manage store inventory, customer orders, and product catalog.
               </p>
 
               <button 
                 onClick={loginAsAdmin}
-                className="flipkart-btn-orange"
+                className="al-umaima-btn-orange"
                 style={{ marginTop: "1.75rem", display: "inline-flex", alignItems: "center", justifyContent: "center", gap: "0.5rem" }}
               >
-                <Shield size={18} /> LOG IN AS FLIPKART SUPERADMIN
+                <Shield size={18} /> LOG IN AS AL-UMAIMA SUPERADMIN
               </button>
             </div>
           </div>
@@ -123,7 +123,7 @@ export default function AdminDashboardPage() {
           <div className="admin-header-strip">
             <div>
               <div className="admin-pill-badge" style={{ backgroundColor: "#FFF7ED", color: "#E5530B" }}>
-                FLIPKART SELLER & ADMIN HUB
+                AL-UMAIMA SELLER & ADMIN HUB
               </div>
               <h1 className="admin-title">Store Management Dashboard</h1>
               <p className="admin-subtitle">Live store sales metrics, customer orders workflow, and catalog controls</p>
@@ -218,10 +218,10 @@ export default function AdminDashboardPage() {
               <div className="admin-actions-bar card" style={{ borderRadius: 2, marginBottom: "1.5rem" }}>
                 <h3 className="bar-title">Catalog Quick Controls</h3>
                 <div className="action-buttons-row">
-                  <button onClick={() => setIsAddProductModalOpen(true)} className="flipkart-btn-orange" style={{ width: "auto", height: 42, padding: "0 1.25rem", display: "flex", alignItems: "center", gap: "0.5rem" }}>
+                  <button onClick={() => setIsAddProductModalOpen(true)} className="al-umaima-btn-orange" style={{ width: "auto", height: 42, padding: "0 1.25rem", display: "flex", alignItems: "center", gap: "0.5rem" }}>
                     <Plus size={16} /> Add New Product
                   </button>
-                  <button onClick={() => setActiveTab("orders")} className="flipkart-btn-blue-outline" style={{ width: "auto", height: 42, padding: "0 1.25rem" }}>
+                  <button onClick={() => setActiveTab("orders")} className="al-umaima-btn-blue-outline" style={{ width: "auto", height: 42, padding: "0 1.25rem" }}>
                     Process Orders ({orders.length})
                   </button>
                 </div>
@@ -364,7 +364,7 @@ export default function AdminDashboardPage() {
             <div>
               <div className="admin-actions-bar card" style={{ borderRadius: 2, marginBottom: "1.5rem" }}>
                 <h3 className="bar-title">Product Catalog Inventory</h3>
-                <button onClick={() => setIsAddProductModalOpen(true)} className="flipkart-btn-orange" style={{ width: "auto", height: 42, padding: "0 1.25rem", display: "flex", alignItems: "center", gap: "0.5rem" }}>
+                <button onClick={() => setIsAddProductModalOpen(true)} className="al-umaima-btn-orange" style={{ width: "auto", height: 42, padding: "0 1.25rem", display: "flex", alignItems: "center", gap: "0.5rem" }}>
                   <Plus size={16} /> Add New Product
                 </button>
               </div>
@@ -445,8 +445,8 @@ export default function AdminDashboardPage() {
                       <td>August 2026</td>
                     </tr>
                     <tr>
-                      <td className="font-bold">Flipkart SuperAdmin</td>
-                      <td>admin@flipkart.com</td>
+                      <td className="font-bold">Al-Umaima SuperAdmin</td>
+                      <td>admin@al-umaima.com</td>
                       <td>9999988888</td>
                       <td><span className="cat-badge" style={{ background: "#FFF7ED", color: "#E5530B" }}>SuperAdmin</span></td>
                       <td>January 2024</td>
@@ -477,7 +477,7 @@ export default function AdminDashboardPage() {
         <div className="modal-backdrop" onClick={() => setIsAddProductModalOpen(false)}>
           <div className="admin-modal-card" onClick={(e) => e.stopPropagation()} style={{ borderRadius: 4 }}>
             <div className="modal-header-row">
-              <h3>Add New Flipkart Product</h3>
+              <h3>Add New Al-Umaima Product</h3>
               <button onClick={() => setIsAddProductModalOpen(false)} className="close-btn">✕</button>
             </div>
 
@@ -562,7 +562,7 @@ export default function AdminDashboardPage() {
                 <button type="button" onClick={() => setIsAddProductModalOpen(false)} style={{ color: "#878787" }}>
                   Cancel
                 </button>
-                <button type="submit" className="flipkart-btn-orange" style={{ width: "auto", padding: "0 1.5rem" }}>
+                <button type="submit" className="al-umaima-btn-orange" style={{ width: "auto", padding: "0 1.5rem" }}>
                   ADD PRODUCT TO STORE
                 </button>
               </div>

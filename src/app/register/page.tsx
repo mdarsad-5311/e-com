@@ -59,38 +59,38 @@ function RegisterContent() {
 
   return (
     <div className="auth-page-wrapper">
-      <div className="flipkart-auth-card">
+      <div className="al-umaima-auth-card">
         {/* Left Blue Banner */}
-        <div className="flipkart-auth-left">
+        <div className="al-umaima-auth-left">
           <div>
-            <div className="flipkart-badge-pill">
+            <div className="al-umaima-badge-pill">
               <ShieldCheck size={14} /> AL-UMAIMA SIGN UP
             </div>
-            <h2 className="flipkart-left-title">Looks like you&apos;re new here!</h2>
-            <p className="flipkart-left-sub">
+            <h2 className="al-umaima-left-title">Looks like you&apos;re new here!</h2>
+            <p className="al-umaima-left-sub">
               Sign up with your mobile number or email to get started with Al-Umaima
             </p>
           </div>
 
-          <div className="flipkart-left-illustration">
+          <div className="al-umaima-left-illustration">
             <ShoppingBag size={120} strokeWidth={1} style={{ opacity: 0.8 }} />
           </div>
         </div>
 
         {/* Right Form Section */}
-        <div className="flipkart-auth-right">
+        <div className="al-umaima-auth-right">
           {error && (
             <div className="auth-error-alert" style={{ marginBottom: "1rem" }}>
               {error}
             </div>
           )}
 
-          <form onSubmit={handleSubmit} className="flipkart-auth-form">
-            <div className="flipkart-input-group">
-              <label className="flipkart-label">Full Name</label>
+          <form onSubmit={handleSubmit} className="al-umaima-auth-form">
+            <div className="al-umaima-input-group">
+              <label className="al-umaima-label">Full Name</label>
               <input
                 type="text"
-                className="flipkart-input"
+                className="al-umaima-input"
                 placeholder="Enter your Full Name"
                 value={name}
                 onChange={(e) => setName(e.target.value)}
@@ -98,11 +98,11 @@ function RegisterContent() {
               />
             </div>
 
-            <div className="flipkart-input-group">
-              <label className="flipkart-label">Mobile Number</label>
+            <div className="al-umaima-input-group">
+              <label className="al-umaima-label">Mobile Number</label>
               <input
                 type="tel"
-                className="flipkart-input"
+                className="al-umaima-input"
                 placeholder="10-digit Mobile Number"
                 value={phone}
                 onChange={(e) => setPhone(e.target.value.replace(/\D/g, ""))}
@@ -110,23 +110,23 @@ function RegisterContent() {
               />
             </div>
 
-            <div className="flipkart-input-group">
-              <label className="flipkart-label">Email Address (Optional)</label>
+            <div className="al-umaima-input-group">
+              <label className="al-umaima-label">Email Address (Optional)</label>
               <input
                 type="email"
-                className="flipkart-input"
+                className="al-umaima-input"
                 placeholder="name@example.com"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
               />
             </div>
 
-            <div className="flipkart-input-group">
-              <label className="flipkart-label">Set Password</label>
+            <div className="al-umaima-input-group">
+              <label className="al-umaima-label">Set Password</label>
               <div style={{ position: "relative" }}>
                 <input
                   type={showPassword ? "text" : "password"}
-                  className="flipkart-input"
+                  className="al-umaima-input"
                   placeholder="At least 6 characters"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
@@ -143,17 +143,17 @@ function RegisterContent() {
               </div>
             </div>
 
-            <p className="flipkart-terms-text">
+            <p className="al-umaima-terms-text">
               By continuing, you agree to Al-Umaima&apos;s{" "}
               <Link href="/faq">Terms of Use</Link> and{" "}
               <Link href="/faq">Privacy Policy</Link>.
             </p>
 
-            <button type="submit" className="flipkart-btn-orange" disabled={isLoading}>
+            <button type="submit" className="al-umaima-btn-orange" disabled={isLoading}>
               {isLoading ? "CREATING ACCOUNT..." : "CONTINUE & REGISTER"}
             </button>
 
-            <Link href={redirectUrl ? `/login?redirect=${encodeURIComponent(redirectUrl)}` : "/login"} className="flipkart-btn-blue-outline" style={{ display: "flex", alignItems: "center", justifyContent: "center" }}>
+            <Link href={redirectUrl ? `/login?redirect=${encodeURIComponent(redirectUrl)}` : "/login"} className="al-umaima-btn-blue-outline" style={{ display: "flex", alignItems: "center", justifyContent: "center" }}>
               EXISTING USER? LOG IN
             </Link>
           </form>
@@ -170,4 +170,3 @@ export default function RegisterPage() {
     </Suspense>
   );
 }
-

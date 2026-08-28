@@ -107,26 +107,26 @@ function LoginContent() {
 
   return (
     <div className="auth-page-wrapper">
-      <div className="flipkart-auth-card">
+      <div className="al-umaima-auth-card">
         {/* Left Blue Banner */}
-        <div className="flipkart-auth-left">
+        <div className="al-umaima-auth-left">
           <div>
-            <div className="flipkart-badge-pill">
+            <div className="al-umaima-badge-pill">
               <ShieldCheck size={14} /> AL-UMAIMA SECURE AUTH
             </div>
-            <h2 className="flipkart-left-title">Login</h2>
-            <p className="flipkart-left-sub">
+            <h2 className="al-umaima-left-title">Login</h2>
+            <p className="al-umaima-left-sub">
               Get access to your Orders, Wishlist and Recommendations
             </p>
           </div>
 
-          <div className="flipkart-left-illustration">
+          <div className="al-umaima-left-illustration">
             <ShoppingBag size={120} strokeWidth={1} style={{ opacity: 0.8 }} />
           </div>
         </div>
 
         {/* Right Form Section */}
-        <div className="flipkart-auth-right">
+        <div className="al-umaima-auth-right">
           {error && (
             <div className="auth-error-alert" style={{ marginBottom: "1rem" }}>
               {error}
@@ -137,13 +137,13 @@ function LoginContent() {
           {step === "input" && (
             <form 
               onSubmit={authMode === "otp" ? handleRequestOtp : handlePasswordLogin}
-              className="flipkart-auth-form"
+              className="al-umaima-auth-form"
             >
-              <div className="flipkart-input-group">
-                <label className="flipkart-label">Enter Email / Mobile number</label>
+              <div className="al-umaima-input-group">
+                <label className="al-umaima-label">Enter Email / Mobile number</label>
                 <input
                   type="text"
-                  className="flipkart-input"
+                  className="al-umaima-input"
                   placeholder="e.g. 9876543210 or user@example.com"
                   value={inputVal}
                   onChange={(e) => setInputVal(e.target.value)}
@@ -152,12 +152,12 @@ function LoginContent() {
               </div>
 
               {authMode === "password" && (
-                <div className="flipkart-input-group" style={{ marginTop: "0.5rem" }}>
-                  <label className="flipkart-label">Enter Password</label>
+                <div className="al-umaima-input-group" style={{ marginTop: "0.5rem" }}>
+                  <label className="al-umaima-label">Enter Password</label>
                   <div style={{ position: "relative" }}>
                     <input
                       type={showPassword ? "text" : "password"}
-                      className="flipkart-input"
+                      className="al-umaima-input"
                       placeholder="••••••••"
                       value={password}
                       onChange={(e) => setPassword(e.target.value)}
@@ -174,18 +174,18 @@ function LoginContent() {
                 </div>
               )}
 
-              <p className="flipkart-terms-text">
+              <p className="al-umaima-terms-text">
                 By continuing, you agree to Al-Umaima&apos;s{" "}
                 <Link href="/faq">Terms of Use</Link> and{" "}
                 <Link href="/faq">Privacy Policy</Link>.
               </p>
 
               {authMode === "otp" ? (
-                <button type="submit" className="flipkart-btn-orange" disabled={isLoading}>
+                <button type="submit" className="al-umaima-btn-orange" disabled={isLoading}>
                   {isLoading ? "REQUESTING OTP..." : "REQUEST OTP"}
                 </button>
               ) : (
-                <button type="submit" className="flipkart-btn-orange" disabled={isLoading}>
+                <button type="submit" className="al-umaima-btn-orange" disabled={isLoading}>
                   {isLoading ? "LOGGING IN..." : "LOGIN"}
                 </button>
               )}
@@ -193,7 +193,7 @@ function LoginContent() {
               {authMode === "otp" ? (
                 <button
                   type="button"
-                  className="flipkart-btn-blue-outline"
+                  className="al-umaima-btn-blue-outline"
                   onClick={() => setAuthMode("password")}
                 >
                   LOGIN WITH PASSWORD
@@ -201,7 +201,7 @@ function LoginContent() {
               ) : (
                 <button
                   type="button"
-                  className="flipkart-btn-blue-outline"
+                  className="al-umaima-btn-blue-outline"
                   onClick={() => setAuthMode("otp")}
                 >
                   REQUEST OTP INSTEAD
@@ -212,7 +212,7 @@ function LoginContent() {
 
           {/* OTP Verification Step */}
           {step === "verify_otp" && (
-            <form onSubmit={handleVerifyOtp} className="flipkart-auth-form">
+            <form onSubmit={handleVerifyOtp} className="al-umaima-auth-form">
               <div>
                 <h3 style={{ fontSize: "1.1rem", fontWeight: 700, color: "#212121" }}>
                   Please enter the OTP sent to
@@ -254,13 +254,13 @@ function LoginContent() {
 
               <p className="otp-timer-text">Demo OTP auto-filled: <strong>123456</strong></p>
 
-              <button type="submit" className="flipkart-btn-orange" disabled={isLoading}>
+              <button type="submit" className="al-umaima-btn-orange" disabled={isLoading}>
                 {isLoading ? "VERIFYING..." : "VERIFY & LOGIN"}
               </button>
 
               <button
                 type="button"
-                className="flipkart-btn-blue-outline"
+                className="al-umaima-btn-blue-outline"
                 onClick={() => setStep("input")}
               >
                 BACK TO LOGIN
@@ -273,19 +273,19 @@ function LoginContent() {
             <div style={{ fontSize: "0.75rem", color: "#878787", fontWeight: 700, marginBottom: "0.5rem" }}>
               QUICK DEMO ACCESS:
             </div>
-            <div className="flipkart-quick-logins">
-              <button type="button" onClick={handleDemoUser} className="flipkart-quick-btn">
+            <div className="al-umaima-quick-logins">
+              <button type="button" onClick={handleDemoUser} className="al-umaima-quick-btn">
                 <UserCheck size={14} /> Demo Customer Login
               </button>
-              <button type="button" onClick={handleDemoAdmin} className="flipkart-quick-btn" style={{ color: "#E5530B" }}>
+              <button type="button" onClick={handleDemoAdmin} className="al-umaima-quick-btn" style={{ color: "#E5530B" }}>
                 <Shield size={14} /> Demo Admin Panel Login
               </button>
             </div>
           </div>
 
           {/* Footer Register Link */}
-          <div className="flipkart-create-account-footer">
-            <Link href={redirectUrl ? `/register?redirect=${encodeURIComponent(redirectUrl)}` : "/register"} className="flipkart-create-link">
+          <div className="al-umaima-create-account-footer">
+            <Link href={redirectUrl ? `/register?redirect=${encodeURIComponent(redirectUrl)}` : "/register"} className="al-umaima-create-link">
               New to Al-Umaima? Create an account
             </Link>
           </div>
@@ -302,4 +302,3 @@ export default function LoginPage() {
     </Suspense>
   );
 }
-
