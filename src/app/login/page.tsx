@@ -12,11 +12,13 @@ import {
   Shield
 } from "lucide-react";
 import { useAuth } from "@/context/AuthContext";
+import { sanitizeRedirect } from "@/lib/security";
 
 function LoginContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
-  const redirectUrl = searchParams.get("redirect") || searchParams.get("callbackUrl");
+  const rawRedirectUrl = searchParams.get("redirect") || searchParams.get("callbackUrl");
+  const redirectUrl = sanitizeRedirect(rawRedirectUrl);
   const { login, loginWithOtp, loginAsAdmin } = useAuth();
 
   const [authMode, setAuthMode] = useState<"otp" | "password">("otp");
@@ -30,8 +32,7 @@ function LoginContent() {
 
   const getRedirectTarget = (isAdmin: boolean) => {
     if (isAdmin) return "/admin";
-    if (redirectUrl) return redirectUrl;
-    return "/profile";
+    return redirectUrl;
   };
 
   const handleRequestOtp = (e: FormEvent) => {
@@ -128,7 +129,7 @@ function LoginContent() {
         {/* Right Form Section */}
         <div className="al-umaima-auth-right">
           {error && (
-            <div className="auth-error-alert" style={{ marginBottom: "1rem" }}>
+            <div className="auth-error-alert" role="alert" style={{ marginBottom: "1rem" }}>
               {error}
             </div>
           )}
@@ -140,9 +141,12 @@ function LoginContent() {
               className="al-umaima-auth-form"
             >
               <div className="al-umaima-input-group">
-                <label className="al-umaima-label">Enter Email / Mobile number</label>
+                <label htmlFor="login-identity-input" className="al-umaima-label">Enter Email / Mobile number</label>
                 <input
+                  id="login-identity-input"
+                  name="identifier"
                   type="text"
+                  autoComplete="username"
                   className="al-umaima-input"
                   placeholder="e.g. 9876543210 or user@example.com"
                   value={inputVal}
@@ -153,10 +157,13 @@ function LoginContent() {
 
               {authMode === "password" && (
                 <div className="al-umaima-input-group" style={{ marginTop: "0.5rem" }}>
-                  <label className="al-umaima-label">Enter Password</label>
+                  <label htmlFor="login-password-input" className="al-umaima-label">Enter Password</label>
                   <div style={{ position: "relative" }}>
                     <input
+                      id="login-password-input"
+                      name="password"
                       type={showPassword ? "text" : "password"}
+                      autoComplete="current-password"
                       className="al-umaima-input"
                       placeholder="••••••••"
                       value={password}
@@ -165,8 +172,9 @@ function LoginContent() {
                     />
                     <button
                       type="button"
+                      aria-label={showPassword ? "Hide password" : "Show password"}
                       onClick={() => setShowPassword(!showPassword)}
-                      style={{ position: "absolute", right: 8, top: 10, color: "#878787" }}
+                      style={{ position: "absolute", right: 8, top: 10, color: "var(--text-muted)", background: "transparent", border: "none", cursor: "pointer" }}
                     >
                       {showPassword ? <EyeOff size={16} /> : <Eye size={16} />}
                     </button>
@@ -214,27 +222,31 @@ function LoginContent() {
           {step === "verify_otp" && (
             <form onSubmit={handleVerifyOtp} className="al-umaima-auth-form">
               <div>
-                <h3 style={{ fontSize: "1.1rem", fontWeight: 700, color: "#212121" }}>
+                <h3 style={{ fontSize: "1.1rem", fontWeight: 700, color: "var(--text)" }}>
                   Please enter the OTP sent to
                 </h3>
-                <div style={{ fontSize: "0.9rem", color: "#2874F0", fontWeight: 700, marginTop: "0.2rem" }}>
+                <div style={{ fontSize: "0.9rem", color: "var(--primary)", fontWeight: 700, marginTop: "0.2rem" }}>
                   {inputVal}{" "}
                   <button
                     type="button"
                     onClick={() => setStep("input")}
-                    style={{ fontSize: "0.75rem", color: "#878787", textDecoration: "underline", marginLeft: "0.5rem" }}
+                    style={{ fontSize: "0.75rem", color: "var(--text-muted)", textDecoration: "underline", marginLeft: "0.5rem", background: "none", border: "none", cursor: "pointer" }}
                   >
                     Change
                   </button>
                 </div>
               </div>
 
-              <div className="otp-box-group">
+              <div className="otp-box-group" role="group" aria-label="6-digit verification code">
                 {otpDigits.map((digit, idx) => (
                   <input
                     key={idx}
                     id={`otp-field-${idx}`}
+                    name={`otp-digit-${idx}`}
+                    aria-label={`Digit ${idx + 1} of 6`}
                     type="text"
+                    inputMode="numeric"
+                    pattern="[0-9]*"
                     maxLength={1}
                     className="otp-digit-input"
                     value={digit}
@@ -269,15 +281,15 @@ function LoginContent() {
           )}
 
           {/* Quick Demo Login Presets */}
-          <div style={{ marginTop: "1.25rem", paddingTop: "1rem", borderTop: "1px solid #E0E0E0" }}>
-            <div style={{ fontSize: "0.75rem", color: "#878787", fontWeight: 700, marginBottom: "0.5rem" }}>
+          <div style={{ marginTop: "1.25rem", paddingTop: "1rem", borderTop: "1px solid var(--borders)" }}>
+            <div style={{ fontSize: "0.75rem", color: "var(--text-muted)", fontWeight: 700, marginBottom: "0.5rem" }}>
               QUICK DEMO ACCESS:
             </div>
             <div className="al-umaima-quick-logins">
               <button type="button" onClick={handleDemoUser} className="al-umaima-quick-btn">
                 <UserCheck size={14} /> Demo Customer Login
               </button>
-              <button type="button" onClick={handleDemoAdmin} className="al-umaima-quick-btn" style={{ color: "#E5530B" }}>
+              <button type="button" onClick={handleDemoAdmin} className="al-umaima-quick-btn" style={{ color: "var(--secondary)" }}>
                 <Shield size={14} /> Demo Admin Panel Login
               </button>
             </div>
@@ -285,7 +297,7 @@ function LoginContent() {
 
           {/* Footer Register Link */}
           <div className="al-umaima-create-account-footer">
-            <Link href={redirectUrl ? `/register?redirect=${encodeURIComponent(redirectUrl)}` : "/register"} className="al-umaima-create-link">
+            <Link href={redirectUrl !== "/profile" ? `/register?redirect=${encodeURIComponent(redirectUrl)}` : "/register"} className="al-umaima-create-link">
               New to Al-Umaima? Create an account
             </Link>
           </div>
@@ -302,3 +314,4 @@ export default function LoginPage() {
     </Suspense>
   );
 }
+

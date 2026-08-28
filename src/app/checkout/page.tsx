@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useRef } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import {
@@ -8,13 +8,12 @@ import {
   Plus,
   ShieldCheck,
   Lock,
-  Edit2,
   CreditCard,
-  Building2,
   Home,
-  CheckCircle2
+  AlertCircle
 } from "lucide-react";
 import { useCart } from "@/context/CartContext";
+import { useFocusTrap } from "@/hooks/useFocusTrap";
 import "@/styles/checkout.css";
 
 interface Address {
@@ -30,12 +29,11 @@ interface Address {
 
 export default function CheckoutPage() {
   const router = useRouter();
-  const { cart, subtotal, totalItemsCount, clearCart } = useCart();
+  const { subtotal, totalItemsCount, clearCart } = useCart();
 
   const [currentStep, setCurrentStep] = useState<1 | 2 | 3>(2);
   const [selectedAddressId, setSelectedAddressId] = useState("addr-1");
   const [isOrderSubmitted, setIsOrderSubmitted] = useState(false);
-  const [generatedOrderId, setGeneratedOrderId] = useState("");
 
   // Addresses matching Attachment 2
   const [addresses, setAddresses] = useState<Address[]>([
@@ -69,6 +67,18 @@ export default function CheckoutPage() {
   const [newCityZip, setNewCityZip] = useState("");
   const [newPhone, setNewPhone] = useState("");
 
+  // Baseline state to track form dirtiness
+  const initialValuesRef = useRef({ name: "", tag: "HOME", line1: "", cityZip: "", phone: "" });
+  const [isDiscardConfirmOpen, setIsDiscardConfirmOpen] = useState(false);
+  const [formErrors, setFormErrors] = useState<Record<string, string>>({});
+  const [isSubmittingAddress, setIsSubmittingAddress] = useState(false);
+
+  // Input refs for autofocus on error
+  const nameInputRef = useRef<HTMLInputElement | null>(null);
+  const line1InputRef = useRef<HTMLInputElement | null>(null);
+  const cityZipInputRef = useRef<HTMLInputElement | null>(null);
+  const phoneInputRef = useRef<HTMLInputElement | null>(null);
+
   // Payment Method State
   const [paymentMethod, setPaymentMethod] = useState<"card" | "apple" | "cod">("card");
   const [cardNumber, setCardNumber] = useState("•••• •••• •••• 4242");
@@ -92,69 +102,164 @@ export default function CheckoutPage() {
 
   const handleOpenEdit = (addr: Address) => {
     setEditingAddrId(addr.id);
-    setNewName(addr.name);
-    setNewTag(addr.tag === "OFFICE" ? "OFFICE" : "HOME");
-    setNewLine1(addr.line1);
-    setNewCityZip(addr.cityStateZip);
-    setNewPhone(addr.phone);
+    const initial = {
+      name: addr.name,
+      tag: addr.tag === "OFFICE" ? ("OFFICE" as const) : ("HOME" as const),
+      line1: addr.line1,
+      cityZip: addr.cityStateZip,
+      phone: addr.phone,
+    };
+    initialValuesRef.current = initial;
+    setNewName(initial.name);
+    setNewTag(initial.tag);
+    setNewLine1(initial.line1);
+    setNewCityZip(initial.cityZip);
+    setNewPhone(initial.phone);
+    setFormErrors({});
     setIsAddModalOpen(true);
   };
 
   const handleOpenNew = () => {
     setEditingAddrId(null);
-    setNewName("John Doe");
-    setNewTag("HOME");
-    setNewLine1("");
-    setNewCityZip("San Francisco, CA 94105");
-    setNewPhone("+1 (555) 000-0000");
+    const initial = {
+      name: "",
+      tag: "HOME" as const,
+      line1: "",
+      cityZip: "",
+      phone: "",
+    };
+    initialValuesRef.current = initial;
+    setNewName(initial.name);
+    setNewTag(initial.tag);
+    setNewLine1(initial.line1);
+    setNewCityZip(initial.cityZip);
+    setNewPhone(initial.phone);
+    setFormErrors({});
     setIsAddModalOpen(true);
+  };
+
+  const isFormDirty = () => {
+    const init = initialValuesRef.current;
+    return (
+      newName.trim() !== init.name.trim() ||
+      newTag !== init.tag ||
+      newLine1.trim() !== init.line1.trim() ||
+      newCityZip.trim() !== init.cityZip.trim() ||
+      newPhone.trim() !== init.phone.trim()
+    );
+  };
+
+  const handleRequestCloseModal = () => {
+    if (isFormDirty()) {
+      setIsDiscardConfirmOpen(true);
+    } else {
+      setIsAddModalOpen(false);
+      setEditingAddrId(null);
+    }
+  };
+
+  const handleConfirmDiscard = () => {
+    setIsDiscardConfirmOpen(false);
+    setIsAddModalOpen(false);
+    setEditingAddrId(null);
+  };
+
+  const validateAddressForm = (): boolean => {
+    const errors: Record<string, string> = {};
+
+    if (!newName.trim() || newName.trim().length < 2) {
+      errors.name = "Full name is required (at least 2 characters).";
+    }
+
+    if (!newLine1.trim() || newLine1.trim().length < 5) {
+      errors.line1 = "Street address is required (at least 5 characters).";
+    }
+
+    if (!newCityZip.trim() || newCityZip.trim().length < 3) {
+      errors.cityZip = "City, State & ZIP/Postal Code is required.";
+    }
+
+    // Phone validation supporting international and standard domestic formats
+    const phoneTrimmed = newPhone.trim();
+    const phoneRegex = /^[+]?[\d\s().-]{7,20}$/;
+    if (!phoneTrimmed) {
+      errors.phone = "Phone number is required for delivery notifications.";
+    } else if (!phoneRegex.test(phoneTrimmed) || phoneTrimmed.replace(/\D/g, "").length < 7) {
+      errors.phone = "Please enter a valid phone number (e.g. +1 555-123-4567).";
+    }
+
+    setFormErrors(errors);
+
+    // Autofocus the first invalid field
+    if (errors.name) {
+      nameInputRef.current?.focus();
+    } else if (errors.line1) {
+      line1InputRef.current?.focus();
+    } else if (errors.cityZip) {
+      cityZipInputRef.current?.focus();
+    } else if (errors.phone) {
+      phoneInputRef.current?.focus();
+    }
+
+    return Object.keys(errors).length === 0;
   };
 
   const handleSaveAddress = (e: React.FormEvent) => {
     e.preventDefault();
-    if (!newName.trim() || !newLine1.trim()) return;
 
-    if (editingAddrId) {
-      setAddresses(
-        addresses.map((a) =>
-          a.id === editingAddrId
-            ? {
-                ...a,
-                name: newName.trim(),
-                tag: newTag,
-                line1: newLine1.trim(),
-                cityStateZip: newCityZip.trim() || "San Francisco, CA 94105",
-                phone: newPhone.trim() || "+1 (555) 123-4567",
-              }
-            : a
-        )
-      );
-    } else {
-      const newAddr: Address = {
-        id: `addr-${Date.now()}`,
-        name: newName.trim(),
-        tag: newTag,
-        line1: newLine1.trim(),
-        cityStateZip: newCityZip.trim() || "San Francisco, CA 94105",
-        country: "United States",
-        phone: newPhone.trim() || "+1 (555) 123-4567",
-      };
-      setAddresses([...addresses, newAddr]);
-      setSelectedAddressId(newAddr.id);
+    if (!validateAddressForm()) {
+      return;
     }
 
-    setIsAddModalOpen(false);
-    setEditingAddrId(null);
+    setIsSubmittingAddress(true);
+
+    setTimeout(() => {
+      if (editingAddrId) {
+        setAddresses((prev) =>
+          prev.map((a) =>
+            a.id === editingAddrId
+              ? {
+                  ...a,
+                  name: newName.trim(),
+                  tag: newTag,
+                  line1: newLine1.trim(),
+                  cityStateZip: newCityZip.trim(),
+                  phone: newPhone.trim(),
+                }
+              : a
+          )
+        );
+      } else {
+        const newAddr: Address = {
+          id: `addr-${Date.now()}`,
+          name: newName.trim(),
+          tag: newTag,
+          line1: newLine1.trim(),
+          cityStateZip: newCityZip.trim(),
+          country: "United States",
+          phone: newPhone.trim(),
+        };
+        setAddresses((prev) => [...prev, newAddr]);
+        setSelectedAddressId(newAddr.id);
+      }
+
+      setIsSubmittingAddress(false);
+      setIsAddModalOpen(false);
+      setEditingAddrId(null);
+    }, 250);
   };
 
   const handlePlaceOrder = () => {
     const num = `AU-${Math.floor(10000 + Math.random() * 90000)}`;
     clearCart();
-    setGeneratedOrderId(num);
     setIsOrderSubmitted(true);
     // Redirect to dedicated Order Confirmation page
     router.push(`/checkout/success?orderId=${num}&subtotal=${itemsPrice.toFixed(2)}`);
   };
+
+  // Focus trap hooks
+  const modalContainerRef = useFocusTrap<HTMLDivElement>(isAddModalOpen && !isDiscardConfirmOpen, handleRequestCloseModal);
+  const discardModalRef = useFocusTrap<HTMLDivElement>(isDiscardConfirmOpen, () => setIsDiscardConfirmOpen(false));
 
   // While redirecting show nothing extra
   if (isOrderSubmitted) return null;
@@ -164,66 +269,74 @@ export default function CheckoutPage() {
       {/* Checkout Clean Top Header */}
       <header className="al-checkout-header">
         <div className="header-container al-checkout-header-inner">
-          <Link href="/" className="al-checkout-logo">
+          <Link href="/" className="al-checkout-logo" aria-label="Al-Umaima Home">
             AL-UMAIMA
           </Link>
           <div className="al-checkout-secure-badge">
-            <Lock size={15} />
+            <Lock size={15} aria-hidden="true" />
             <span>Secure Checkout</span>
           </div>
         </div>
       </header>
 
       {/* Progress Stepper Bar (Login -> Shipping -> Payment) */}
-      <div className="al-checkout-stepper-wrap">
+      <nav className="al-checkout-stepper-wrap" aria-label="Checkout Progress">
         <div className="al-stepper-container">
           {/* Step 1: Login (Completed) */}
-          <div 
+          <button 
+            type="button"
             className="al-step-item completed"
             onClick={() => setCurrentStep(2)}
-            style={{ cursor: "pointer" }}
+            aria-label="Step 1: Login (Completed)"
+            style={{ background: "none", border: "none", cursor: "pointer", font: "inherit" }}
           >
             <div className="al-step-circle">
-              <Check size={14} strokeWidth={3} />
+              <Check size={14} strokeWidth={3} aria-hidden="true" />
             </div>
             <span className="al-step-label">Login</span>
-          </div>
+          </button>
 
-          <div className="al-step-connector completed" />
+          <div className="al-step-connector completed" aria-hidden="true" />
 
           {/* Step 2: Shipping */}
-          <div 
+          <button 
+            type="button"
             className={`al-step-item ${currentStep >= 2 ? "active" : ""}`}
             onClick={() => setCurrentStep(2)}
-            style={{ cursor: "pointer" }}
+            aria-label="Step 2: Shipping"
+            aria-current={currentStep === 2 ? "step" : undefined}
+            style={{ background: "none", border: "none", cursor: "pointer", font: "inherit" }}
           >
             <div className="al-step-circle">2</div>
             <span className="al-step-label">Shipping</span>
-          </div>
+          </button>
 
-          <div className={`al-step-connector ${currentStep >= 3 ? "completed" : ""}`} />
+          <div className={`al-step-connector ${currentStep >= 3 ? "completed" : ""}`} aria-hidden="true" />
 
           {/* Step 3: Payment */}
-          <div 
+          <button 
+            type="button"
             className={`al-step-item ${currentStep === 3 ? "active" : ""}`}
             onClick={() => setCurrentStep(3)}
-            style={{ cursor: "pointer" }}
+            aria-label="Step 3: Payment"
+            aria-current={currentStep === 3 ? "step" : undefined}
+            style={{ background: "none", border: "none", cursor: "pointer", font: "inherit" }}
           >
             <div className="al-step-circle">3</div>
             <span className="al-step-label">Payment</span>
-          </div>
+          </button>
         </div>
-      </div>
+      </nav>
 
       {/* Main Checkout Grid */}
       <main className="container al-checkout-main-grid">
         {/* Left Column */}
-        <section className="al-checkout-left-col">
+        <section className="al-checkout-left-col" aria-labelledby="checkout-step-title">
           {currentStep === 2 ? (
             <>
-              <h2 className="al-checkout-section-title">Select Delivery Address</h2>
+              <h2 id="checkout-step-title" className="al-checkout-section-title">Select Delivery Address</h2>
 
-              <div className="al-addresses-grid">
+              <div className="al-addresses-grid" role="radiogroup" aria-label="Saved Delivery Addresses">
                 {addresses.map((addr) => {
                   const isSelected = selectedAddressId === addr.id;
 
@@ -231,6 +344,16 @@ export default function CheckoutPage() {
                     <div
                       key={addr.id}
                       onClick={() => handleSelectAddress(addr.id)}
+                      onKeyDown={(e) => {
+                        if (e.key === "Enter" || e.key === " ") {
+                          e.preventDefault();
+                          handleSelectAddress(addr.id);
+                        }
+                      }}
+                      tabIndex={0}
+                      role="radio"
+                      aria-checked={isSelected}
+                      aria-label={`${addr.name}, ${addr.tag} address at ${addr.line1}, ${addr.cityStateZip}`}
                       className={`al-address-card ${isSelected ? "selected" : ""}`}
                     >
                       {/* Top Row: Name + Tag + Radio Button */}
@@ -240,7 +363,7 @@ export default function CheckoutPage() {
                           <span className="al-addr-tag-pill">{addr.tag}</span>
                         </div>
 
-                        <div className={`al-custom-radio ${isSelected ? "checked" : ""}`}>
+                        <div className={`al-custom-radio ${isSelected ? "checked" : ""}`} aria-hidden="true">
                           {isSelected && <div className="al-radio-dot" />}
                         </div>
                       </div>
@@ -274,6 +397,7 @@ export default function CheckoutPage() {
                               handleOpenEdit(addr);
                             }}
                             className="al-edit-addr-link"
+                            aria-label={`Edit address for ${addr.name}`}
                           >
                             Edit
                           </button>
@@ -297,62 +421,96 @@ export default function CheckoutPage() {
                 })}
 
                 {/* Add New Address Card */}
-                <div
+                <button
+                  type="button"
                   onClick={handleOpenNew}
                   className="al-add-address-card"
+                  aria-label="Add a new delivery address"
                 >
                   <div className="al-add-icon-circle">
-                    <Plus size={20} />
+                    <Plus size={20} aria-hidden="true" />
                   </div>
                   <span className="al-add-addr-text">Add New Address</span>
-                </div>
+                </button>
               </div>
             </>
           ) : (
             /* Step 3: Payment Method */
             <div className="al-payment-step-wrap">
-              <h2 className="al-checkout-section-title">Select Payment Method</h2>
+              <h2 id="checkout-step-title" className="al-checkout-section-title">Select Payment Method</h2>
 
-              <div className="al-payment-options-list">
+              <div className="al-payment-options-list" role="radiogroup" aria-label="Payment Options">
                 {/* Credit Card Option */}
                 <div 
                   className={`al-payment-option-card ${paymentMethod === "card" ? "selected" : ""}`}
                   onClick={() => setPaymentMethod("card")}
+                  onKeyDown={(e) => {
+                    if (e.key === "Enter" || e.key === " ") {
+                      e.preventDefault();
+                      setPaymentMethod("card");
+                    }
+                  }}
+                  tabIndex={0}
+                  role="radio"
+                  aria-checked={paymentMethod === "card"}
+                  aria-label="Credit or Debit Card"
                 >
                   <div className="al-pay-card-header">
                     <div className="al-pay-title-group">
-                      <CreditCard size={20} className="al-pay-icon" />
+                      <CreditCard size={20} className="al-pay-icon" aria-hidden="true" />
                       <strong>Credit or Debit Card</strong>
                     </div>
-                    <div className={`al-custom-radio ${paymentMethod === "card" ? "checked" : ""}`}>
+                    <div className={`al-custom-radio ${paymentMethod === "card" ? "checked" : ""}`} aria-hidden="true">
                       {paymentMethod === "card" && <div className="al-radio-dot" />}
                     </div>
                   </div>
 
                   {paymentMethod === "card" && (
                     <div className="al-card-inputs-grid" onClick={(e) => e.stopPropagation()}>
-                      <input
-                        type="text"
-                        placeholder="Card Number"
-                        value={cardNumber}
-                        onChange={(e) => setCardNumber(e.target.value)}
-                        className="al-checkout-input"
-                      />
+                      <div>
+                        <label htmlFor="card-number-input" className="sr-only" style={{ display: "none" }}>Card Number</label>
+                        <input
+                          id="card-number-input"
+                          name="cardNumber"
+                          type="text"
+                          autoComplete="cc-number"
+                          placeholder="Card Number"
+                          aria-label="Card Number"
+                          value={cardNumber}
+                          onChange={(e) => setCardNumber(e.target.value)}
+                          className="al-checkout-input"
+                        />
+                      </div>
                       <div className="al-card-two-col">
-                        <input
-                          type="text"
-                          placeholder="MM/YY"
-                          value={cardExpiry}
-                          onChange={(e) => setCardExpiry(e.target.value)}
-                          className="al-checkout-input"
-                        />
-                        <input
-                          type="text"
-                          placeholder="CVC"
-                          value={cardCvc}
-                          onChange={(e) => setCardCvc(e.target.value)}
-                          className="al-checkout-input"
-                        />
+                        <div>
+                          <label htmlFor="card-expiry-input" className="sr-only" style={{ display: "none" }}>Expiration Date</label>
+                          <input
+                            id="card-expiry-input"
+                            name="cardExpiry"
+                            type="text"
+                            autoComplete="cc-exp"
+                            placeholder="MM/YY"
+                            aria-label="Card Expiration Date"
+                            value={cardExpiry}
+                            onChange={(e) => setCardExpiry(e.target.value)}
+                            className="al-checkout-input"
+                          />
+                        </div>
+                        <div>
+                          <label htmlFor="card-cvc-input" className="sr-only" style={{ display: "none" }}>Security Code</label>
+                          <input
+                            id="card-cvc-input"
+                            name="cardCvc"
+                            type="password"
+                            maxLength={4}
+                            autoComplete="cc-csc"
+                            placeholder="CVC"
+                            aria-label="Card Security Code"
+                            value={cardCvc}
+                            onChange={(e) => setCardCvc(e.target.value)}
+                            className="al-checkout-input"
+                          />
+                        </div>
                       </div>
                     </div>
                   )}
@@ -362,13 +520,23 @@ export default function CheckoutPage() {
                 <div 
                   className={`al-payment-option-card ${paymentMethod === "cod" ? "selected" : ""}`}
                   onClick={() => setPaymentMethod("cod")}
+                  onKeyDown={(e) => {
+                    if (e.key === "Enter" || e.key === " ") {
+                      e.preventDefault();
+                      setPaymentMethod("cod");
+                    }
+                  }}
+                  tabIndex={0}
+                  role="radio"
+                  aria-checked={paymentMethod === "cod"}
+                  aria-label="Cash on Delivery"
                 >
                   <div className="al-pay-card-header">
                     <div className="al-pay-title-group">
-                      <Home size={20} className="al-pay-icon" />
+                      <Home size={20} className="al-pay-icon" aria-hidden="true" />
                       <strong>Cash on Delivery (COD)</strong>
                     </div>
-                    <div className={`al-custom-radio ${paymentMethod === "cod" ? "checked" : ""}`}>
+                    <div className={`al-custom-radio ${paymentMethod === "cod" ? "checked" : ""}`} aria-hidden="true">
                       {paymentMethod === "cod" && <div className="al-radio-dot" />}
                     </div>
                   </div>
@@ -396,7 +564,7 @@ export default function CheckoutPage() {
         </section>
 
         {/* Right Column: Order Summary Card */}
-        <aside className="al-checkout-right-col">
+        <aside className="al-checkout-right-col" aria-label="Order Summary">
           <div className="al-checkout-summary-card">
             <h3 className="al-summary-card-title">Order Summary</h3>
 
@@ -426,7 +594,7 @@ export default function CheckoutPage() {
 
             {/* Trust Guarantee Box */}
             <div className="al-checkout-trust-box">
-              <ShieldCheck size={20} className="al-trust-icon" />
+              <ShieldCheck size={20} className="al-trust-icon" aria-hidden="true" />
               <div className="al-trust-texts">
                 <strong>Al-Umaima Assured</strong>
                 <span>Secure transaction guarantees</span>
@@ -443,33 +611,64 @@ export default function CheckoutPage() {
         </div>
       </footer>
 
-      {/* Add/Edit Address Modal */}
+      {/* Add/Edit Address Modal with Focus Trap & Semantics */}
       {isAddModalOpen && (
-        <div className="al-modal-backdrop" onClick={() => setIsAddModalOpen(false)}>
-          <div className="al-checkout-modal" onClick={(e) => e.stopPropagation()}>
+        <div className="al-modal-backdrop" onClick={handleRequestCloseModal}>
+          <div
+            ref={modalContainerRef}
+            tabIndex={-1}
+            className="al-checkout-modal"
+            onClick={(e) => e.stopPropagation()}
+            role="dialog"
+            aria-modal="true"
+            aria-labelledby="checkout-modal-title"
+          >
             <div className="al-modal-header">
-              <h3>{editingAddrId ? "Edit Delivery Address" : "Add New Delivery Address"}</h3>
-              <button type="button" onClick={() => setIsAddModalOpen(false)} className="al-modal-close">✕</button>
+              <h3 id="checkout-modal-title">{editingAddrId ? "Edit Delivery Address" : "Add New Delivery Address"}</h3>
+              <button
+                type="button"
+                onClick={handleRequestCloseModal}
+                aria-label="Close delivery address dialog"
+                className="al-modal-close"
+              >
+                ✕
+              </button>
             </div>
 
-            <form onSubmit={handleSaveAddress} className="al-modal-form">
+            <form onSubmit={handleSaveAddress} className="al-modal-form" noValidate>
               <div className="al-form-group">
-                <label>Full Name</label>
+                <label htmlFor="checkout-full-name">Full Name *</label>
                 <input
+                  ref={nameInputRef}
+                  id="checkout-full-name"
+                  name="fullName"
                   type="text"
+                  autoComplete="name"
                   placeholder="e.g. John Doe"
                   value={newName}
-                  onChange={(e) => setNewName(e.target.value)}
-                  className="al-checkout-input"
+                  onChange={(e) => {
+                    setNewName(e.target.value);
+                    if (formErrors.name) setFormErrors((prev) => ({ ...prev, name: "" }));
+                  }}
+                  className={`al-checkout-input ${formErrors.name ? "error" : ""}`}
+                  aria-invalid={!!formErrors.name}
+                  aria-describedby={formErrors.name ? "name-error-msg" : undefined}
                   required
                 />
+                {formErrors.name && (
+                  <span id="name-error-msg" role="alert" style={{ color: "var(--error)", fontSize: "0.78rem", display: "flex", alignItems: "center", gap: "0.25rem", marginTop: "0.25rem" }}>
+                    <AlertCircle size={13} aria-hidden="true" /> {formErrors.name}
+                  </span>
+                )}
               </div>
 
               <div className="al-form-group">
-                <label>Address Tag</label>
-                <div className="al-tag-selector">
+                <label id="addr-tag-label">Address Tag</label>
+                <div className="al-tag-selector" role="radiogroup" aria-labelledby="addr-tag-label">
                   <button
                     type="button"
+                    role="radio"
+                    aria-checked={newTag === "HOME"}
                     onClick={() => setNewTag("HOME")}
                     className={`al-tag-opt ${newTag === "HOME" ? "active" : ""}`}
                   >
@@ -477,6 +676,8 @@ export default function CheckoutPage() {
                   </button>
                   <button
                     type="button"
+                    role="radio"
+                    aria-checked={newTag === "OFFICE"}
                     onClick={() => setNewTag("OFFICE")}
                     className={`al-tag-opt ${newTag === "OFFICE" ? "active" : ""}`}
                   >
@@ -486,46 +687,142 @@ export default function CheckoutPage() {
               </div>
 
               <div className="al-form-group">
-                <label>Street Address</label>
+                <label htmlFor="checkout-street-address">Street Address *</label>
                 <input
+                  ref={line1InputRef}
+                  id="checkout-street-address"
+                  name="streetAddress"
                   type="text"
+                  autoComplete="street-address"
                   placeholder="e.g. 123 Tech Boulevard, Suite 400"
                   value={newLine1}
-                  onChange={(e) => setNewLine1(e.target.value)}
-                  className="al-checkout-input"
+                  onChange={(e) => {
+                    setNewLine1(e.target.value);
+                    if (formErrors.line1) setFormErrors((prev) => ({ ...prev, line1: "" }));
+                  }}
+                  className={`al-checkout-input ${formErrors.line1 ? "error" : ""}`}
+                  aria-invalid={!!formErrors.line1}
+                  aria-describedby={formErrors.line1 ? "line1-error-msg" : undefined}
                   required
                 />
+                {formErrors.line1 && (
+                  <span id="line1-error-msg" role="alert" style={{ color: "var(--error)", fontSize: "0.78rem", display: "flex", alignItems: "center", gap: "0.25rem", marginTop: "0.25rem" }}>
+                    <AlertCircle size={13} aria-hidden="true" /> {formErrors.line1}
+                  </span>
+                )}
               </div>
 
               <div className="al-form-group">
-                <label>City, State & Zip Code</label>
+                <label htmlFor="checkout-city-zip">City, State & ZIP / Postal Code *</label>
                 <input
+                  ref={cityZipInputRef}
+                  id="checkout-city-zip"
+                  name="cityStateZip"
                   type="text"
+                  autoComplete="postal-code"
                   placeholder="e.g. Silicon Valley, CA 94025"
                   value={newCityZip}
-                  onChange={(e) => setNewCityZip(e.target.value)}
-                  className="al-checkout-input"
+                  onChange={(e) => {
+                    setNewCityZip(e.target.value);
+                    if (formErrors.cityZip) setFormErrors((prev) => ({ ...prev, cityZip: "" }));
+                  }}
+                  className={`al-checkout-input ${formErrors.cityZip ? "error" : ""}`}
+                  aria-invalid={!!formErrors.cityZip}
+                  aria-describedby={formErrors.cityZip ? "cityzip-error-msg" : undefined}
                   required
                 />
+                {formErrors.cityZip && (
+                  <span id="cityzip-error-msg" role="alert" style={{ color: "var(--error)", fontSize: "0.78rem", display: "flex", alignItems: "center", gap: "0.25rem", marginTop: "0.25rem" }}>
+                    <AlertCircle size={13} aria-hidden="true" /> {formErrors.cityZip}
+                  </span>
+                )}
               </div>
 
               <div className="al-form-group">
-                <label>Phone Number</label>
+                <label htmlFor="checkout-phone-number">Phone Number *</label>
                 <input
-                  type="text"
-                  placeholder="+1 (555) 123-4567"
+                  ref={phoneInputRef}
+                  id="checkout-phone-number"
+                  name="phone"
+                  type="tel"
+                  autoComplete="tel"
+                  placeholder="e.g. +1 (555) 123-4567"
                   value={newPhone}
-                  onChange={(e) => setNewPhone(e.target.value)}
-                  className="al-checkout-input"
+                  onChange={(e) => {
+                    setNewPhone(e.target.value);
+                    if (formErrors.phone) setFormErrors((prev) => ({ ...prev, phone: "" }));
+                  }}
+                  className={`al-checkout-input ${formErrors.phone ? "error" : ""}`}
+                  aria-invalid={!!formErrors.phone}
+                  aria-describedby={formErrors.phone ? "phone-error-msg" : undefined}
                   required
                 />
+                {formErrors.phone && (
+                  <span id="phone-error-msg" role="alert" style={{ color: "var(--error)", fontSize: "0.78rem", display: "flex", alignItems: "center", gap: "0.25rem", marginTop: "0.25rem" }}>
+                    <AlertCircle size={13} aria-hidden="true" /> {formErrors.phone}
+                  </span>
+                )}
               </div>
 
               <div className="al-modal-footer">
-                <button type="button" onClick={() => setIsAddModalOpen(false)} className="al-modal-cancel">Cancel</button>
-                <button type="submit" className="al-modal-save-btn">Save Address</button>
+                <button
+                  type="button"
+                  onClick={handleRequestCloseModal}
+                  className="al-modal-cancel"
+                  disabled={isSubmittingAddress}
+                >
+                  Cancel
+                </button>
+                <button
+                  type="submit"
+                  className="al-modal-save-btn"
+                  disabled={isSubmittingAddress}
+                >
+                  {isSubmittingAddress ? "Saving..." : "Save Address"}
+                </button>
               </div>
             </form>
+          </div>
+        </div>
+      )}
+
+      {/* Discard Confirmation Modal */}
+      {isDiscardConfirmOpen && (
+        <div className="al-modal-backdrop" style={{ zIndex: 2100 }} onClick={() => setIsDiscardConfirmOpen(false)}>
+          <div
+            ref={discardModalRef}
+            tabIndex={-1}
+            className="al-checkout-modal"
+            style={{ maxWidth: 400 }}
+            onClick={(e) => e.stopPropagation()}
+            role="alertdialog"
+            aria-modal="true"
+            aria-labelledby="discard-title"
+            aria-describedby="discard-desc"
+          >
+            <div className="al-modal-header">
+              <h3 id="discard-title">Discard changes?</h3>
+            </div>
+            <p id="discard-desc" style={{ color: "var(--text-muted)", fontSize: "0.9rem", margin: "1rem 0 1.5rem" }}>
+              You have unsaved changes to this delivery address. Are you sure you want to discard them?
+            </p>
+            <div className="al-modal-footer" style={{ justifyContent: "flex-end" }}>
+              <button
+                type="button"
+                onClick={() => setIsDiscardConfirmOpen(false)}
+                className="al-modal-cancel"
+              >
+                Continue Editing
+              </button>
+              <button
+                type="button"
+                onClick={handleConfirmDiscard}
+                className="al-modal-save-btn"
+                style={{ backgroundColor: "var(--error)", color: "#FFFFFF" }}
+              >
+                Discard
+              </button>
+            </div>
           </div>
         </div>
       )}

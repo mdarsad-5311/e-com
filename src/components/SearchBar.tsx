@@ -1,9 +1,11 @@
 "use client";
 
-import { useState, useMemo, useEffect } from "react";
+import { useState, useMemo } from "react";
 import Link from "next/link";
+import Image from "next/image";
 import { Search, X, Star, ArrowRight, Tag } from "lucide-react";
 import { products, Product } from "@/data/products";
+import { useFocusTrap } from "@/hooks/useFocusTrap";
 import "@/styles/search-bar.css";
 
 interface SearchBarProps {
@@ -12,14 +14,7 @@ interface SearchBarProps {
 
 export default function SearchBar({ onClose }: SearchBarProps) {
   const [query, setQuery] = useState<string>("");
-
-  useEffect(() => {
-    const onKey = (e: globalThis.KeyboardEvent) => {
-      if (e.key === "Escape") onClose();
-    };
-    window.addEventListener("keydown", onKey);
-    return () => window.removeEventListener("keydown", onKey);
-  }, [onClose]);
+  const modalRef = useFocusTrap<HTMLDivElement>(true, onClose);
 
   const searchResults = useMemo<Product[]>(() => {
     if (!query.trim()) return [];
@@ -28,29 +23,50 @@ export default function SearchBar({ onClose }: SearchBarProps) {
       (item) =>
         item.title.toLowerCase().includes(q) ||
         item.categoryName.toLowerCase().includes(q) ||
-        item.description.toLowerCase().includes(q)
+        (item.description && item.description.toLowerCase().includes(q))
     );
   }, [query]);
 
   return (
     <div className="search-overlay" onClick={onClose}>
-      <div className="search-modal" onClick={(e) => e.stopPropagation()}>
+      <div 
+        ref={modalRef}
+        tabIndex={-1}
+        className="search-modal" 
+        onClick={(e) => e.stopPropagation()}
+        role="dialog"
+        aria-modal="true"
+        aria-label="Search catalog products"
+      >
         <div className="search-input-wrapper">
-          <Search size={22} className="search-icon" />
+          <Search size={22} className="search-icon" aria-hidden="true" />
           <input
-            type="text"
+            id="global-catalog-search-input"
+            name="searchQuery"
+            type="search"
             className="search-input"
             placeholder="Search audio, smartwatches, furniture, fashion..."
+            aria-label="Search audio, smartwatches, furniture, fashion"
             value={query}
             onChange={(e) => setQuery(e.target.value)}
             autoFocus
           />
           {query && (
-            <button onClick={() => setQuery("")} className="clear-btn">
-              <X size={18} />
+            <button 
+              type="button"
+              onClick={() => setQuery("")} 
+              className="clear-btn"
+              aria-label="Clear search input"
+            >
+              <X size={18} aria-hidden="true" />
             </button>
           )}
-          <button onClick={onClose} className="close-modal-btn">
+          <button 
+            type="button"
+            onClick={onClose} 
+            className="close-modal-btn"
+            aria-label="Close search dialog"
+          >
             ESC
           </button>
         </div>
@@ -59,14 +75,16 @@ export default function SearchBar({ onClose }: SearchBarProps) {
         {!query && (
           <div className="search-suggestions">
             <div className="suggestion-label">Popular Searches:</div>
-            <div className="tag-list">
+            <div className="tag-list" role="list">
               {["Headphones", "Smartwatch", "Waterproof", "RGB Lamp", "Coffee Dripper"].map((tag) => (
                 <button
                   key={tag}
+                  type="button"
                   className="search-tag"
                   onClick={() => setQuery(tag)}
+                  aria-label={`Search for ${tag}`}
                 >
-                  <Tag size={12} /> {tag}
+                  <Tag size={12} aria-hidden="true" /> {tag}
                 </button>
               ))}
             </div>
@@ -76,22 +94,25 @@ export default function SearchBar({ onClose }: SearchBarProps) {
         {/* Dynamic Search Results */}
         {query && (
           <div className="search-results">
-            <div className="results-count">
+            <div className="results-count" aria-live="polite">
               Found {searchResults.length} match{searchResults.length === 1 ? "" : "es"} for &quot;{query}&quot;
             </div>
 
             {searchResults.length > 0 ? (
-              <div className="results-list">
+              <div className="results-list" role="list">
                 {searchResults.map((product) => (
                   <Link
                     key={product.id}
-                    href={`/products/${product.id}`}
+                    href={`/products/${product.slug || product.id}`}
                     onClick={onClose}
                     className="result-card"
+                    aria-label={`${product.title}, $${product.price.toFixed(2)}, rating ${product.rating}`}
                   >
-                    <img
+                    <Image
                       src={product.image}
                       alt={product.title}
+                      width={52}
+                      height={52}
                       className="result-thumb"
                     />
                     <div className="result-info">
@@ -100,16 +121,16 @@ export default function SearchBar({ onClose }: SearchBarProps) {
                       <div className="result-meta">
                         <span className="result-price">${product.price.toFixed(2)}</span>
                         <span className="result-rating">
-                          <Star size={12} fill="#f59e0b" color="#f59e0b" /> {product.rating}
+                          <Star size={12} fill="#f59e0b" color="#f59e0b" aria-hidden="true" /> {product.rating}
                         </span>
                       </div>
                     </div>
-                    <ArrowRight size={18} className="result-arrow" />
+                    <ArrowRight size={18} className="result-arrow" aria-hidden="true" />
                   </Link>
                 ))}
               </div>
             ) : (
-              <div className="no-results">
+              <div className="no-results" role="status">
                 No products found matching your search. Try different keywords.
               </div>
             )}

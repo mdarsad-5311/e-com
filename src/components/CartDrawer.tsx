@@ -6,6 +6,7 @@ import Image from "next/image";
 import { Minus, Plus, ShoppingBag, Trash2, X, ArrowRight, Truck, CheckCircle2 } from "lucide-react";
 import { useCart } from "@/context/CartContext";
 import { useUI } from "@/context/UIContext";
+import { useFocusTrap } from "@/hooks/useFocusTrap";
 import "@/styles/cart-drawer.css";
 
 const FREE_SHIPPING_THRESHOLD = 150;
@@ -13,25 +14,19 @@ const FREE_SHIPPING_THRESHOLD = 150;
 export default function CartDrawer() {
   const { cart, updateQuantity, removeFromCart, totalItemsCount, subtotal } = useCart();
   const { isCartOpen, closeCart } = useUI();
+  const drawerRef = useFocusTrap<HTMLElement>(isCartOpen, closeCart);
 
-  // Close drawer on Escape key
+  // Lock body scroll when open
   useEffect(() => {
-    const handleKeyDown = (e: KeyboardEvent) => {
-      if (e.key === "Escape" && isCartOpen) {
-        closeCart();
-      }
-    };
     if (isCartOpen) {
       document.body.style.overflow = "hidden";
-      window.addEventListener("keydown", handleKeyDown);
     } else {
       document.body.style.overflow = "";
     }
     return () => {
       document.body.style.overflow = "";
-      window.removeEventListener("keydown", handleKeyDown);
     };
-  }, [isCartOpen, closeCart]);
+  }, [isCartOpen]);
 
   if (!isCartOpen) return null;
 
@@ -42,11 +37,13 @@ export default function CartDrawer() {
   return (
     <div className="drawer-backdrop" onClick={closeCart}>
       <aside
+        ref={drawerRef}
+        tabIndex={-1}
         className="cart-drawer"
         onClick={(e) => e.stopPropagation()}
         role="dialog"
         aria-modal="true"
-        aria-label="Shopping Bag"
+        aria-label="Shopping Bag Drawer"
       >
         {/* Header */}
         <header className="drawer-header">
@@ -54,8 +51,13 @@ export default function CartDrawer() {
             <h2>Your Shopping Bag</h2>
             <p>{totalItemsCount} {totalItemsCount === 1 ? "item" : "items"}</p>
           </div>
-          <button onClick={closeCart} aria-label="Close shopping bag" className="drawer-close-btn">
-            <X size={20} />
+          <button 
+            type="button"
+            onClick={closeCart} 
+            aria-label="Close shopping bag drawer" 
+            className="drawer-close-btn"
+          >
+            <X size={20} aria-hidden="true" />
           </button>
         </header>
 
@@ -64,17 +66,17 @@ export default function CartDrawer() {
           <div className="shipping-progress-text">
             {isFreeShippingUnlocked ? (
               <span className="shipping-unlocked-msg">
-                <CheckCircle2 size={16} className="shipping-icon-success" />
+                <CheckCircle2 size={16} className="shipping-icon-success" aria-hidden="true" />
                 <strong>Free Express Shipping unlocked!</strong>
               </span>
             ) : (
               <span className="shipping-locked-msg">
-                <Truck size={16} className="shipping-icon-truck" />
+                <Truck size={16} className="shipping-icon-truck" aria-hidden="true" />
                 Add <strong>${remainingForFreeShipping.toFixed(2)}</strong> more for <strong>Free Express Shipping</strong>
               </span>
             )}
           </div>
-          <div className="progress-track" role="progressbar" aria-valuenow={progressPct} aria-valuemin={0} aria-valuemax={100}>
+          <div className="progress-track" role="progressbar" aria-label="Free shipping progress" aria-valuenow={progressPct} aria-valuemin={0} aria-valuemax={100}>
             <div
               className={`progress-fill ${isFreeShippingUnlocked ? "unlocked" : ""}`}
               style={{ width: `${progressPct}%` }}
@@ -87,7 +89,7 @@ export default function CartDrawer() {
           {cart.length === 0 ? (
             <div className="empty-drawer">
               <div className="empty-icon-box">
-                <ShoppingBag size={40} />
+                <ShoppingBag size={40} aria-hidden="true" />
               </div>
               <h3>Your bag is empty</h3>
               <p>Explore our curated collections and add your favorite pieces.</p>
@@ -118,30 +120,33 @@ export default function CartDrawer() {
                     )}
                   </div>
                   <div className="qty-row">
-                    <div className="qty-pill">
+                    <div className="qty-pill" role="group" aria-label={`Quantity selector for ${item.product.title}`}>
                       <button
+                        type="button"
                         onClick={() => updateQuantity(item.product.id, item.quantity - 1)}
-                        aria-label="Decrease quantity"
+                        aria-label={`Decrease quantity of ${item.product.title}`}
                         className="qty-btn"
                       >
-                        <Minus size={12} />
+                        <Minus size={12} aria-hidden="true" />
                       </button>
-                      <span className="qty-val">{item.quantity}</span>
+                      <span className="qty-val" aria-live="polite">{item.quantity}</span>
                       <button
+                        type="button"
                         onClick={() => updateQuantity(item.product.id, item.quantity + 1)}
-                        aria-label="Increase quantity"
+                        aria-label={`Increase quantity of ${item.product.title}`}
                         className="qty-btn"
                       >
-                        <Plus size={12} />
+                        <Plus size={12} aria-hidden="true" />
                       </button>
                     </div>
                     <button
+                      type="button"
                       className="remove-btn"
                       onClick={() => removeFromCart(item.product.id)}
-                      aria-label="Remove item"
+                      aria-label={`Remove ${item.product.title} from bag`}
                       title="Remove from bag"
                     >
-                      <Trash2 size={14} />
+                      <Trash2 size={14} aria-hidden="true" />
                       <span>Remove</span>
                     </button>
                   </div>
@@ -161,7 +166,7 @@ export default function CartDrawer() {
             <p className="tax-note">Taxes and shipping calculated at checkout</p>
             <Link href="/checkout" className="btn btn-primary full btn-checkout-drawer" onClick={closeCart}>
               <span>Proceed to Checkout</span>
-              <ArrowRight size={16} />
+              <ArrowRight size={16} aria-hidden="true" />
             </Link>
             <Link href="/cart" className="btn btn-outline full btn-view-cart-drawer" onClick={closeCart}>
               View Full Cart & Save Items

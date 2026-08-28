@@ -3,6 +3,7 @@
 import { useState, useEffect, useRef } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import Link from "next/link";
+import Image from "next/image";
 import { 
   ArrowLeft, 
   X, 
@@ -204,9 +205,11 @@ export default function SearchPage() {
             {SUGGESTED_PRODUCTS.map((product) => (
               <div key={product.id} className="al-suggested-product-row">
                 <Link href={product.href} style={{ display: "contents" }}>
-                  <img
+                  <Image
                     src={product.image}
                     alt={product.name}
+                    width={48}
+                    height={48}
                     className="al-suggested-product-img"
                   />
                   <div className="al-suggested-product-info">

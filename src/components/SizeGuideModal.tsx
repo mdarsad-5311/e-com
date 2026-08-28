@@ -1,7 +1,8 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { X, Ruler } from "lucide-react";
+import { useFocusTrap } from "@/hooks/useFocusTrap";
 import "@/styles/size-guide-modal.css";
 
 interface SizeGuideModalProps {
@@ -10,26 +11,9 @@ interface SizeGuideModalProps {
   category?: string;
 }
 
-export default function SizeGuideModal({ isOpen, onClose, category }: SizeGuideModalProps) {
+export default function SizeGuideModal({ isOpen, onClose }: SizeGuideModalProps) {
   const [unit, setUnit] = useState<"in" | "cm">("in");
-
-  useEffect(() => {
-    const handleKeyDown = (e: KeyboardEvent) => {
-      if (e.key === "Escape" && isOpen) {
-        onClose();
-      }
-    };
-    if (isOpen) {
-      document.body.style.overflow = "hidden";
-      window.addEventListener("keydown", handleKeyDown);
-    } else {
-      document.body.style.overflow = "";
-    }
-    return () => {
-      document.body.style.overflow = "";
-      window.removeEventListener("keydown", handleKeyDown);
-    };
-  }, [isOpen, onClose]);
+  const modalRef = useFocusTrap<HTMLDivElement>(isOpen, onClose);
 
   if (!isOpen) return null;
 
@@ -52,6 +36,8 @@ export default function SizeGuideModal({ isOpen, onClose, category }: SizeGuideM
   return (
     <div className="al-modal-overlay" onClick={onClose}>
       <div
+        ref={modalRef}
+        tabIndex={-1}
         className="al-size-guide-modal"
         onClick={(e) => e.stopPropagation()}
         role="dialog"
@@ -60,11 +46,16 @@ export default function SizeGuideModal({ isOpen, onClose, category }: SizeGuideM
       >
         <div className="al-size-guide-header">
           <div className="al-size-title-group">
-            <Ruler size={20} className="al-ruler-icon" />
+            <Ruler size={20} className="al-ruler-icon" aria-hidden="true" />
             <h3 id="size-guide-title">Size & Fit Guide</h3>
           </div>
-          <button onClick={onClose} aria-label="Close size guide" className="al-modal-close-btn">
-            <X size={20} />
+          <button 
+            type="button"
+            onClick={onClose} 
+            aria-label="Close size guide" 
+            className="al-modal-close-btn"
+          >
+            <X size={20} aria-hidden="true" />
           </button>
         </div>
 
@@ -75,10 +66,12 @@ export default function SizeGuideModal({ isOpen, onClose, category }: SizeGuideM
 
           {/* Unit Toggle */}
           <div className="al-unit-toggle-row">
-            <span className="al-unit-label">Unit of measurement:</span>
-            <div className="al-unit-pill-toggle">
+            <span className="al-unit-label" id="unit-measurement-label">Unit of measurement:</span>
+            <div className="al-unit-pill-toggle" role="radiogroup" aria-labelledby="unit-measurement-label">
               <button
                 type="button"
+                role="radio"
+                aria-checked={unit === "in"}
                 className={`al-unit-btn ${unit === "in" ? "active" : ""}`}
                 onClick={() => setUnit("in")}
               >
@@ -86,6 +79,8 @@ export default function SizeGuideModal({ isOpen, onClose, category }: SizeGuideM
               </button>
               <button
                 type="button"
+                role="radio"
+                aria-checked={unit === "cm"}
                 className={`al-unit-btn ${unit === "cm" ? "active" : ""}`}
                 onClick={() => setUnit("cm")}
               >
@@ -99,11 +94,11 @@ export default function SizeGuideModal({ isOpen, onClose, category }: SizeGuideM
             <table className="al-size-table">
               <thead>
                 <tr>
-                  <th>Size</th>
-                  <th>Chest ({unit})</th>
-                  <th>Waist ({unit})</th>
-                  <th>Hips ({unit})</th>
-                  <th>Length ({unit})</th>
+                  <th scope="col">Size</th>
+                  <th scope="col">Chest ({unit})</th>
+                  <th scope="col">Waist ({unit})</th>
+                  <th scope="col">Hips ({unit})</th>
+                  <th scope="col">Length ({unit})</th>
                 </tr>
               </thead>
               <tbody>

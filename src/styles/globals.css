@@ -12,7 +12,7 @@
   --surface-alt: #f1f5f9;
   --surface-tint: #0C2340;
 
-  /* Contrast & Text */
+  /* Contrast & Text - WCAG 2.1 AA Compliant */
   --on-surface: #0C2340;
   --on-surface-variant: #475569;
   --inverse-surface: #1E293B;
@@ -21,13 +21,13 @@
   --on-background: #0C2340;
   --background-subtle: #FFFFFF;
   --text: #0C2340;
-  --text-muted: #64748B;
-  --text-light: #94A3B8;
+  --text-muted: #475569;
+  --text-light: #64748B;
   --text-inverse: #FFFFFF;
 
   /* Outlines & Borders */
-  --outline: #94A3B8;
-  --outline-variant: #E2E8F0;
+  --outline: #64748B;
+  --outline-variant: #CBD5E1;
   --borders: #E2E8F0;
   --borders-hover: #CBD5E1;
   --cards: #FFFFFF;
@@ -128,6 +128,10 @@ html, body {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   min-height: 100vh;
+  min-height: 100dvh;
+  accent-color: var(--secondary);
+  scrollbar-width: thin;
+  scrollbar-color: #CBD5E1 transparent;
   overflow-x: clip;
 }
 

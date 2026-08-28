@@ -7,14 +7,16 @@ import {
   ShoppingBag, 
   ShieldCheck, 
   Eye, 
-  EyeOff
+  EyeOff 
 } from "lucide-react";
 import { useAuth } from "@/context/AuthContext";
+import { sanitizeRedirect } from "@/lib/security";
 
 function RegisterContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
-  const redirectUrl = searchParams.get("redirect") || searchParams.get("callbackUrl");
+  const rawRedirectUrl = searchParams.get("redirect") || searchParams.get("callbackUrl");
+  const redirectUrl = sanitizeRedirect(rawRedirectUrl);
   const { register } = useAuth();
 
   const [name, setName] = useState<string>("");
@@ -50,7 +52,7 @@ function RegisterContent() {
       const success = register(name, email, phone, password);
       setIsLoading(false);
       if (success) {
-        router.push(redirectUrl || "/profile");
+        router.push(redirectUrl);
       } else {
         setError("Failed to create account. Please try again.");
       }
@@ -80,16 +82,19 @@ function RegisterContent() {
         {/* Right Form Section */}
         <div className="al-umaima-auth-right">
           {error && (
-            <div className="auth-error-alert" style={{ marginBottom: "1rem" }}>
+            <div className="auth-error-alert" role="alert" style={{ marginBottom: "1rem" }}>
               {error}
             </div>
           )}
 
           <form onSubmit={handleSubmit} className="al-umaima-auth-form">
             <div className="al-umaima-input-group">
-              <label className="al-umaima-label">Full Name</label>
+              <label htmlFor="reg-name-input" className="al-umaima-label">Full Name</label>
               <input
+                id="reg-name-input"
+                name="name"
                 type="text"
+                autoComplete="name"
                 className="al-umaima-input"
                 placeholder="Enter your Full Name"
                 value={name}
@@ -99,9 +104,12 @@ function RegisterContent() {
             </div>
 
             <div className="al-umaima-input-group">
-              <label className="al-umaima-label">Mobile Number</label>
+              <label htmlFor="reg-phone-input" className="al-umaima-label">Mobile Number</label>
               <input
+                id="reg-phone-input"
+                name="phone"
                 type="tel"
+                autoComplete="tel"
                 className="al-umaima-input"
                 placeholder="10-digit Mobile Number"
                 value={phone}
@@ -111,9 +119,12 @@ function RegisterContent() {
             </div>
 
             <div className="al-umaima-input-group">
-              <label className="al-umaima-label">Email Address (Optional)</label>
+              <label htmlFor="reg-email-input" className="al-umaima-label">Email Address (Optional)</label>
               <input
+                id="reg-email-input"
+                name="email"
                 type="email"
+                autoComplete="email"
                 className="al-umaima-input"
                 placeholder="name@example.com"
                 value={email}
@@ -122,10 +133,13 @@ function RegisterContent() {
             </div>
 
             <div className="al-umaima-input-group">
-              <label className="al-umaima-label">Set Password</label>
+              <label htmlFor="reg-password-input" className="al-umaima-label">Set Password</label>
               <div style={{ position: "relative" }}>
                 <input
+                  id="reg-password-input"
+                  name="password"
                   type={showPassword ? "text" : "password"}
+                  autoComplete="new-password"
                   className="al-umaima-input"
                   placeholder="At least 6 characters"
                   value={password}
@@ -135,8 +149,9 @@ function RegisterContent() {
                 />
                 <button
                   type="button"
+                  aria-label={showPassword ? "Hide password" : "Show password"}
                   onClick={() => setShowPassword(!showPassword)}
-                  style={{ position: "absolute", right: 8, top: 10, color: "#878787" }}
+                  style={{ position: "absolute", right: 8, top: 10, color: "var(--text-muted)", background: "transparent", border: "none", cursor: "pointer" }}
                 >
                   {showPassword ? <EyeOff size={16} /> : <Eye size={16} />}
                 </button>
@@ -153,7 +168,7 @@ function RegisterContent() {
               {isLoading ? "CREATING ACCOUNT..." : "CONTINUE & REGISTER"}
             </button>
 
-            <Link href={redirectUrl ? `/login?redirect=${encodeURIComponent(redirectUrl)}` : "/login"} className="al-umaima-btn-blue-outline" style={{ display: "flex", alignItems: "center", justifyContent: "center" }}>
+            <Link href={redirectUrl !== "/profile" ? `/login?redirect=${encodeURIComponent(redirectUrl)}` : "/login"} className="al-umaima-btn-blue-outline" style={{ display: "flex", alignItems: "center", justifyContent: "center" }}>
               EXISTING USER? LOG IN
             </Link>
           </form>
@@ -170,3 +185,4 @@ export default function RegisterPage() {
     </Suspense>
   );
 }
+
