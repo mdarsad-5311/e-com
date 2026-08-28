@@ -213,8 +213,8 @@
   .quick-strip-row {
     justify-content: flex-start;
     gap: 1.35rem;
-    padding-left: 0.75rem;
-    padding-right: 0.75rem;
+    padding-left: 2.2rem;
+    padding-right: 2.2rem;
   }
 
   .quick-carousel-btn {
@@ -234,7 +234,7 @@
   .quick-strip-row {
     justify-content: flex-start;
     gap: 1.15rem;
-    padding: 0.35rem 0.5rem 0.5rem;
+    padding: 0.35rem 2rem 0.5rem;
   }
 
   .avatar-circle {
@@ -259,7 +259,7 @@
 
   .quick-strip-row {
     gap: 0.95rem;
-    padding: 0.25rem 0.4rem 0.4rem;
+    padding: 0.25rem 1.85rem 0.4rem;
   }
 
   .avatar-circle {

@@ -46,10 +46,22 @@ export default function Navbar() {
     return () => window.removeEventListener("keydown", onKey);
   }, [openSearch]);
 
+  useEffect(() => {
+    if (isMobileMenuOpen) {
+      document.body.style.overflow = "hidden";
+    } else {
+      document.body.style.overflow = "";
+    }
+    return () => {
+      document.body.style.overflow = "";
+    };
+  }, [isMobileMenuOpen]);
+
   const handleSearchSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (searchInput.trim()) {
       router.push(`/products?q=${encodeURIComponent(searchInput.trim())}`);
+      setIsMobileMenuOpen(false);
     } else {
       openSearch();
     }
@@ -96,15 +108,6 @@ export default function Navbar() {
           <Link href="/" className="al-brand-logo">
             AL-UMAIMA
           </Link>
-          {/* Mobile-only: search icon (links to /search page) */}
-          <Link
-            href="/search"
-            className="al-action-btn al-mobile-search-icon"
-            aria-label="Search"
-            title="Search"
-          >
-            <Search size={20} strokeWidth={1.8} />
-          </Link>
         </div>
 
 
@@ -143,8 +146,18 @@ export default function Navbar() {
           </form>
         </div>
 
-        {/* Right Icon Actions (Cart, Wishlist, Profile) */}
+        {/* Right Icon Actions (Search on mobile, Cart, Wishlist, Profile) */}
         <div className="al-actions-col">
+          {/* Mobile-only Search Button */}
+          <Link
+            href="/search"
+            className="al-action-btn al-mobile-search-icon"
+            aria-label="Search"
+            title="Search"
+          >
+            <Search size={20} strokeWidth={1.8} />
+          </Link>
+
           {/* Shopping Cart Button */}
           <button 
             type="button" 
@@ -225,14 +238,20 @@ export default function Navbar() {
 
       {/* Mobile Drawer Navigation */}
       {isMobileMenuOpen && (
-        <div className="al-mobile-backdrop" onClick={() => setIsMobileMenuOpen(false)}>
-          <div className="al-mobile-drawer" onClick={(e) => e.stopPropagation()}>
+        <>
+          <div 
+            className="al-mobile-backdrop" 
+            onClick={() => setIsMobileMenuOpen(false)} 
+            aria-hidden="true"
+          />
+          <aside className="al-mobile-drawer" aria-label="Mobile Navigation Menu">
             <div className="al-drawer-header">
               <span className="al-brand-logo">AL-UMAIMA</span>
               <button 
                 type="button" 
                 className="al-drawer-close"
                 onClick={() => setIsMobileMenuOpen(false)}
+                aria-label="Close navigation menu"
               >
                 <X size={20} />
               </button>
@@ -242,31 +261,45 @@ export default function Navbar() {
               <form className="al-search-form" onSubmit={handleSearchSubmit}>
                 <input 
                   type="text"
-                  placeholder="Search..."
+                  placeholder="Search products, brands..."
                   value={searchInput}
                   onChange={(e) => setSearchInput(e.target.value)}
                   className="al-search-input"
                 />
-                <button type="submit" className="al-search-icon-btn">
+                <button type="submit" className="al-search-icon-btn" aria-label="Submit search">
                   <Search size={16} />
                 </button>
               </form>
             </div>
 
             <nav className="al-drawer-nav">
-              {navLinks.map((item) => (
-                <Link
-                  key={item.name}
-                  href={item.href}
-                  className="al-drawer-link"
-                  onClick={() => setIsMobileMenuOpen(false)}
-                >
-                  {item.name}
-                </Link>
-              ))}
+              {navLinks.map((item) => {
+                const isActive = pathname === item.href || 
+                  (item.name === "Electronics" && (pathname === "/category/electronics" || pathname.startsWith("/products")));
+
+                return (
+                  <Link
+                    key={item.name}
+                    href={item.href}
+                    className={`al-drawer-link ${isActive ? "active" : ""}`}
+                    onClick={() => setIsMobileMenuOpen(false)}
+                  >
+                    <span>{item.name}</span>
+                  </Link>
+                );
+              })}
             </nav>
 
             <div className="al-drawer-footer">
+              {user ? (
+                <Link href="/profile" className="al-drawer-link" onClick={() => setIsMobileMenuOpen(false)}>
+                  <User size={16} /> {user.name || "My Account"}
+                </Link>
+              ) : (
+                <Link href="/login" className="al-drawer-link" onClick={() => setIsMobileMenuOpen(false)}>
+                  <User size={16} /> Sign In / Register
+                </Link>
+              )}
               <Link href="/wishlist" className="al-drawer-link" onClick={() => setIsMobileMenuOpen(false)}>
                 <Heart size={16} /> Wishlist ({wishlistCount})
               </Link>
@@ -277,8 +310,8 @@ export default function Navbar() {
                 <HelpCircle size={16} /> Customer Service
               </Link>
             </div>
-          </div>
-        </div>
+          </aside>
+        </>
       )}
 
       {/* Global Quick Search Modal */}
