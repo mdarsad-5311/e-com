@@ -1,29 +1,48 @@
-/* CategoryQuickStrip Component Styles */
+/* CategoryQuickStrip Component Styles - Responsive Carousel on Small Screens */
 .quick-strip-container {
   background: #0B0F19;
-  border-bottom: 1px solid var(--border-subtle);
-  padding: 1.1rem 0;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  padding: 1.1rem 0 0.85rem;
   box-shadow: 0 4px 14px rgba(0, 0, 0, 0.3);
+  position: relative;
+  overflow: hidden;
+}
+
+.quick-strip-wrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
 }
 
 .quick-strip-row {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 1.6rem;
+  gap: 1.5rem;
   overflow-x: auto;
-  padding: 0.2rem 0.5rem;
+  padding: 0.5rem 0.5rem 0.65rem;
   scroll-snap-type: x mandatory;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;
+  scroll-behavior: smooth;
+  width: 100%;
 }
 
+.quick-strip-row::-webkit-scrollbar {
+  display: none;
+}
+
+/* Category Item */
 .quick-cat-item {
   display: flex;
   flex-direction: column;
   align-items: center;
   gap: 0.5rem;
   flex-shrink: 0;
-  transition: var(--transition);
+  transition: transform 0.2s ease, opacity 0.2s ease;
   scroll-snap-align: start;
+  text-decoration: none;
+  user-select: none;
 }
 
 .quick-cat-item:hover {
@@ -41,17 +60,17 @@
   border-radius: 50%;
   padding: 3px;
   background: linear-gradient(135deg, #1E293B 0%, #334155 100%);
-  transition: var(--transition);
+  transition: all 0.25s ease;
 }
 
 .quick-cat-item:hover .avatar-circle {
-  background: linear-gradient(135deg, var(--primary) 0%, var(--accent-cyan) 100%);
-  box-shadow: 0 6px 20px rgba(59, 130, 246, 0.4);
+  background: linear-gradient(135deg, #0C2340 0%, #FF7A00 100%);
+  box-shadow: 0 6px 20px rgba(255, 122, 0, 0.4);
 }
 
 .highlight-deal .avatar-circle {
-  background: linear-gradient(135deg, var(--accent) 0%, var(--accent-rose) 100%);
-  box-shadow: 0 6px 20px rgba(249, 115, 22, 0.5);
+  background: linear-gradient(135deg, #FF7A00 0%, #DC2626 100%);
+  box-shadow: 0 6px 20px rgba(255, 122, 0, 0.45);
 }
 
 .avatar-img {
@@ -62,6 +81,7 @@
   background: #151D2F;
   border: 2px solid #151D2F;
   transition: transform 0.3s ease;
+  display: block;
 }
 
 .quick-cat-item:hover .avatar-img {
@@ -75,39 +95,40 @@
   width: 24px;
   height: 24px;
   border-radius: 50%;
-  background: var(--bg-card);
+  background: #1E293B;
   color: #fff;
   display: flex;
   align-items: center;
   justify-content: center;
   border: 2px solid #0B0F19;
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.4);
 }
 
 .highlight-deal .icon-overlay {
-  background: var(--accent);
+  background: #FF7A00;
 }
 
 .strip-pill-badge {
   position: absolute;
-  top: -4px;
+  top: -5px;
   left: 50%;
   transform: translateX(-50%);
   background: #1E293B;
   color: #fff;
   font-size: 0.62rem;
   font-weight: 800;
-  padding: 0.1rem 0.45rem;
-  border-radius: var(--radius-full);
+  padding: 0.12rem 0.45rem;
+  border-radius: 999px;
   letter-spacing: 0.04em;
   box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
   white-space: nowrap;
-  border: 1px solid var(--border-subtle);
+  border: 1px solid rgba(255, 255, 255, 0.15);
 }
 
 .badge-flash {
-  background: linear-gradient(135deg, var(--accent) 0%, var(--accent-rose) 100%);
+  background: linear-gradient(135deg, #FF7A00 0%, #DC2626 100%);
   border: none;
+  color: #FFFFFF;
 }
 
 .cat-title {
@@ -116,19 +137,142 @@
   color: #FFFFFF;
   text-align: center;
   white-space: nowrap;
-  transition: var(--transition);
+  transition: color 0.15s ease;
 }
 
 .quick-cat-item:hover .cat-title {
-  color: var(--primary);
+  color: #FF8C00;
+}
+
+/* ==========================================================================
+   Carousel Navigation Buttons (Mobile & Responsive View)
+   ========================================================================== */
+.quick-carousel-btn {
+  display: none;
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: rgba(15, 23, 42, 0.88);
+  backdrop-filter: blur(4px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  color: #FFFFFF;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  z-index: 10;
+  transition: all 0.2s ease;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+  opacity: 0;
+  pointer-events: none;
+}
+
+.quick-carousel-btn.visible {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.quick-carousel-btn:hover {
+  background: #FF7A00;
+  border-color: #FF7A00;
+  transform: translateY(-50%) scale(1.08);
+}
+
+.quick-carousel-prev {
+  left: 4px;
+}
+
+.quick-carousel-next {
+  right: 4px;
+}
+
+/* Progress bar at bottom of carousel on small screens */
+.quick-strip-progress-bar-wrap {
+  display: none;
+  width: 72px;
+  height: 3px;
+  background: rgba(255, 255, 255, 0.15);
+  border-radius: 99px;
+  margin: 0.4rem auto 0;
+  overflow: hidden;
+}
+
+.quick-strip-progress-bar-fill {
+  height: 100%;
+  background: linear-gradient(90deg, #FF7A00, #FF8C00);
+  border-radius: 99px;
+  transition: width 0.15s ease-out;
+}
+
+/* ==========================================================================
+   Responsive Breakpoints - Convert to Smooth Horizontal Carousel
+   ========================================================================== */
+@media (max-width: 1024px) {
+  .quick-strip-row {
+    justify-content: flex-start;
+    gap: 1.35rem;
+    padding-left: 0.75rem;
+    padding-right: 0.75rem;
+  }
+
+  .quick-carousel-btn {
+    display: flex;
+  }
+
+  .quick-strip-progress-bar-wrap {
+    display: block;
+  }
 }
 
 @media (max-width: 768px) {
+  .quick-strip-container {
+    padding: 0.95rem 0 0.75rem;
+  }
+
   .quick-strip-row {
     justify-content: flex-start;
+    gap: 1.15rem;
+    padding: 0.35rem 0.5rem 0.5rem;
   }
+
   .avatar-circle {
     width: 56px;
     height: 56px;
+  }
+
+  .cat-title {
+    font-size: 0.78rem;
+  }
+
+  .icon-overlay {
+    width: 22px;
+    height: 22px;
+  }
+}
+
+@media (max-width: 480px) {
+  .quick-strip-container {
+    padding: 0.85rem 0 0.65rem;
+  }
+
+  .quick-strip-row {
+    gap: 0.95rem;
+    padding: 0.25rem 0.4rem 0.4rem;
+  }
+
+  .avatar-circle {
+    width: 52px;
+    height: 52px;
+  }
+
+  .cat-title {
+    font-size: 0.74rem;
+  }
+
+  .strip-pill-badge {
+    font-size: 0.58rem;
+    padding: 0.1rem 0.38rem;
   }
 }

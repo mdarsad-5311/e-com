@@ -1,11 +1,17 @@
 "use client";
 
+import { useState, useRef, useEffect, useCallback } from "react";
 import Link from "next/link";
-import { Headphones, Shirt, Home, Watch, Smartphone, Sparkles, Flame } from "lucide-react";
+import { Headphones, Shirt, Home, Watch, Smartphone, Sparkles, Flame, ChevronLeft, ChevronRight } from "lucide-react";
 import { categories } from "@/data/products";
 import "@/styles/category-quick-strip.css";
 
 export default function CategoryQuickStrip() {
+  const scrollRef = useRef<HTMLDivElement>(null);
+  const [canScrollLeft, setCanScrollLeft] = useState(false);
+  const [canScrollRight, setCanScrollRight] = useState(false);
+  const [scrollProgress, setScrollProgress] = useState(0);
+
   const quickCategories = [
     {
       id: "all-deals",
@@ -45,10 +51,58 @@ export default function CategoryQuickStrip() {
     },
   ];
 
+  const checkScroll = useCallback(() => {
+    const el = scrollRef.current;
+    if (!el) return;
+    const { scrollLeft, scrollWidth, clientWidth } = el;
+    setCanScrollLeft(scrollLeft > 5);
+    setCanScrollRight(scrollLeft < scrollWidth - clientWidth - 5);
+    const maxScroll = scrollWidth - clientWidth;
+    if (maxScroll > 0) {
+      setScrollProgress((scrollLeft / maxScroll) * 100);
+    }
+  }, []);
+
+  useEffect(() => {
+    const el = scrollRef.current;
+    if (!el) return;
+    checkScroll();
+    el.addEventListener("scroll", checkScroll, { passive: true });
+    window.addEventListener("resize", checkScroll);
+    return () => {
+      el.removeEventListener("scroll", checkScroll);
+      window.removeEventListener("resize", checkScroll);
+    };
+  }, [checkScroll]);
+
+  const handleScroll = (direction: "left" | "right") => {
+    const el = scrollRef.current;
+    if (!el) return;
+    const scrollAmount = direction === "left" ? -220 : 220;
+    el.scrollBy({ left: scrollAmount, behavior: "smooth" });
+  };
+
   return (
-    <div className="quick-strip-container">
-      <div className="container">
-        <div className="quick-strip-row no-scrollbar">
+    <section className="quick-strip-container" aria-label="Quick Category Carousel">
+      <div className="container quick-strip-wrapper">
+        {/* Left Arrow Button */}
+        <button
+          type="button"
+          className={`quick-carousel-btn quick-carousel-prev ${canScrollLeft ? "visible" : ""}`}
+          onClick={() => handleScroll("left")}
+          aria-label="Scroll categories left"
+        >
+          <ChevronLeft size={18} />
+        </button>
+
+        {/* Carousel Track */}
+        <div
+          ref={scrollRef}
+          className="quick-strip-row no-scrollbar"
+          tabIndex={0}
+          role="region"
+          aria-label="Category Carousel"
+        >
           {quickCategories.map((item) => {
             const IconComp = item.icon;
             return (
@@ -75,7 +129,25 @@ export default function CategoryQuickStrip() {
             );
           })}
         </div>
+
+        {/* Right Arrow Button */}
+        <button
+          type="button"
+          className={`quick-carousel-btn quick-carousel-next ${canScrollRight ? "visible" : ""}`}
+          onClick={() => handleScroll("right")}
+          aria-label="Scroll categories right"
+        >
+          <ChevronRight size={18} />
+        </button>
       </div>
-    </div>
+
+      {/* Mobile Carousel Progress Bar (Visible on Small Screens) */}
+      <div className="quick-strip-progress-bar-wrap">
+        <div
+          className="quick-strip-progress-bar-fill"
+          style={{ width: `${Math.max(15, Math.min(100, scrollProgress || 20))}%` }}
+        />
+      </div>
+    </section>
   );
 }

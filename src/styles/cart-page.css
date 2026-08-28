@@ -12,6 +12,18 @@
   padding: 0 1.5rem;
 }
 
+@media (max-width: 640px) {
+  .al-cart-main-container {
+    padding: 0 1rem;
+  }
+  .al-cart-main-heading {
+    font-size: 1.65rem;
+  }
+  .al-cart-header-title-row {
+    margin-bottom: 1.25rem;
+  }
+}
+
 .al-cart-header-title-row {
   display: flex;
   align-items: center;

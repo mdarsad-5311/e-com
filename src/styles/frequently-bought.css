@@ -198,5 +198,49 @@
 @media (max-width: 900px) {
   .al-fbt-grid {
     grid-template-columns: 1fr;
+    gap: 1.5rem;
+  }
+}
+
+@media (max-width: 600px) {
+  .al-fbt-section {
+    padding: 1.25rem 1rem;
+    margin: 1.5rem 0;
+  }
+  .al-fbt-items-flow {
+    justify-content: center;
+    gap: 0.5rem;
+  }
+  .al-fbt-single-item-wrap {
+    gap: 0.5rem;
+  }
+  .al-fbt-thumb-card {
+    width: 105px;
+  }
+  .al-fbt-thumb-link {
+    width: 80px;
+    height: 80px;
+  }
+  .al-fbt-plus-icon {
+    font-size: 1.1rem;
+  }
+  .al-fbt-cta-card {
+    padding: 1rem;
+  }
+}
+
+@media (max-width: 380px) {
+  .al-fbt-thumb-card {
+    width: 85px;
+  }
+  .al-fbt-thumb-link {
+    width: 68px;
+    height: 68px;
+  }
+  .al-fbt-item-name {
+    font-size: 0.7rem;
+  }
+  .al-fbt-item-price {
+    font-size: 0.78rem;
   }
 }

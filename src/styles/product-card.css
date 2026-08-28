@@ -58,46 +58,55 @@
   transform: scale(1.05);
 }
 
+/* Badges Container (Pills at Top-Left) */
+.al-card-badges {
+  position: absolute;
+  top: 0.6rem;
+  left: 0.6rem;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  max-width: calc(100% - 48px);
+  flex-wrap: wrap;
+  z-index: 2;
+  pointer-events: none;
+}
+
 /* Assured Badge (White Pill with Blue Shield Check) */
 .al-assured-pill {
-  position: absolute;
-  top: 0.65rem;
-  left: 0.65rem;
   background-color: rgba(255, 255, 255, 0.95);
   backdrop-filter: blur(4px);
   border: 1px solid #dbeafe;
   border-radius: 6px;
-  padding: 0.22rem 0.5rem;
+  padding: 0.2rem 0.45rem;
   display: inline-flex;
   align-items: center;
-  gap: 4px;
-  z-index: 2;
+  gap: 3px;
   box-shadow: 0 1px 4px rgba(0, 0, 0, 0.06);
-  font-size: 0.7rem;
+  font-size: 0.68rem;
   font-weight: 700;
   color: #0C2340;
+  white-space: nowrap;
 }
 
 .al-assured-icon {
   color: #2563eb;
+  flex-shrink: 0;
 }
 
 /* Sale Discount Badge (Red/Orange Pill) */
 .al-card-discount-pill {
-  position: absolute;
-  top: 0.65rem;
-  left: 5.5rem;
   background-color: #DC2626;
   color: #FFFFFF;
   border-radius: 6px;
-  padding: 0.22rem 0.45rem;
+  padding: 0.2rem 0.45rem;
   display: inline-flex;
   align-items: center;
-  z-index: 2;
   box-shadow: 0 1px 4px rgba(220, 38, 38, 0.2);
-  font-size: 0.68rem;
+  font-size: 0.66rem;
   font-weight: 800;
   letter-spacing: 0.02em;
+  white-space: nowrap;
 }
 
 /* Circular Wishlist Button */
@@ -269,27 +278,61 @@
 
 /* Mobile Responsiveness */
 @media (max-width: 480px) {
-  .al-card-body {
-    padding: 0.75rem 0.85rem 0.85rem;
-  }
-  
-  .al-card-title {
-    font-size: 0.88rem;
-    min-height: 2.5em;
-  }
-  
-  .al-card-price {
-    font-size: 1.05rem;
+  .al-card-badges {
+    top: 0.45rem;
+    left: 0.45rem;
+    gap: 3px;
+    max-width: calc(100% - 40px);
   }
 
-  .al-card-discount-pill {
-    left: 4.8rem;
+  .al-assured-pill {
     padding: 0.15rem 0.35rem;
     font-size: 0.62rem;
   }
 
+  .al-card-discount-pill {
+    padding: 0.15rem 0.35rem;
+    font-size: 0.62rem;
+  }
+
+  .al-wishlist-circle-btn {
+    top: 0.45rem;
+    right: 0.45rem;
+    width: 30px;
+    height: 30px;
+  }
+
+  .al-card-body {
+    padding: 0.7rem 0.75rem 0.75rem;
+  }
+  
+  .al-card-title {
+    font-size: 0.84rem;
+    min-height: 2.4em;
+    line-height: 1.3;
+    margin-bottom: 0.35rem;
+  }
+  
+  .al-card-price {
+    font-size: 1rem;
+  }
+
+  .al-card-orig-price {
+    font-size: 0.75rem;
+  }
+
   .al-cart-btn-rect {
-    width: 34px;
-    height: 34px;
+    width: 32px;
+    height: 32px;
+    border-radius: 6px;
+  }
+
+  .al-card-category {
+    font-size: 0.64rem;
+  }
+
+  .al-card-rating-badge {
+    font-size: 0.65rem;
+    padding: 1px 4px;
   }
 }

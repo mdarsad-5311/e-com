@@ -15,8 +15,9 @@ export default function BottomNav() {
   const isCart = pathname === "/cart";
   const isProfile = pathname.startsWith("/profile") || pathname === "/login" || pathname === "/register" || pathname.startsWith("/orders") || pathname.startsWith("/track-order");
   const isCheckout = pathname.startsWith("/checkout");
+  const isProductDetail = pathname.startsWith("/products/") && pathname !== "/products";
 
-  if (isCheckout) return null;
+  if (isCheckout || isProductDetail) return null;
 
   return (
     <nav className="al-bottom-nav">

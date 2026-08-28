@@ -201,6 +201,7 @@
 }
 
 /* 2-Column Product Grid */
+.al-products-grid,
 .al-fashion-products-grid-2col {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
@@ -669,6 +670,7 @@
     display: none;
   }
 
+  .al-products-grid,
   .al-fashion-products-grid-2col {
     grid-template-columns: repeat(2, 1fr);
     gap: 0.75rem;
@@ -690,6 +692,7 @@
 }
 
 @media (max-width: 480px) {
+  .al-products-grid,
   .al-fashion-products-grid-2col {
     grid-template-columns: repeat(2, 1fr);
     gap: 0.65rem;
@@ -705,5 +708,25 @@
 
   .al-fashion-card-price {
     font-size: 0.95rem;
+  }
+
+  .al-fashion-featured-card {
+    flex-direction: row;
+  }
+}
+
+@media (max-width: 340px) {
+  .al-products-grid,
+  .al-fashion-products-grid-2col {
+    grid-template-columns: 1fr;
+    gap: 0.75rem;
+  }
+  .al-fashion-featured-card {
+    flex-direction: column;
+  }
+  .al-fashion-featured-img-wrap {
+    width: 100%;
+    min-width: 100%;
+    height: 140px;
   }
 }

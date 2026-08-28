@@ -70,6 +70,12 @@
   overflow-x: auto;
   scroll-snap-type: x mandatory;
   padding-bottom: 0.5rem;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;
+}
+
+.carousel-track::-webkit-scrollbar {
+  display: none;
 }
 
 .carousel-item {
@@ -80,7 +86,18 @@
 }
 
 @media (max-width: 768px) {
+  .bestsellers-dark-section { padding: 2.5rem 0; }
   .bestsellers-dark-card { padding: 1.25rem; }
-  .bestseller-header { flex-direction: column; align-items: flex-start; gap: 1rem; }
+  .bestseller-header { flex-direction: column; align-items: flex-start; gap: 0.75rem; }
+  .dark-title { font-size: 1.65rem; }
   .carousel-item { flex: 0 0 240px; }
+  .carousel-track { gap: 1rem; }
+}
+
+@media (max-width: 480px) {
+  .bestsellers-dark-card { padding: 1rem 0.85rem; }
+  .dark-title { font-size: 1.4rem; }
+  .dark-subtitle { font-size: 0.85rem; }
+  .carousel-item { flex: 0 0 200px; }
+  .carousel-track { gap: 0.75rem; }
 }

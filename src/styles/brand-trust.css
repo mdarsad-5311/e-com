@@ -44,5 +44,11 @@
 @media (max-width: 480px) {
   .al-trust-grid {
     grid-template-columns: 1fr;
+    gap: 0.85rem;
+  }
+  .al-trust-label {
+    white-space: normal;
+    font-size: 0.82rem;
+    line-height: 1.35;
   }
 }

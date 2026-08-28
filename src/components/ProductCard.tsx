@@ -49,20 +49,21 @@ export default function ProductCard({ product }: ProductCardProps) {
     <div className="al-card-item">
       {/* Product Image Wrap & Overlay Actions */}
       <div className="al-card-img-wrap-outer">
-        {/* Assured Badge (White Pill with Blue Shield Check) */}
-        {product.isAssured !== false && (
-          <div className="al-assured-pill">
-            <ShieldCheck size={14} className="al-assured-icon" />
-            <span>Assured</span>
-          </div>
-        )}
+        {/* Badges Container (Assured + Discount) */}
+        <div className="al-card-badges">
+          {product.isAssured !== false && (
+            <div className="al-assured-pill">
+              <ShieldCheck size={13} className="al-assured-icon" />
+              <span>Assured</span>
+            </div>
+          )}
 
-        {/* Sale Discount Badge */}
-        {discountPct > 0 && (
-          <div className="al-card-discount-pill">
-            <span>{discountPct}% OFF</span>
-          </div>
-        )}
+          {discountPct > 0 && (
+            <div className="al-card-discount-pill">
+              <span>{discountPct}% OFF</span>
+            </div>
+          )}
+        </div>
 
         {/* Circular Wishlist Button */}
         <button
