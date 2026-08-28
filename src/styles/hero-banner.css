@@ -114,7 +114,7 @@
 .al-hero-mobile-view {
   display: none;
   position: relative;
-  min-height: 380px;
+  min-height: 240px;
   align-items: flex-end;
   overflow: hidden;
   padding: 0;
@@ -135,8 +135,8 @@
   inset: 0;
   background: linear-gradient(
     180deg,
-    rgba(0, 26, 51, 0.2) 0%,
-    rgba(0, 26, 51, 0.75) 60%,
+    rgba(0, 26, 51, 0.15) 0%,
+    rgba(0, 26, 51, 0.7) 50%,
     rgba(0, 26, 51, 0.95) 100%
   );
   z-index: 2;
@@ -145,7 +145,7 @@
 .al-hero-mobile-content {
   position: relative;
   z-index: 3;
-  padding: 1.75rem 1.25rem 2rem;
+  padding: 1rem 1rem 1.15rem;
   width: 100%;
   display: flex;
   flex-direction: column;
@@ -156,46 +156,48 @@
   background: rgba(255, 140, 0, 0.2);
   border: 1px solid rgba(255, 140, 0, 0.5);
   color: #FF8C00;
-  font-size: 0.72rem;
+  font-size: 0.7rem;
   font-weight: 800;
-  padding: 0.25rem 0.65rem;
+  padding: 0.2rem 0.55rem;
   border-radius: 4px;
   display: inline-flex;
   align-items: center;
-  gap: 0.3rem;
-  letter-spacing: 0.04em;
-  margin-bottom: 0.75rem;
+  gap: 0.25rem;
+  letter-spacing: 0.03em;
+  margin-bottom: 0.35rem;
   backdrop-filter: blur(4px);
 }
 
 .al-hero-mobile-title {
-  font-size: clamp(1.65rem, 7vw, 2.15rem);
+  font-size: clamp(1.3rem, 5.5vw, 1.65rem);
   font-weight: 900;
   color: #ffffff;
   letter-spacing: -0.03em;
-  margin-bottom: 0.4rem;
-  line-height: 1.1;
+  margin-bottom: 0.25rem;
+  line-height: 1.15;
 }
 
 .al-hero-mobile-sub {
-  font-size: 0.9rem;
+  font-size: 0.8rem;
   color: #cbd5e1;
-  margin-bottom: 1.25rem;
+  margin-bottom: 0.75rem;
+  line-height: 1.3;
 }
 
 .al-hero-btn-shop-mobile {
   width: 100%;
-  height: 46px;
+  height: 38px;
   background-color: #FF8C00;
   color: #ffffff;
-  font-size: 0.95rem;
+  font-size: 0.86rem;
   font-weight: 700;
-  border-radius: 8px;
+  border-radius: 6px;
   display: flex;
   align-items: center;
   justify-content: center;
+  gap: 0.35rem;
   text-decoration: none;
-  box-shadow: 0 4px 14px rgba(255, 140, 0, 0.35);
+  box-shadow: 0 3px 10px rgba(255, 140, 0, 0.3);
   transition: background-color 0.15s ease;
 }
 

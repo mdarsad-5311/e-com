@@ -146,16 +146,19 @@ export default function Navbar() {
           </form>
         </div>
 
-        {/* Right Icon Actions (Search on mobile, Cart, Wishlist, Profile) */}
+        {/* Right Icon Actions (Cart, Wishlist, Profile) */}
         <div className="al-actions-col">
-          {/* Mobile-only Search Button */}
-          <Link
-            href="/search"
-            className="al-action-btn al-mobile-search-icon"
-            aria-label="Search"
-            title="Search"
+          {/* Wishlist Link */}
+          <Link 
+            href="/wishlist" 
+            className="al-action-btn" 
+            title="Wishlist"
+            aria-label="Wishlist"
           >
-            <Search size={20} strokeWidth={1.8} />
+            <Heart size={20} strokeWidth={1.8} />
+            {wishlistCount > 0 && (
+              <span className="al-badge-count">{wishlistCount}</span>
+            )}
           </Link>
 
           {/* Shopping Cart Button */}
@@ -171,19 +174,6 @@ export default function Navbar() {
               <span className="al-badge-count">{totalItemsCount}</span>
             )}
           </button>
-
-          {/* Wishlist Link */}
-          <Link 
-            href="/wishlist" 
-            className="al-action-btn" 
-            title="Wishlist"
-            aria-label="Wishlist"
-          >
-            <Heart size={20} strokeWidth={1.8} />
-            {wishlistCount > 0 && (
-              <span className="al-badge-count">{wishlistCount}</span>
-            )}
-          </Link>
 
           {/* User Profile / Dropdown */}
           <div 
@@ -233,6 +223,33 @@ export default function Navbar() {
               </div>
             )}
           </div>
+        </div>
+      </div>
+
+      {/* Flipkart-Style Full-Width Mobile Search Bar */}
+      <div className="al-mobile-search-bar-wrap">
+        <div className="header-container">
+          <form className="al-mobile-search-form" onSubmit={handleSearchSubmit}>
+            <Search size={17} className="al-mobile-search-icon-left" />
+            <input 
+              type="text"
+              placeholder="Search for products, brands and more..."
+              value={searchInput}
+              onChange={(e) => setSearchInput(e.target.value)}
+              className="al-mobile-search-input"
+              aria-label="Search products"
+            />
+            {searchInput.trim().length > 0 && (
+              <button 
+                type="button" 
+                className="al-mobile-search-clear-btn"
+                onClick={() => setSearchInput("")}
+                aria-label="Clear search"
+              >
+                <X size={15} />
+              </button>
+            )}
+          </form>
         </div>
       </div>
 
