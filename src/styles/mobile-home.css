@@ -1,0 +1,1112 @@
+/* ==========================================================================
+   AL-UMAIMA MOBILE SHOPPING-APP HOME PAGE STYLES
+   Scoped strictly to Mobile screens (max-width: 768px)
+   Referenced from modern shopping-app UX (Flipkart layout architecture)
+   ========================================================================== */
+
+/* By default on Desktop & Tablet, mobile home view is hidden */
+.al-mobile-home-view {
+  display: none;
+}
+
+.al-desktop-home-view {
+  display: block;
+}
+
+/* ==========================================================================
+   MOBILE BREAKPOINT (max-width: 768px)
+   ========================================================================== */
+@media (max-width: 768px) {
+  /* Toggle views */
+  .al-desktop-home-view {
+    display: none !important;
+  }
+
+  .al-mobile-home-view {
+    display: block !important;
+    width: 100%;
+    max-width: 100vw;
+    overflow-x: hidden;
+    background: #F8FAFC;
+    padding-bottom: calc(72px + env(safe-area-inset-bottom, 16px));
+    font-family: inherit;
+  }
+
+  /* When on mobile Home Page, hide standard legacy header */
+  .al-header.al-header-home,
+  body.on-mobile-home .al-header {
+    display: none !important;
+  }
+
+  /* Adjust main container padding on mobile home */
+  main:has(.al-mobile-home-view),
+  body.on-mobile-home .main-content {
+    padding-top: 0 !important;
+    margin-top: 0 !important;
+  }
+
+  .al-mobile-home-view-inner {
+    width: 100%;
+    max-width: 100%;
+    margin: 0 auto;
+  }
+
+  /* ------------------------------------------------------------------------
+     1. TOP AREA (App Branding, Address Selector, Actions)
+     ------------------------------------------------------------------------ */
+  .al-mobile-home-header {
+    background: linear-gradient(180deg, #E0F2FE 0%, #F0F9FF 60%, #F8FAFC 100%);
+    padding: 0.75rem 1rem 0.6rem;
+    border-bottom-left-radius: 18px;
+    border-bottom-right-radius: 18px;
+    box-shadow: 0 4px 14px rgba(0, 26, 51, 0.04);
+  }
+
+  .al-mobile-header-top-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 0.5rem;
+  }
+
+  .al-mobile-brand-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    text-decoration: none;
+    color: #001A33;
+  }
+
+  .al-mobile-brand-badge {
+    width: 28px;
+    height: 28px;
+    border-radius: 8px;
+    background: linear-gradient(135deg, #001A33 0%, #003366 100%);
+    color: #FF7A00;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 2px 6px rgba(0, 26, 51, 0.2);
+  }
+
+  .al-mobile-brand-sparkle {
+    color: #FF7A00;
+  }
+
+  .al-mobile-brand-title {
+    font-size: 1.15rem;
+    font-weight: 900;
+    letter-spacing: -0.02em;
+    color: #001A33;
+  }
+
+  .al-mobile-header-actions {
+    display: flex;
+    align-items: center;
+    gap: 0.65rem;
+  }
+
+  .al-mobile-coin-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.3rem;
+    background: #FFFFFF;
+    padding: 0.25rem 0.6rem;
+    border-radius: 999px;
+    text-decoration: none;
+    border: 1px solid #E2E8F0;
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.04);
+  }
+
+  .al-mobile-coin-icon {
+    color: #EAB308;
+    fill: #FDE047;
+  }
+
+  .al-mobile-coin-val {
+    font-size: 0.75rem;
+    font-weight: 700;
+    color: #0F172A;
+  }
+
+  .al-mobile-header-btn {
+    position: relative;
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    background: #FFFFFF;
+    border: 1px solid #E2E8F0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #0F172A;
+    text-decoration: none;
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.04);
+  }
+
+  .al-mobile-badge-dot {
+    position: absolute;
+    top: 6px;
+    right: 6px;
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background: #EF4444;
+    border: 1.5px solid #FFFFFF;
+  }
+
+  /* Address / Location Strip (Flipkart Reference Style) */
+  .al-mobile-location-strip {
+    margin-bottom: 0.65rem;
+  }
+
+  .al-mobile-location-btn {
+    background: none;
+    border: none;
+    padding: 0;
+    margin: 0;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    cursor: pointer;
+    text-align: left;
+    max-width: 100%;
+  }
+
+  .al-mobile-loc-pin {
+    color: #0284C7;
+    flex-shrink: 0;
+  }
+
+  .al-mobile-loc-text {
+    display: flex;
+    align-items: center;
+    gap: 0.35rem;
+    font-size: 0.78rem;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    color: #334155;
+  }
+
+  .al-mobile-loc-tag {
+    font-weight: 800;
+    color: #0F172A;
+    font-size: 0.75rem;
+    letter-spacing: 0.02em;
+  }
+
+  .al-mobile-loc-summary {
+    color: #64748B;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 220px;
+  }
+
+  .al-mobile-loc-arrow {
+    color: #64748B;
+    flex-shrink: 0;
+  }
+
+  /* ------------------------------------------------------------------------
+     2. SEARCH BAR
+     ------------------------------------------------------------------------ */
+  .al-mobile-searchbar-container {
+    width: 100%;
+  }
+
+  .al-mobile-searchbar-form {
+    display: flex;
+    align-items: center;
+    width: 100%;
+    background: #FFFFFF;
+    border: 1.5px solid #CBD5E1;
+    border-radius: 999px;
+    padding: 0.35rem 0.75rem;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+    transition: all 0.2s ease;
+  }
+
+  .al-mobile-searchbar-form:focus-within {
+    border-color: #0284C7;
+    box-shadow: 0 3px 12px rgba(2, 132, 199, 0.15);
+  }
+
+  .al-mobile-search-icon-left {
+    color: #64748B;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-right: 0.5rem;
+    flex-shrink: 0;
+  }
+
+  .al-mobile-search-input {
+    flex: 1;
+    border: none;
+    background: transparent;
+    outline: none;
+    font-size: 0.85rem;
+    color: #0F172A;
+    min-width: 0;
+  }
+
+  .al-mobile-search-input::placeholder {
+    color: #94A3B8;
+    font-size: 0.82rem;
+  }
+
+  .al-mobile-search-actions-right {
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+    margin-left: 0.4rem;
+  }
+
+  .al-mobile-search-action-btn {
+    background: none;
+    border: none;
+    padding: 0.25rem;
+    color: #64748B;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    transition: color 0.15s ease;
+  }
+
+  .al-mobile-search-action-btn:hover {
+    color: #0284C7;
+  }
+
+  .al-mobile-search-action-btn.listening {
+    color: #EF4444;
+    animation: pulse 1.2s infinite;
+  }
+
+  /* ------------------------------------------------------------------------
+     3. CATEGORY SHORTCUTS (Horizontal scroller with active indicator)
+     ------------------------------------------------------------------------ */
+  .al-mobile-cat-scroller-wrap {
+    width: 100%;
+    background: #FFFFFF;
+    padding: 0.65rem 0.5rem 0.35rem;
+    margin-bottom: 0.75rem;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.02);
+  }
+
+  .al-mobile-cat-track {
+    display: flex;
+    align-items: flex-start;
+    gap: 1.1rem;
+    overflow-x: auto;
+    padding: 0 0.5rem 0.2rem;
+    -webkit-overflow-scrolling: touch;
+    scroll-behavior: smooth;
+  }
+
+  .al-mobile-cat-item {
+    position: relative;
+    background: none;
+    border: none;
+    padding: 0 0 0.45rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.35rem;
+    cursor: pointer;
+    flex-shrink: 0;
+    min-width: 54px;
+    text-decoration: none;
+  }
+
+  .al-mobile-cat-icon-frame {
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    background: #F1F5F9;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s ease;
+  }
+
+  .al-mobile-cat-icon-circle {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #334155;
+  }
+
+  .al-mobile-cat-item.active .al-mobile-cat-icon-frame {
+    background: #E0F2FE;
+    box-shadow: 0 2px 8px rgba(2, 132, 199, 0.2);
+  }
+
+  .al-mobile-cat-item.active .al-mobile-cat-icon-circle {
+    color: #0284C7;
+  }
+
+  .al-mobile-cat-title {
+    font-size: 0.72rem;
+    font-weight: 500;
+    color: #475569;
+    white-space: nowrap;
+  }
+
+  .al-mobile-cat-item.active .al-mobile-cat-title {
+    color: #0284C7;
+    font-weight: 700;
+  }
+
+  /* Active Indicator Line (Matches reference screenshot blue underline) */
+  .al-mobile-cat-active-bar {
+    position: absolute;
+    bottom: 0;
+    left: 15%;
+    right: 15%;
+    height: 3px;
+    border-radius: 999px;
+    background-color: #0284C7;
+  }
+
+  /* ------------------------------------------------------------------------
+     4. PROMOTIONAL BANNER CAROUSEL
+     ------------------------------------------------------------------------ */
+  .al-mobile-carousel-section {
+    padding: 0 0.85rem;
+    margin-bottom: 1rem;
+  }
+
+  .al-mobile-carousel-viewport {
+    width: 100%;
+    overflow: hidden;
+    border-radius: 16px;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
+  }
+
+  .al-mobile-carousel-track {
+    display: flex;
+    width: 100%;
+    transition: transform 0.4s cubic-bezier(0.25, 1, 0.5, 1);
+  }
+
+  .al-mobile-carousel-slide {
+    flex: 0 0 100%;
+    width: 100%;
+  }
+
+  .al-mobile-banner-card {
+    display: block;
+    text-decoration: none;
+    width: 100%;
+    border-radius: 16px;
+    overflow: hidden;
+  }
+
+  .al-mobile-banner-bg {
+    position: relative;
+    width: 100%;
+    min-height: 185px;
+    display: flex;
+    align-items: center;
+    overflow: hidden;
+  }
+
+  .al-mobile-banner-img-wrap {
+    position: absolute;
+    right: 0;
+    top: 0;
+    bottom: 0;
+    width: 58%;
+    overflow: hidden;
+  }
+
+  .al-mobile-banner-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center;
+  }
+
+  .al-mobile-banner-gradient-overlay {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(90deg, rgba(15, 23, 42, 0.95) 0%, rgba(15, 23, 42, 0.75) 45%, rgba(15, 23, 42, 0.1) 100%);
+  }
+
+  .al-mobile-banner-content {
+    position: relative;
+    z-index: 2;
+    padding: 1.1rem;
+    max-width: 65%;
+    color: #FFFFFF;
+  }
+
+  .al-mobile-banner-tag {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.25rem;
+    font-size: 0.68rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.03em;
+    color: #FDBA74;
+    margin-bottom: 0.35rem;
+  }
+
+  .al-mobile-banner-heading {
+    font-size: 1.05rem;
+    font-weight: 800;
+    line-height: 1.25;
+    color: #FFFFFF;
+    margin: 0 0 0.25rem;
+  }
+
+  .al-mobile-banner-subheading {
+    font-size: 0.72rem;
+    color: #CBD5E1;
+    line-height: 1.35;
+    margin: 0 0 0.65rem;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+
+  .al-mobile-banner-cta-row {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+
+  .al-mobile-banner-offer-pill {
+    background: #C2410C;
+    color: #FFFFFF;
+    font-size: 0.68rem;
+    font-weight: 800;
+    padding: 0.25rem 0.55rem;
+    border-radius: 6px;
+    letter-spacing: 0.02em;
+  }
+
+  .al-mobile-banner-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.2rem;
+    font-size: 0.7rem;
+    font-weight: 600;
+    color: #FFFFFF;
+    opacity: 0.9;
+  }
+
+  /* Carousel Pagination Dots (--- indicator style) */
+  .al-mobile-carousel-pagination {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.35rem;
+    margin-top: 0.55rem;
+  }
+
+  .al-carousel-dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 999px;
+    background: #CBD5E1;
+    border: none;
+    padding: 0;
+    cursor: pointer;
+    transition: all 0.25s ease;
+  }
+
+  .al-carousel-dot.active {
+    width: 22px;
+    height: 5px;
+    background: #0F172A;
+  }
+
+  /* ------------------------------------------------------------------------
+     5. PERSONALIZED / RECENTLY VIEWED SECTION ("Still Looking For These?")
+     Matching reference screenshot rounded card container & layout
+     ------------------------------------------------------------------------ */
+  .al-mobile-continue-shopping-section {
+    padding: 0 0.85rem;
+    margin-bottom: 1.15rem;
+  }
+
+  .al-mobile-continue-shopping-card {
+    background: linear-gradient(180deg, #EFF6FF 0%, #FFFFFF 100%);
+    border: 1px solid #DBEAFE;
+    border-radius: 18px;
+    padding: 0.9rem 0.85rem;
+    box-shadow: 0 2px 10px rgba(2, 132, 199, 0.05);
+  }
+
+  .al-mobile-continue-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 0.75rem;
+  }
+
+  .al-mobile-continue-title-row {
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+  }
+
+  .al-mobile-continue-title {
+    font-size: 0.95rem;
+    font-weight: 800;
+    color: #0F172A;
+    margin: 0;
+  }
+
+  .al-mobile-continue-view-all {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.2rem;
+    font-size: 0.75rem;
+    font-weight: 600;
+    color: #0284C7;
+    text-decoration: none;
+  }
+
+  .al-mobile-continue-scroller {
+    display: flex;
+    gap: 0.75rem;
+    overflow-x: auto;
+    padding-bottom: 0.35rem;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .al-mobile-continue-item {
+    flex: 0 0 115px;
+    background: #FFFFFF;
+    border: 1px solid #E2E8F0;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.03);
+    transition: transform 0.15s ease;
+  }
+
+  .al-mobile-continue-item-link {
+    display: flex;
+    flex-direction: column;
+    text-decoration: none;
+    color: inherit;
+    height: 100%;
+  }
+
+  .al-mobile-continue-img-box {
+    position: relative;
+    width: 100%;
+    height: 110px;
+    background: #F8FAFC;
+    overflow: hidden;
+  }
+
+  .al-mobile-continue-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .al-mobile-continue-discount-badge {
+    position: absolute;
+    top: 5px;
+    left: 5px;
+    background: #10B981;
+    color: #FFFFFF;
+    font-size: 0.58rem;
+    font-weight: 800;
+    padding: 0.15rem 0.35rem;
+    border-radius: 4px;
+  }
+
+  .al-mobile-continue-info {
+    padding: 0.5rem 0.45rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+    flex: 1;
+  }
+
+  .al-mobile-continue-prod-name {
+    font-size: 0.72rem;
+    font-weight: 600;
+    color: #1E293B;
+    margin: 0;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .al-mobile-continue-price-row {
+    display: flex;
+    align-items: baseline;
+    gap: 0.3rem;
+  }
+
+  .al-mobile-continue-price {
+    font-size: 0.78rem;
+    font-weight: 800;
+    color: #0F172A;
+  }
+
+  .al-mobile-continue-orig-price {
+    font-size: 0.65rem;
+    color: #94A3B8;
+    text-decoration: line-through;
+  }
+
+  .al-mobile-continue-cta-tag {
+    margin-top: auto;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.2rem;
+    font-size: 0.65rem;
+    font-weight: 700;
+    color: #0284C7;
+    padding-top: 0.2rem;
+  }
+
+  /* ------------------------------------------------------------------------
+     6. SUGGESTED PRODUCTS (2-Column Responsive Grid)
+     ------------------------------------------------------------------------ */
+  .al-mobile-suggested-section {
+    padding: 0 0.85rem;
+    margin-bottom: 1.5rem;
+  }
+
+  .al-mobile-suggested-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 0.75rem;
+  }
+
+  .al-mobile-suggested-title {
+    font-size: 1.05rem;
+    font-weight: 800;
+    color: #0F172A;
+    margin: 0;
+  }
+
+  .al-mobile-suggested-subtitle {
+    font-size: 0.72rem;
+    color: #64748B;
+    display: block;
+    margin-top: 0.15rem;
+  }
+
+  .al-mobile-suggested-arrow-btn {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    background: #0F172A;
+    color: #FFFFFF;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-decoration: none;
+    flex-shrink: 0;
+    box-shadow: 0 2px 6px rgba(15, 23, 42, 0.2);
+  }
+
+  .al-mobile-products-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 0.75rem;
+  }
+
+  .al-mobile-product-card {
+    background: #FFFFFF;
+    border: 1px solid #E2E8F0;
+    border-radius: 14px;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.03);
+    transition: transform 0.15s ease, box-shadow 0.15s ease;
+  }
+
+  .al-mobile-card-img-wrap {
+    position: relative;
+    width: 100%;
+    aspect-ratio: 1 / 1;
+    background: #F8FAFC;
+    overflow: hidden;
+  }
+
+  .al-mobile-card-img-link {
+    display: block;
+    width: 100%;
+    height: 100%;
+  }
+
+  .al-mobile-card-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.3s ease;
+  }
+
+  .al-mobile-card-badges {
+    position: absolute;
+    top: 6px;
+    left: 6px;
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+    pointer-events: none;
+  }
+
+  .al-mobile-badge-assured {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.2rem;
+    background: #001A33;
+    color: #FF7A00;
+    font-size: 0.58rem;
+    font-weight: 800;
+    padding: 0.15rem 0.4rem;
+    border-radius: 4px;
+    letter-spacing: 0.02em;
+  }
+
+  .al-mobile-badge-discount {
+    background: #0284C7;
+    color: #FFFFFF;
+    font-size: 0.58rem;
+    font-weight: 800;
+    padding: 0.15rem 0.4rem;
+    border-radius: 4px;
+    letter-spacing: 0.02em;
+  }
+
+  .al-mobile-card-wishlist-btn {
+    position: absolute;
+    top: 6px;
+    right: 6px;
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.9);
+    border: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.1);
+  }
+
+  .al-mobile-card-body {
+    padding: 0.65rem 0.6rem;
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    gap: 0.25rem;
+  }
+
+  .al-mobile-card-meta {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    font-size: 0.68rem;
+  }
+
+  .al-mobile-card-cat-name {
+    font-weight: 700;
+    color: #64748B;
+    text-transform: uppercase;
+    letter-spacing: 0.02em;
+    font-size: 0.62rem;
+  }
+
+  .al-mobile-card-rating {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.2rem;
+    font-weight: 700;
+    color: #0F172A;
+    font-size: 0.68rem;
+  }
+
+  .al-mobile-card-title-link {
+    text-decoration: none;
+    color: inherit;
+  }
+
+  .al-mobile-card-title {
+    font-size: 0.78rem;
+    font-weight: 600;
+    color: #1E293B;
+    margin: 0;
+    line-height: 1.35;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    min-height: 2.1rem;
+  }
+
+  .al-mobile-card-bottom-row {
+    margin-top: auto;
+    padding-top: 0.35rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .al-mobile-card-price-group {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .al-mobile-card-price {
+    font-size: 0.88rem;
+    font-weight: 800;
+    color: #0F172A;
+  }
+
+  .al-mobile-card-orig-price {
+    font-size: 0.68rem;
+    color: #94A3B8;
+    text-decoration: line-through;
+  }
+
+  .al-mobile-card-cart-btn {
+    width: 32px;
+    height: 32px;
+    border-radius: 8px;
+    background: #001A33;
+    color: #FFFFFF;
+    border: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.15s ease;
+  }
+
+  .al-mobile-card-cart-btn.added {
+    background: #10B981;
+  }
+
+  /* ------------------------------------------------------------------------
+     7. ADDRESS SELECTOR BOTTOM SHEET MODAL
+     ------------------------------------------------------------------------ */
+  .al-mobile-sheet-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.5);
+    z-index: 100000;
+    display: flex;
+    align-items: flex-end;
+    animation: fadeIn 0.2s ease;
+  }
+
+  .al-mobile-sheet-content {
+    width: 100%;
+    max-height: 80vh;
+    background: #FFFFFF;
+    border-top-left-radius: 20px;
+    border-top-right-radius: 20px;
+    padding: 0.75rem 1.25rem calc(1.5rem + env(safe-area-inset-bottom, 16px));
+    overflow-y: auto;
+    animation: slideUp 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  .al-mobile-sheet-drag-handle {
+    width: 36px;
+    height: 4px;
+    border-radius: 999px;
+    background: #CBD5E1;
+    margin: 0 auto 0.75rem;
+  }
+
+  .al-mobile-sheet-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 0.35rem;
+  }
+
+  .al-mobile-sheet-title-wrap {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+
+  .al-mobile-sheet-title {
+    font-size: 1rem;
+    font-weight: 800;
+    color: #0F172A;
+    margin: 0;
+  }
+
+  .al-mobile-sheet-close {
+    background: none;
+    border: none;
+    color: #64748B;
+    cursor: pointer;
+    padding: 0.25rem;
+  }
+
+  .al-mobile-sheet-desc {
+    font-size: 0.78rem;
+    color: #64748B;
+    margin: 0 0 1rem;
+  }
+
+  .al-mobile-address-list {
+    display: flex;
+    flex-direction: column;
+    gap: 0.65rem;
+    margin-bottom: 1.25rem;
+  }
+
+  .al-mobile-address-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.75rem;
+    padding: 0.75rem 0.85rem;
+    border: 1.5px solid #E2E8F0;
+    border-radius: 12px;
+    cursor: pointer;
+    transition: all 0.15s ease;
+  }
+
+  .al-mobile-address-item.selected {
+    border-color: #0284C7;
+    background: #F0F9FF;
+  }
+
+  .al-mobile-addr-radio {
+    margin-top: 0.2rem;
+  }
+
+  .al-radio-dot {
+    display: block;
+    width: 16px;
+    height: 16px;
+    border-radius: 50%;
+    border: 2px solid #94A3B8;
+  }
+
+  .al-radio-dot.active {
+    border-color: #0284C7;
+    background: radial-gradient(circle, #0284C7 45%, transparent 55%);
+  }
+
+  .al-mobile-addr-info {
+    flex: 1;
+  }
+
+  .al-mobile-addr-label-row {
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+    margin-bottom: 0.2rem;
+  }
+
+  .al-mobile-addr-type-pill {
+    background: #001A33;
+    color: #FFFFFF;
+    font-size: 0.65rem;
+    font-weight: 700;
+    padding: 0.1rem 0.4rem;
+    border-radius: 4px;
+  }
+
+  .al-mobile-addr-default-tag {
+    background: #E2E8F0;
+    color: #475569;
+    font-size: 0.62rem;
+    font-weight: 600;
+    padding: 0.1rem 0.35rem;
+    border-radius: 4px;
+  }
+
+  .al-mobile-addr-recipient {
+    font-size: 0.78rem;
+    font-weight: 700;
+    color: #0F172A;
+  }
+
+  .al-mobile-addr-street {
+    font-size: 0.72rem;
+    color: #64748B;
+    margin: 0;
+    line-height: 1.35;
+  }
+
+  .al-mobile-addr-check {
+    color: #0284C7;
+    flex-shrink: 0;
+    margin-top: 0.2rem;
+  }
+
+  .al-mobile-sheet-add-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.35rem;
+    width: 100%;
+    padding: 0.75rem;
+    border: 1.5px dashed #0284C7;
+    border-radius: 12px;
+    color: #0284C7;
+    font-size: 0.82rem;
+    font-weight: 700;
+    text-decoration: none;
+  }
+}
+
+/* ==========================================================================
+   TARGETED SCREEN WIDTH TUNING (320px - 430px)
+   ========================================================================== */
+@media (max-width: 360px) {
+  .al-mobile-loc-summary {
+    max-width: 140px;
+  }
+
+  .al-mobile-banner-bg {
+    min-height: 170px;
+  }
+
+  .al-mobile-banner-content {
+    max-width: 75%;
+    padding: 0.85rem;
+  }
+
+  .al-mobile-banner-heading {
+    font-size: 0.95rem;
+  }
+
+  .al-mobile-continue-item {
+    flex: 0 0 100px;
+  }
+
+  .al-mobile-continue-img-box {
+    height: 95px;
+  }
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes slideUp {
+  from { transform: translateY(100%); }
+  to { transform: translateY(0); }
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.4; }
+}

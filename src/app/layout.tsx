@@ -46,8 +46,7 @@ import "@/styles/trending-now.css";
 import "@/styles/size-guide-modal.css";
 import "@/styles/pincode-checker.css";
 import "@/styles/frequently-bought.css";
-
-
+import "@/styles/mobile-home.css";
 
 import AppProviders from "@/components/AppProviders";
 import { Metadata } from "next";

@@ -93,7 +93,7 @@ export default function Navbar() {
   }
 
   return (
-    <header className="al-header">
+    <header className={`al-header ${pathname === "/" ? "al-header-home" : ""}`}>
       <div className="header-container al-header-inner">
         {/* Brand Logo */}
         <div className="al-brand-col">
