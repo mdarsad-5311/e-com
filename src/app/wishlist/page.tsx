@@ -4,20 +4,29 @@ import Link from "next/link";
 import { Heart, ShoppingBag, Trash2, ArrowRight, Check } from "lucide-react";
 import { useWishlist } from "@/context/WishlistContext";
 import { useCart } from "@/context/CartContext";
+import { useToast } from "@/context/ToastContext";
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import "@/styles/wishlist.css";
 
 export default function WishlistPage() {
-  const { wishlist, removeFromWishlist } = useWishlist();
+  const { wishlist, removeFromWishlist, moveToCart } = useWishlist();
   const { addToCart } = useCart();
-  const [movedId, setMovedId] = useState<string | null>(null);
+  const { showToast } = useToast();
+  const [movedId, setMovedId] = useState<string | number | null>(null);
 
-  const handleMoveToCart = (product: any) => {
-    addToCart(product, 1);
+  const handleMoveToCart = async (product: any) => {
     setMovedId(product.id);
+    const success = await moveToCart(product.id);
+    if (success) {
+      showToast(`${product.title} moved to cart!`);
+    } else {
+      // Fallback to client-side cart add if server-side wishlist move fails or is offline
+      addToCart(product, 1);
+      await removeFromWishlist(product.id);
+      showToast(`${product.title} added to cart`);
+    }
     setTimeout(() => {
-      removeFromWishlist(product.id);
       setMovedId(null);
     }, 1200);
   };
@@ -46,7 +55,7 @@ export default function WishlistPage() {
                 transition={{ duration: 0.3 }}
                 className="wishlist-card"
               >
-                <button 
+                <button
                   onClick={() => removeFromWishlist(product.id)}
                   className="remove-wishlist-btn"
                   title="Remove from wishlist"
@@ -59,21 +68,22 @@ export default function WishlistPage() {
                 </div>
 
                 <div className="wishlist-card-content">
-                  <span className="wishlist-cat">{product.categoryName}</span>
-                  <Link href={`/products/${product.id}`}>
+                  <span className="wishlist-cat">{product.categoryName || product.category}</span>
+                  <Link href={`/products/${product.slug || product.id}`}>
                     <h3 className="wishlist-title">{product.title}</h3>
                   </Link>
 
                   <div className="wishlist-price-row">
-                    <span className="current-price">${product.price.toFixed(2)}</span>
+                    <span className="current-price">${Number(product.price).toFixed(2)}</span>
                     {product.originalPrice && (
-                      <span className="old-price">${product.originalPrice.toFixed(2)}</span>
+                      <span className="old-price">${Number(product.originalPrice).toFixed(2)}</span>
                     )}
                   </div>
 
                   <button
                     className={`btn btn-primary move-cart-btn ${movedId === product.id ? "moved" : ""}`}
                     onClick={() => handleMoveToCart(product)}
+                    disabled={movedId === product.id}
                   >
                     {movedId === product.id ? (
                       <>
