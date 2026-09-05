@@ -1,6 +1,7 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { useRouter } from "next/navigation";
 import Image from "next/image";
 import { 
   TrendingUp, 
@@ -19,7 +20,15 @@ import { useFocusTrap } from "@/hooks/useFocusTrap";
 import "@/styles/admin.css";
 
 export default function AdminDashboardPage() {
-  const { isAdmin, loginAsAdmin, orders, updateOrderStatus } = useAuth();
+  const router = useRouter();
+  const { user, isAdmin, isLoading, loginAsAdmin, orders, updateOrderStatus } = useAuth();
+
+  // Protected Route Guard (STEP 6G)
+  useEffect(() => {
+    if (!isLoading && !user) {
+      router.push("/login?redirect=" + encodeURIComponent("/admin"));
+    }
+  }, [isLoading, user, router]);
 
   const [activeTab, setActiveTab] = useState<"overview" | "orders" | "products" | "users">("overview");
   const [productList, setProductList] = useState<Product[]>(initialProducts);
@@ -80,6 +89,14 @@ export default function AdminDashboardPage() {
   };
 
   const modalRef = useFocusTrap<HTMLDivElement>(isAddProductModalOpen, () => setIsAddProductModalOpen(false));
+
+  if (isLoading) {
+    return (
+      <div className="admin-root-container" style={{ minHeight: "60vh", display: "flex", alignItems: "center", justifyContent: "center" }}>
+        <p style={{ color: "var(--text-muted)" }}>Loading admin dashboard...</p>
+      </div>
+    );
+  }
 
   if (!isAdmin) {
     return (

@@ -2,12 +2,34 @@
 
 import { useRef } from "react";
 import { Flame, ChevronLeft, ChevronRight } from "lucide-react";
-import { products, Product } from "@/data/products";
+import { products as fallbackProducts, Product } from "@/data/products";
+import { getBestSellers } from "@/lib/products";
+import { useEffect, useState } from "react";
 import ProductCard from "./ProductCard";
 import "@/styles/best-sellers.css";
 
 export default function BestSellers() {
-  const bestSellers = products.filter((p: Product) => p.isBestSeller);
+  const [bestSellers, setBestSellers] = useState<Product[]>(
+    () => fallbackProducts.filter((p: Product) => p.isBestSeller)
+  );
+
+  useEffect(() => {
+    let isMounted = true;
+    async function loadBestSellers() {
+      try {
+        const items = await getBestSellers();
+        if (isMounted && items.length > 0) {
+          setBestSellers(items);
+        }
+      } catch (err) {
+        console.error("Failed to load best sellers from Django API:", err);
+      }
+    }
+    loadBestSellers();
+    return () => {
+      isMounted = false;
+    };
+  }, []);
   const scrollRef = useRef<HTMLDivElement>(null);
 
   const handleScroll = (direction: "left" | "right") => {

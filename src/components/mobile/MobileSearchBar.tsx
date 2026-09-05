@@ -34,13 +34,11 @@ export default function MobileSearchBar({
 
     if (SpeechRecognition) {
       try {
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         const recognition = new (SpeechRecognition as any)();
         recognition.lang = "en-US";
         recognition.start();
         setIsListening(true);
 
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         recognition.onresult = (event: any) => {
           const speechResult = event.results[0][0].transcript;
           setQuery(speechResult);

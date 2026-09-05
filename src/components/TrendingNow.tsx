@@ -1,9 +1,10 @@
 "use client";
 
-import { useState, useMemo } from "react";
+import { useState, useEffect } from "react";
 import Link from "next/link";
 import { ChevronRight } from "lucide-react";
-import { products as allProducts, Product } from "@/data/products";
+import { products as fallbackProducts, Product } from "@/data/products";
+import { getTrendingProducts } from "@/lib/products";
 import ProductCard from "@/components/ProductCard";
 import "@/styles/trending-now.css";
 
@@ -18,24 +19,26 @@ const CATEGORY_PILLS = [
 
 export default function TrendingNow() {
   const [activeCategory, setActiveCategory] = useState("All Items");
+  const [trendingProducts, setTrendingProducts] = useState<Product[]>(() => {
+    return [...fallbackProducts].sort((a, b) => b.rating - a.rating).slice(0, 8);
+  });
 
-  const trendingProducts: Product[] = useMemo(() => {
-    let filtered = allProducts;
-    if (activeCategory === "Electronics") {
-      filtered = allProducts.filter((p) => p.category === "electronics");
-    } else if (activeCategory === "Fashion") {
-      filtered = allProducts.filter((p) => p.category === "fashion");
-    } else if (activeCategory === "Home") {
-      filtered = allProducts.filter((p) => p.category === "home-goods" || p.category === "home-living");
-    } else if (activeCategory === "Beauty") {
-      filtered = allProducts.filter((p) => p.category === "beauty" || p.category === "accessories");
-    } else if (activeCategory === "Offers") {
-      filtered = allProducts.filter((p) => (p.discountPercentage && p.discountPercentage > 0) || p.badge === "SALE" || p.isFeatured);
+  useEffect(() => {
+    let isMounted = true;
+    async function fetchTrending() {
+      try {
+        const items = await getTrendingProducts(activeCategory);
+        if (isMounted && items.length > 0) {
+          setTrendingProducts(items);
+        }
+      } catch (err) {
+        console.error("Failed to load trending items from Django API:", err);
+      }
     }
-    
-    // Sort by rating / best seller and take top items
-    const sorted = [...filtered].sort((a, b) => b.rating - a.rating);
-    return sorted.slice(0, 8);
+    fetchTrending();
+    return () => {
+      isMounted = false;
+    };
   }, [activeCategory]);
 
   return (

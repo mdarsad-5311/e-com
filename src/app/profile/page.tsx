@@ -33,9 +33,25 @@ import "@/styles/profile.css";
 
 export default function ProfilePage() {
   const router = useRouter();
-  const { user, addresses, logout, updateProfile } = useAuth();
+  const { user, addresses, logout, updateProfile, isLoading } = useAuth();
   const { wishlistCount } = useWishlist();
   const { showToast } = useToast();
+
+  // Protected Route Guard (STEP 6G)
+  useEffect(() => {
+    if (!isLoading && !user) {
+      router.push("/login?redirect=" + encodeURIComponent("/profile"));
+    }
+  }, [isLoading, user, router]);
+
+  // Sync inputs with real backend user profile
+  useEffect(() => {
+    if (user) {
+      setNameInput(user.name || "");
+      setEmailInput(user.email || "");
+      setPhoneInput(user.phone || "");
+    }
+  }, [user]);
 
   // Active Modals: "profile" | "settings" | "notifications" | "security" | null
   const [activeModal, setActiveModal] = useState<"profile" | "settings" | "notifications" | "security" | null>(null);
@@ -306,8 +322,8 @@ export default function ProfilePage() {
           <button
             type="button"
             className="al-profile-nav-card al-profile-nav-logout"
-            onClick={() => {
-              logout();
+            onClick={async () => {
+              await logout();
               showToast("Signed out successfully");
               router.push("/login");
             }}

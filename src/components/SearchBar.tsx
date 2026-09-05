@@ -1,10 +1,11 @@
 "use client";
 
-import { useState, useMemo } from "react";
+import { useState, useEffect } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { Search, X, Star, ArrowRight, Tag } from "lucide-react";
-import { products, Product } from "@/data/products";
+import { products as fallbackProducts, Product } from "@/data/products";
+import { searchProducts } from "@/lib/products";
 import { useFocusTrap } from "@/hooks/useFocusTrap";
 import "@/styles/search-bar.css";
 
@@ -14,17 +15,46 @@ interface SearchBarProps {
 
 export default function SearchBar({ onClose }: SearchBarProps) {
   const [query, setQuery] = useState<string>("");
+  const [searchResults, setSearchResults] = useState<Product[]>([]);
+  const [isSearching, setIsSearching] = useState<boolean>(false);
   const modalRef = useFocusTrap<HTMLDivElement>(true, onClose);
 
-  const searchResults = useMemo<Product[]>(() => {
-    if (!query.trim()) return [];
-    const q = query.toLowerCase();
-    return products.filter(
-      (item) =>
-        item.title.toLowerCase().includes(q) ||
-        item.categoryName.toLowerCase().includes(q) ||
-        (item.description && item.description.toLowerCase().includes(q))
-    );
+  useEffect(() => {
+    if (!query.trim()) {
+      setSearchResults([]);
+      return;
+    }
+
+    let isMounted = true;
+    const timer = setTimeout(async () => {
+      setIsSearching(true);
+      try {
+        const results = await searchProducts(query);
+        if (isMounted) {
+          setSearchResults(results);
+        }
+      } catch (err) {
+        console.error("Search failed:", err);
+        if (isMounted) {
+          const q = query.toLowerCase();
+          setSearchResults(
+            fallbackProducts.filter(
+              (item) =>
+                item.title.toLowerCase().includes(q) ||
+                item.categoryName.toLowerCase().includes(q) ||
+                (item.description && item.description.toLowerCase().includes(q))
+            )
+          );
+        }
+      } finally {
+        if (isMounted) setIsSearching(false);
+      }
+    }, 250);
+
+    return () => {
+      isMounted = false;
+      clearTimeout(timer);
+    };
   }, [query]);
 
   return (
@@ -95,7 +125,11 @@ export default function SearchBar({ onClose }: SearchBarProps) {
         {query && (
           <div className="search-results">
             <div className="results-count" aria-live="polite">
-              Found {searchResults.length} match{searchResults.length === 1 ? "" : "es"} for &quot;{query}&quot;
+              {isSearching ? (
+                "Searching..."
+              ) : (
+                `Found ${searchResults.length} match${searchResults.length === 1 ? "" : "es"} for "${query}"`
+              )}
             </div>
 
             {searchResults.length > 0 ? (
@@ -130,9 +164,11 @@ export default function SearchBar({ onClose }: SearchBarProps) {
                 ))}
               </div>
             ) : (
-              <div className="no-results" role="status">
-                No products found matching your search. Try different keywords.
-              </div>
+              !isSearching && (
+                <div className="no-results" role="status">
+                  No products found matching your search. Try different keywords.
+                </div>
+              )
             )}
           </div>
         )}

@@ -3,7 +3,8 @@
 import { useState, useRef, useEffect, useCallback } from "react";
 import Link from "next/link";
 import { Headphones, Shirt, Home, Watch, Smartphone, Sparkles, Flame, ChevronLeft, ChevronRight } from "lucide-react";
-import { categories } from "@/data/products";
+import { categories as fallbackCategories, Category } from "@/data/products";
+import { getCategories } from "@/lib/categories";
 import "@/styles/category-quick-strip.css";
 
 export default function CategoryQuickStrip() {
@@ -11,6 +12,25 @@ export default function CategoryQuickStrip() {
   const [canScrollLeft, setCanScrollLeft] = useState(false);
   const [canScrollRight, setCanScrollRight] = useState(false);
   const [scrollProgress, setScrollProgress] = useState(0);
+  const [categoryList, setCategoryList] = useState<Category[]>(fallbackCategories);
+
+  useEffect(() => {
+    let isMounted = true;
+    async function loadCats() {
+      try {
+        const items = await getCategories();
+        if (isMounted && items.length > 0) {
+          setCategoryList(items);
+        }
+      } catch (err) {
+        console.error("Failed to load quick strip categories:", err);
+      }
+    }
+    loadCats();
+    return () => {
+      isMounted = false;
+    };
+  }, []);
 
   const quickCategories = [
     {
@@ -22,7 +42,7 @@ export default function CategoryQuickStrip() {
       highlight: true,
       badge: "HOT",
     },
-    ...categories.map((c) => ({
+    ...categoryList.map((c) => ({
       id: c.id,
       title: c.name,
       slug: `category/${c.slug}`,

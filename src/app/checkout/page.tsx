@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import {
@@ -10,10 +10,14 @@ import {
   Lock,
   CreditCard,
   Home,
-  AlertCircle
+  AlertCircle,
+  ShoppingBag
 } from "lucide-react";
 import { useCart } from "@/context/CartContext";
+import { useAuth } from "@/context/AuthContext";
 import { useFocusTrap } from "@/hooks/useFocusTrap";
+import { api } from "@/lib/api";
+import { CreateOrderPayload, OrderResponse } from "@/types/api";
 import "@/styles/checkout.css";
 
 interface Address {
@@ -29,13 +33,23 @@ interface Address {
 
 export default function CheckoutPage() {
   const router = useRouter();
+  const { user, isLoading } = useAuth();
   const { subtotal, totalItemsCount, clearCart } = useCart();
+
+  // Protected Route Guard
+  useEffect(() => {
+    if (!isLoading && !user) {
+      router.push("/login?redirect=" + encodeURIComponent("/checkout"));
+    }
+  }, [isLoading, user, router]);
 
   const [currentStep, setCurrentStep] = useState<1 | 2 | 3>(2);
   const [selectedAddressId, setSelectedAddressId] = useState("addr-1");
   const [isOrderSubmitted, setIsOrderSubmitted] = useState(false);
+  const [isSubmittingOrder, setIsSubmittingOrder] = useState(false);
+  const [checkoutError, setCheckoutError] = useState<string | null>(null);
 
-  // Addresses matching Attachment 2
+  // Addresses state
   const [addresses, setAddresses] = useState<Address[]>([
     {
       id: "addr-1",
@@ -57,6 +71,40 @@ export default function CheckoutPage() {
       phone: "+1 (555) 987-6543",
     },
   ]);
+
+  // Load saved user addresses from backend if authenticated
+  useEffect(() => {
+    let isMounted = true;
+    const loadAddresses = async () => {
+      try {
+        const res = await api.get("/api/addresses/");
+        const addrList = Array.isArray(res) ? res : (res?.results || []);
+        if (isMounted && addrList.length > 0) {
+          const mapped: Address[] = addrList.map((a: any) => ({
+            id: String(a.id),
+            name: a.full_name || a.name || "Recipient",
+            tag: a.is_default ? "HOME" : "OFFICE",
+            line1: a.street_address || a.line1 || "",
+            line2: a.line2 || "",
+            cityStateZip: `${a.city || ""}, ${a.state || ""} ${a.postal_code || ""}`.trim().replace(/^,\s*/, ""),
+            country: a.country || "United States",
+            phone: a.phone_number || a.phone || "",
+          }));
+          setAddresses(mapped);
+          setSelectedAddressId(mapped[0].id);
+        }
+      } catch {
+        // Gracefully use local addresses
+      }
+    };
+
+    if (user) {
+      loadAddresses();
+    }
+    return () => {
+      isMounted = false;
+    };
+  }, [user]);
 
   // Modal State for adding/editing address
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
@@ -85,15 +133,16 @@ export default function CheckoutPage() {
   const [cardExpiry, setCardExpiry] = useState("12/28");
   const [cardCvc, setCardCvc] = useState("123");
 
-  // Pricing calculations
-  const defaultSubtotal = 1498.00;
-  const itemsPrice = subtotal > 0 ? subtotal : defaultSubtotal;
-  const itemsCount = totalItemsCount > 0 ? totalItemsCount : 2;
-  const estimatedTax = itemsPrice * 0.08; // 8% tax -> $119.84 for $1498.00
+  // Server computes authoritative totals; frontend displays preview based on live cart
+  const itemsPrice = subtotal;
+  const itemsCount = totalItemsCount;
+  const estimatedTax = itemsPrice > 0 ? itemsPrice * 0.08 : 0;
   const orderTotal = itemsPrice + estimatedTax;
+  const isCartEmpty = itemsCount === 0;
 
   const handleSelectAddress = (id: string) => {
     setSelectedAddressId(id);
+    setCheckoutError(null);
   };
 
   const handleDeliverHere = () => {
@@ -179,7 +228,6 @@ export default function CheckoutPage() {
       errors.cityZip = "City, State & ZIP/Postal Code is required.";
     }
 
-    // Phone validation supporting international and standard domestic formats
     const phoneTrimmed = newPhone.trim();
     const phoneRegex = /^[+]?[\d\s().-]{7,20}$/;
     if (!phoneTrimmed) {
@@ -190,7 +238,6 @@ export default function CheckoutPage() {
 
     setFormErrors(errors);
 
-    // Autofocus the first invalid field
     if (errors.name) {
       nameInputRef.current?.focus();
     } else if (errors.line1) {
@@ -204,7 +251,7 @@ export default function CheckoutPage() {
     return Object.keys(errors).length === 0;
   };
 
-  const handleSaveAddress = (e: React.FormEvent) => {
+  const handleSaveAddress = async (e: React.FormEvent) => {
     e.preventDefault();
 
     if (!validateAddressForm()) {
@@ -213,7 +260,7 @@ export default function CheckoutPage() {
 
     setIsSubmittingAddress(true);
 
-    setTimeout(() => {
+    try {
       if (editingAddrId) {
         setAddresses((prev) =>
           prev.map((a) =>
@@ -246,23 +293,71 @@ export default function CheckoutPage() {
       setIsSubmittingAddress(false);
       setIsAddModalOpen(false);
       setEditingAddrId(null);
-    }, 250);
+    } catch {
+      setIsSubmittingAddress(false);
+    }
   };
 
-  const handlePlaceOrder = () => {
-    const num = `AU-${Math.floor(10000 + Math.random() * 90000)}`;
-    clearCart();
-    setIsOrderSubmitted(true);
-    // Redirect to dedicated Order Confirmation page
-    router.push(`/checkout/success?orderId=${num}&subtotal=${itemsPrice.toFixed(2)}`);
+  // Place Order API Integration with double-submission protection
+  const handlePlaceOrder = async () => {
+    if (isSubmittingOrder) return;
+    if (isCartEmpty) {
+      setCheckoutError("Your cart is empty. Please add items to your cart before proceeding.");
+      return;
+    }
+
+    setIsSubmittingOrder(true);
+    setCheckoutError(null);
+
+    try {
+      const selectedAddr = addresses.find((a) => a.id === selectedAddressId);
+      const isNumericId = selectedAddr && !isNaN(Number(selectedAddr.id)) && Number(selectedAddr.id) > 0;
+
+      const payload: CreateOrderPayload = {
+        payment_method: paymentMethod === "cod" ? "Cash on Delivery" : paymentMethod === "apple" ? "Apple Pay" : "Credit Card",
+      };
+
+      if (isNumericId && selectedAddr) {
+        payload.shipping_address_id = Number(selectedAddr.id);
+      } else if (selectedAddr) {
+        payload.shipping_address = {
+          name: selectedAddr.name,
+          line1: selectedAddr.line1,
+          line2: selectedAddr.line2 || "",
+          cityStateZip: selectedAddr.cityStateZip,
+          country: selectedAddr.country || "United States",
+          phone: selectedAddr.phone,
+        };
+      }
+
+      const order = await api.post<OrderResponse>("/api/orders/", payload);
+      clearCart();
+      setIsOrderSubmitted(true);
+      const orderIdentifier = order.order_number || String(order.id);
+      router.push(`/checkout/success?orderId=${encodeURIComponent(orderIdentifier)}&id=${order.id}&subtotal=${order.subtotal}&total=${order.total_amount}`);
+    } catch (err: any) {
+      setCheckoutError(err.message || "Failed to place order. Please verify your cart and address and try again.");
+      setIsSubmittingOrder(false);
+    }
   };
 
   // Focus trap hooks
   const modalContainerRef = useFocusTrap<HTMLDivElement>(isAddModalOpen && !isDiscardConfirmOpen, handleRequestCloseModal);
   const discardModalRef = useFocusTrap<HTMLDivElement>(isDiscardConfirmOpen, () => setIsDiscardConfirmOpen(false));
 
-  // While redirecting show nothing extra
   if (isOrderSubmitted) return null;
+
+  if (isLoading) {
+    return (
+      <div className="al-checkout-page" style={{ minHeight: "60vh", display: "flex", alignItems: "center", justifyContent: "center" }}>
+        <p style={{ color: "var(--text-muted)" }}>Loading checkout...</p>
+      </div>
+    );
+  }
+
+  if (!user) {
+    return null;
+  }
 
   return (
     <div className="al-checkout-page">
@@ -327,6 +422,31 @@ export default function CheckoutPage() {
           </button>
         </div>
       </nav>
+
+      {/* Empty cart warning banner */}
+      {isCartEmpty && (
+        <div className="container" style={{ marginBottom: "1.5rem" }}>
+          <div style={{ padding: "1rem 1.25rem", backgroundColor: "rgba(245, 158, 11, 0.1)", border: "1px solid #f59e0b", borderRadius: "8px", color: "#b45309", display: "flex", alignItems: "center", justifyContent: "space-between" }}>
+            <div style={{ display: "flex", alignItems: "center", gap: "0.75rem" }}>
+              <ShoppingBag size={20} />
+              <span>Your cart is empty. Add products to your cart to proceed with checkout.</span>
+            </div>
+            <Link href="/" className="btn btn-outline" style={{ padding: "0.4rem 0.85rem", fontSize: "0.85rem", borderColor: "#f59e0b", color: "#b45309" }}>
+              Shop Now
+            </Link>
+          </div>
+        </div>
+      )}
+
+      {/* Error alert if order placement fails */}
+      {checkoutError && (
+        <div className="container" style={{ marginBottom: "1.5rem" }}>
+          <div style={{ padding: "0.85rem 1.25rem", backgroundColor: "rgba(239, 68, 68, 0.1)", border: "1px solid var(--error, #ef4444)", borderRadius: "8px", color: "var(--error, #ef4444)", display: "flex", alignItems: "center", gap: "0.75rem" }} role="alert">
+            <AlertCircle size={18} />
+            <span>{checkoutError}</span>
+          </div>
+        </div>
+      )}
 
       {/* Main Checkout Grid */}
       <main className="container al-checkout-main-grid">
@@ -554,9 +674,10 @@ export default function CheckoutPage() {
                 <button
                   type="button"
                   onClick={handlePlaceOrder}
+                  disabled={isSubmittingOrder || isCartEmpty}
                   className="al-btn-place-order"
                 >
-                  Confirm & Place Order →
+                  {isSubmittingOrder ? "Placing Order..." : "Confirm & Place Order →"}
                 </button>
               </div>
             </div>
@@ -583,35 +704,24 @@ export default function CheckoutPage() {
                 <span>Estimated Tax</span>
                 <span>${estimatedTax.toLocaleString("en-US", { minimumFractionDigits: 2 })}</span>
               </div>
-            </div>
 
-            <div className="al-summary-divider" />
+              <div className="al-summary-divider" />
 
-            <div className="al-summary-total-line">
-              <span className="al-total-word">Total</span>
-              <span className="al-total-amount">${orderTotal.toLocaleString("en-US", { minimumFractionDigits: 2 })}</span>
-            </div>
-
-            {/* Trust Guarantee Box */}
-            <div className="al-checkout-trust-box">
-              <ShieldCheck size={20} className="al-trust-icon" aria-hidden="true" />
-              <div className="al-trust-texts">
-                <strong>Al-Umaima Assured</strong>
-                <span>Secure transaction guarantees</span>
+              <div className="al-summary-total-line">
+                <span>Order Total</span>
+                <span>${orderTotal.toLocaleString("en-US", { minimumFractionDigits: 2 })}</span>
               </div>
+            </div>
+
+            <div className="al-checkout-badge-row">
+              <ShieldCheck size={18} className="al-badge-shield-icon" aria-hidden="true" />
+              <span>Safe &amp; Secure 256-Bit SSL Encrypted Checkout</span>
             </div>
           </div>
         </aside>
       </main>
 
-      {/* Footer */}
-      <footer className="al-checkout-footer">
-        <div className="container">
-          <p>© 2024 Al-Umaima Premium Electronics. All rights reserved.</p>
-        </div>
-      </footer>
-
-      {/* Add/Edit Address Modal with Focus Trap & Semantics */}
+      {/* Add / Edit Address Modal with accessible Focus Trap */}
       {isAddModalOpen && (
         <div className="al-modal-backdrop" onClick={handleRequestCloseModal}>
           <div
@@ -621,18 +731,12 @@ export default function CheckoutPage() {
             onClick={(e) => e.stopPropagation()}
             role="dialog"
             aria-modal="true"
-            aria-labelledby="checkout-modal-title"
+            aria-labelledby="modal-addr-title"
           >
             <div className="al-modal-header">
-              <h3 id="checkout-modal-title">{editingAddrId ? "Edit Delivery Address" : "Add New Delivery Address"}</h3>
-              <button
-                type="button"
-                onClick={handleRequestCloseModal}
-                aria-label="Close delivery address dialog"
-                className="al-modal-close"
-              >
-                ✕
-              </button>
+              <h3 id="modal-addr-title">
+                {editingAddrId ? "Edit Delivery Address" : "Add New Delivery Address"}
+              </h3>
             </div>
 
             <form onSubmit={handleSaveAddress} className="al-modal-form" noValidate>

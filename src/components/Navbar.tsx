@@ -204,7 +204,7 @@ export default function Navbar() {
                     <Link href="/wishlist" className="al-menu-item"><Heart size={15} /> Wishlist ({wishlistCount})</Link>
                     <Link href="/admin" className="al-menu-item"><TrendingUp size={15} /> Seller Dashboard</Link>
                     <div className="al-menu-divider" />
-                    <button onClick={logout} className="al-menu-item al-menu-logout"><LogOut size={15} /> Sign Out</button>
+                    <button onClick={async () => { await logout(); router.push("/login"); }} className="al-menu-item al-menu-logout"><LogOut size={15} /> Sign Out</button>
                   </>
                 ) : (
                   <>

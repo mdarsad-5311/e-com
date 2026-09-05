@@ -2,7 +2,8 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { ChevronRight } from "lucide-react";
 import { Metadata } from "next";
-import { products, Product } from "@/data/products";
+import { Product, products as fallbackProducts } from "@/data/products";
+import { getProductBySlug, getAllProducts } from "@/lib/products";
 import ProductGallery from "@/components/ProductGallery";
 import ProductInfo from "@/components/ProductInfo";
 import ProductViewTracker from "@/components/ProductViewTracker";
@@ -18,7 +19,7 @@ interface ProductDetailPageProps {
 
 export function generateStaticParams() {
   const paramList: { id: string }[] = [];
-  products.forEach((prod: Product) => {
+  fallbackProducts.forEach((prod: Product) => {
     paramList.push({ id: prod.id });
     if (prod.slug && prod.slug !== prod.id) {
       paramList.push({ id: prod.slug });
@@ -30,7 +31,7 @@ export function generateStaticParams() {
 export function generateMetadata({ params }: ProductDetailPageProps): Metadata {
   const { id } = params;
   const decodedId = decodeURIComponent(id);
-  const product = products.find(
+  let product = fallbackProducts.find(
     (p: Product) => p.id === decodedId || p.slug === decodedId || p.id === id || p.slug === id
   );
 
@@ -58,12 +59,10 @@ export function generateMetadata({ params }: ProductDetailPageProps): Metadata {
   };
 }
 
-export default function ProductDetailPage({ params }: ProductDetailPageProps) {
+export default async function ProductDetailPage({ params }: ProductDetailPageProps) {
   const { id } = params;
   const decodedId = decodeURIComponent(id);
-  const product = products.find(
-    (p: Product) => p.id === decodedId || p.slug === decodedId || p.id === id || p.slug === id
-  );
+  const product = await getProductBySlug(decodedId);
 
   if (!product) {
     notFound();

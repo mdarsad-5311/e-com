@@ -1,6 +1,7 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { useRouter } from "next/navigation";
 import Link from "next/link";
 import {
   Search,
@@ -15,66 +16,66 @@ import {
   CreditCard,
   Lock,
   Star,
+  Clock,
+  AlertCircle
 } from "lucide-react";
 import { useAuth } from "@/context/AuthContext";
+import { api } from "@/lib/api";
+import { OrderResponse } from "@/types/api";
 import "@/styles/orders-page.css";
 
 type OrderTab = "orders" | "buy_again" | "not_shipped" | "cancelled";
 type TimeFilter = "3months" | "2023" | "2022";
 
-const SAMPLE_ORDERS = [
-  {
-    id: "114 8902 332",
-    placed: "October 24, 2023",
-    total: 249.99,
-    shipTo: "John Doe",
-    status: "arriving",
-    statusLabel: "Arriving Tomorrow",
-    statusDate: "",
-    product: {
-      title: "Noise Cancelling Wireless Headphones - Pro Series Black",
-      image: "",
-      qty: 1,
-    },
-    actions: ["track", "view_details"],
-  },
-  {
-    id: "112 5534 111",
-    placed: "October 12, 2023",
-    total: 89.98,
-    shipTo: "John Doe",
-    status: "delivered",
-    statusLabel: "Delivered Oct 12",
-    statusDate: "Oct 12",
-    product: {
-      title: "Smart Home Security Camera - 1080p HD Indoor",
-      image: "",
-      qty: 2,
-    },
-    actions: ["buy_again", "return"],
-  },
-  {
-    id: "111 9923 005",
-    placed: "September 28, 2023",
-    total: 142.50,
-    shipTo: "John Doe",
-    status: "delivered",
-    statusLabel: "Delivered Sep 28",
-    statusDate: "Sep 28",
-    product: null, // multi-item order
-    itemCount: 3,
-    actions: ["view_details", "leave_review"],
-  },
-];
-
 export default function OrdersPage() {
-  const { orders: contextOrders, updateOrderStatus } = useAuth();
+  const router = useRouter();
+  const { user, isLoading: authLoading } = useAuth();
+
+  const [orders, setOrders] = useState<OrderResponse[]>([]);
+  const [loading, setLoading] = useState<boolean>(true);
   const [activeTab, setActiveTab] = useState<OrderTab>("orders");
   const [timeFilter, setTimeFilter] = useState<TimeFilter>("3months");
   const [searchQuery, setSearchQuery] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
 
-  const displayOrders = contextOrders.length > 0 ? contextOrders : [];
+  // Protected Route Guard
+  useEffect(() => {
+    if (!authLoading && !user) {
+      router.push("/login?redirect=" + encodeURIComponent("/orders"));
+    }
+  }, [authLoading, user, router]);
+
+  // Fetch live orders from Django backend
+  useEffect(() => {
+    let isMounted = true;
+
+    const fetchOrders = async () => {
+      if (!user) return;
+      try {
+        setLoading(true);
+        const data = await api.get<OrderResponse[]>("/api/orders/");
+        if (isMounted) {
+          setOrders(Array.isArray(data) ? data : []);
+        }
+      } catch (err) {
+        if (isMounted) {
+          setOrders([]);
+        }
+      } finally {
+        if (isMounted) {
+          setLoading(false);
+        }
+      }
+    };
+
+    if (user) {
+      fetchOrders();
+    }
+
+    return () => {
+      isMounted = false;
+    };
+  }, [user]);
 
   const sidebarLinks = [
     { href: "/profile", icon: <LayoutDashboard size={18} />, label: "Dashboard" },
@@ -97,288 +98,262 @@ export default function OrdersPage() {
     { id: "2022",    label: "2022" },
   ];
 
+  if (authLoading) {
+    return (
+      <div className="op-page" style={{ minHeight: "60vh", display: "flex", alignItems: "center", justifyContent: "center" }}>
+        <p style={{ color: "var(--text-muted)" }}>Loading your orders...</p>
+      </div>
+    );
+  }
+
+  if (!user) {
+    return null;
+  }
+
+  // Filter orders based on active tab and search query
+  const filteredOrders = orders.filter((order) => {
+    const statusLower = (order.status || "").toLowerCase();
+
+    // Tab filter
+    if (activeTab === "not_shipped" && !["pending", "processing", "confirmed"].includes(statusLower)) {
+      return false;
+    }
+    if (activeTab === "cancelled" && statusLower !== "cancelled") {
+      return false;
+    }
+    if (activeTab === "buy_again" && statusLower !== "delivered") {
+      return false;
+    }
+
+    // Search query
+    if (searchQuery.trim()) {
+      const q = searchQuery.toLowerCase();
+      const matchId = String(order.id).toLowerCase().includes(q) || (order.order_number || "").toLowerCase().includes(q);
+      const matchItem = order.items?.some((it) => (it.title || it.product_name || "").toLowerCase().includes(q));
+      const matchAddress = (order.shippingAddress || "").toLowerCase().includes(q);
+      return matchId || matchItem || matchAddress;
+    }
+
+    return true;
+  });
+
   return (
     <div className="op-page">
-
-      {/* ══════════════ MOBILE LAYOUT ══════════════ */}
-      <div className="op-mobile-layout">
-        <div className="op-mob-header">
-          <h1 className="op-mob-title">Your Orders</h1>
-          <div className="op-mob-header-actions">
-            <button type="button" className="op-mob-icon-btn" aria-label="Search"><Search size={20} /></button>
-            <button type="button" className="op-mob-icon-btn" aria-label="Filter"><SlidersHorizontal size={20} /></button>
-          </div>
-        </div>
-
-        {/* Time filter pills */}
-        <div className="op-mob-time-filters">
-          {timeFilters.map((tf) => (
-            <button
-              key={tf.id}
-              type="button"
-              className={`op-mob-time-pill ${timeFilter === tf.id ? "op-mob-time-pill-active" : ""}`}
-              onClick={() => setTimeFilter(tf.id)}
-            >
-              {tf.label}
-            </button>
-          ))}
-        </div>
-
-        {/* Order cards */}
-        <div className="op-mob-orders-list">
-          {SAMPLE_ORDERS.map((order, idx) => (
-            <div key={order.id} className="op-mob-order-card">
-              {/* Status badge */}
-              {order.status === "arriving" && (
-                <div className="op-mob-status-row">
-                  <span className="op-mob-status-arriving">{order.statusLabel}</span>
-                  <span className="op-mob-order-num">Order #{order.id}</span>
-                </div>
-              )}
-              {order.status === "delivered" && (
-                <div className="op-mob-status-row">
-                  <span className="op-mob-status-delivered">
-                    <Check size={13} strokeWidth={3} /> {order.statusLabel}
-                  </span>
-                  <span className="op-mob-order-num">Order #{order.id}</span>
-                </div>
-              )}
-
-              {/* Product row */}
-              {order.product ? (
-                <div className="op-mob-product-row">
-                  <div className="op-mob-product-img">
-                    <div className="op-mob-product-placeholder" />
-                  </div>
-                  <div className="op-mob-product-info">
-                    <div className="op-mob-product-title">{order.product.title}</div>
-                    <div className="op-mob-product-qty">Qty: {order.product.qty}</div>
-                    <div className="op-mob-product-price">${order.total.toFixed(2)}</div>
-                  </div>
-                </div>
-              ) : (
-                <div className="op-mob-multi-items-row">
-                  <div className="op-mob-multi-thumbs">
-                    {[0,1,2].map((i) => <div key={i} className="op-mob-product-placeholder op-mob-product-placeholder-sm" />)}
-                  </div>
-                  <div>
-                    <div className="op-mob-multi-count">{order.itemCount} items</div>
-                    <div className="op-mob-product-price">${order.total.toFixed(2)}</div>
-                  </div>
-                </div>
-              )}
-
-              {/* Action buttons */}
-              <div className="op-mob-action-btns">
-                {order.actions.includes("track") && (
-                  <Link href={`/track-order?id=${order.id}`} className="op-mob-btn-primary">Track Package</Link>
-                )}
-                {order.actions.includes("view_details") && (
-                  <Link href={`/orders/details?id=${order.id}`} className="op-mob-btn-secondary">View Details</Link>
-                )}
-                {order.actions.includes("buy_again") && (
-                  <button type="button" className="op-mob-btn-primary">Buy it again</button>
-                )}
-                {order.actions.includes("return") && (
-                  <button type="button" className="op-mob-btn-secondary">Return Item</button>
-                )}
-                {order.actions.includes("leave_review") && (
-                  <button type="button" className="op-mob-btn-secondary">Leave Review</button>
-                )}
-              </div>
+      <div className="container op-layout">
+        {/* Left Sidebar */}
+        <aside className="op-sidebar" aria-label="Account Navigation">
+          <div className="op-user-snippet">
+            <div className="op-avatar">
+              {user?.name ? user.name.charAt(0).toUpperCase() : "U"}
             </div>
-          ))}
-
-          {displayOrders.map((order) => (
-            <div key={order.id} className="op-mob-order-card">
-              <div className="op-mob-status-row">
-                {order.status === "Delivered"
-                  ? <span className="op-mob-status-delivered"><Check size={13} strokeWidth={3} /> Delivered</span>
-                  : <span className="op-mob-status-arriving">{order.status}</span>
-                }
-                <span className="op-mob-order-num">Order #{order.id}</span>
-              </div>
-
-              {order.items.map((item) => (
-                <div key={item.id} className="op-mob-product-row">
-                  <div className="op-mob-product-img">
-                    {item.image
-                      ? <img src={item.image} alt={item.title} style={{ width: "100%", height: "100%", objectFit: "contain" }} />
-                      : <div className="op-mob-product-placeholder" />
-                    }
-                  </div>
-                  <div className="op-mob-product-info">
-                    <div className="op-mob-product-title">{item.title}</div>
-                    <div className="op-mob-product-qty">Qty: {item.quantity}</div>
-                    <div className="op-mob-product-price">${order.totalAmount.toFixed(2)}</div>
-                  </div>
-                </div>
-              ))}
-
-              <div className="op-mob-action-btns">
-                {order.status === "Delivered" && <button type="button" className="op-mob-btn-primary">Buy it again</button>}
-                <Link href={`/orders/details?id=${order.id}`} className="op-mob-btn-secondary">View Details</Link>
-              </div>
-            </div>
-          ))}
-        </div>
-      </div>
-
-      {/* ══════════════ DESKTOP LAYOUT ══════════════ */}
-      <div className="op-layout op-desktop-layout">
-        {/* Sidebar */}
-        <aside className="op-sidebar">
-          <div className="op-sidebar-user">
-            <div className="op-avatar"><span>U</span></div>
-            <div>
-              <div className="op-sidebar-name">Welcome, User</div>
-              <div className="op-sidebar-prime"><Star size={11} className="op-prime-star" />Al-Umaima Prime Member</div>
+            <div className="op-user-info">
+              <strong className="op-user-name">{user?.name || "Customer"}</strong>
+              <span className="op-user-email">{user?.email || ""}</span>
             </div>
           </div>
-          <nav className="op-sidebar-nav">
+
+          <nav className="op-nav-list">
             {sidebarLinks.map((link) => (
-              <Link key={link.label} href={link.href} className={`op-nav-item ${link.active ? "op-nav-active" : ""}`}>
-                <span className="op-nav-icon">{link.icon}</span>
+              <Link
+                key={link.label}
+                href={link.href}
+                className={`op-nav-item ${link.active ? "op-nav-active" : ""}`}
+              >
+                {link.icon}
                 <span>{link.label}</span>
               </Link>
             ))}
           </nav>
         </aside>
 
-        {/* Main */}
-        <main className="op-main">
-          <div className="op-breadcrumb">
-            <Link href="/profile" className="op-breadcrumb-link">Account</Link>
-            <span className="op-breadcrumb-sep">&rsaquo;</span>
-            <span className="op-breadcrumb-current">Your Orders</span>
-          </div>
+        {/* Main Content Area */}
+        <main className="op-main-content">
+          <div className="op-header">
+            <h1 className="op-title">Your Orders</h1>
 
-          <div className="op-page-header">
-            <h1 className="op-page-title">Your Orders</h1>
-            <div className="op-header-actions">
-              <div className="op-search-wrap">
-                <Search size={15} className="op-search-icon" />
-                <input type="text" placeholder="Search all orders" value={searchQuery} onChange={(e) => setSearchQuery(e.target.value)} className="op-search-input" />
-              </div>
-              <button type="button" className="op-filter-btn"><Filter size={15} />Filter Orders</button>
+            <div className="op-search-bar">
+              <Search size={16} className="op-search-icon" />
+              <input
+                type="text"
+                placeholder="Search all orders..."
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                className="op-search-input"
+                aria-label="Search all orders"
+              />
             </div>
           </div>
 
-          <div className="op-tabs-bar">
+          {/* Tab Navigation */}
+          <div className="op-tabs" role="tablist">
             {tabs.map((tab) => (
-              <button key={tab.id} type="button" className={`op-tab-btn ${activeTab === tab.id ? "op-tab-active" : ""}`} onClick={() => setActiveTab(tab.id)}>{tab.label}</button>
+              <button
+                key={tab.id}
+                role="tab"
+                aria-selected={activeTab === tab.id}
+                onClick={() => {
+                  setActiveTab(tab.id);
+                  setCurrentPage(1);
+                }}
+                className={`op-tab-btn ${activeTab === tab.id ? "op-tab-active" : ""}`}
+              >
+                {tab.label}
+              </button>
             ))}
           </div>
 
-          {activeTab === "orders" && (
-            <>
-              <div className="op-orders-count">
-                <strong>{displayOrders.length > 0 ? displayOrders.length : SAMPLE_ORDERS.length} orders</strong> placed in <strong>past 3 months</strong>
-              </div>
+          {/* Time Filter Row */}
+          <div className="op-filter-row">
+            <span className="op-filter-label">Filter orders by:</span>
+            {timeFilters.map((tf) => (
+              <button
+                key={tf.id}
+                onClick={() => setTimeFilter(tf.id)}
+                className={`op-time-pill ${timeFilter === tf.id ? "op-time-active" : ""}`}
+              >
+                {tf.label}
+              </button>
+            ))}
+          </div>
 
-              <div className="op-orders-list">
-                {/* Static sample */}
-                {displayOrders.length === 0 && SAMPLE_ORDERS.map((order) => (
-                  <div key={order.id} className="op-order-card">
-                    <div className="op-order-card-header">
-                      <div className="op-order-meta-left">
-                        <div className="op-meta-block"><div className="op-meta-label">ORDER PLACED</div><div className="op-meta-value">{order.placed}</div></div>
-                        <div className="op-meta-block"><div className="op-meta-label">TOTAL</div><div className="op-meta-value">${order.total.toFixed(2)}</div></div>
-                        <div className="op-meta-block"><div className="op-meta-label">SHIP TO</div><button type="button" className="op-ship-to-btn">{order.shipTo} <ChevronRight size={12} /></button></div>
-                      </div>
-                      <div className="op-order-meta-right">
-                        <div className="op-order-number">Order # {order.id}</div>
-                        <div className="op-order-links">
-                          <button type="button" className="op-order-link">View order details</button>
-                          <span className="op-link-sep">|</span>
-                          <button type="button" className="op-order-link">Invoice</button>
-                        </div>
-                      </div>
-                    </div>
-
-                    {order.product && (
-                      <div className="op-order-item">
-                        <div className="op-item-image-wrap"><div className="op-item-placeholder-img" /></div>
-                        <div className="op-item-center">
-                          <div className="op-item-title">{order.product.title}</div>
-                          {order.status === "arriving" && <div className="op-status-pill op-status-transit">{order.statusLabel}</div>}
-                          {order.status === "delivered" && <div className="op-status-pill op-status-delivered"><Check size={12} strokeWidth={3} /> {order.statusLabel}</div>}
-                        </div>
-                        <div className="op-item-right-actions">
-                          {order.actions.includes("buy_again") && <button type="button" className="op-buy-again-btn">Buy it again</button>}
-                          {order.actions.includes("track") && <Link href={`/track-order?id=${order.id}`} className="op-track-orange-btn">Track package</Link>}
-                          {order.actions.includes("view_details") && <Link href={`/orders/details?id=${order.id}`} className="op-ghost-btn">View Details</Link>}
-                          {order.actions.includes("return") && <button type="button" className="op-ghost-btn">Return items</button>}
-                          {order.actions.includes("leave_review") && <button type="button" className="op-ghost-btn">Leave Review</button>}
-                        </div>
-                      </div>
-                    )}
-
-                    {!order.product && (
-                      <div className="op-order-item">
-                        <div className="op-item-image-wrap"><div className="op-item-placeholder-img" /></div>
-                        <div className="op-item-center">
-                          <div className="op-item-title">{order.itemCount} items · ${order.total.toFixed(2)}</div>
-                          {order.status === "delivered" && <div className="op-status-pill op-status-delivered"><Check size={12} strokeWidth={3} /> {order.statusLabel}</div>}
-                        </div>
-                        <div className="op-item-right-actions">
-                          <Link href={`/orders/details?id=${order.id}`} className="op-ghost-btn">View Details</Link>
-                          <button type="button" className="op-ghost-btn">Leave Review</button>
-                        </div>
-                      </div>
-                    )}
-                  </div>
-                ))}
-
-                {displayOrders.map((order) => (
-                  <div key={order.id} className="op-order-card">
-                    <div className="op-order-card-header">
-                      <div className="op-order-meta-left">
-                        <div className="op-meta-block"><div className="op-meta-label">ORDER PLACED</div><div className="op-meta-value">{order.date}</div></div>
-                        <div className="op-meta-block"><div className="op-meta-label">TOTAL</div><div className="op-meta-value">${order.totalAmount.toFixed(2)}</div></div>
-                        <div className="op-meta-block"><div className="op-meta-label">SHIP TO</div><button type="button" className="op-ship-to-btn">John Doe <ChevronRight size={12} /></button></div>
-                      </div>
-                      <div className="op-order-meta-right">
-                        <div className="op-order-number">Order # {order.id}</div>
-                        <div className="op-order-links"><Link href={`/track-order?id=${order.id}`} className="op-order-link">View order details</Link><span className="op-link-sep">|</span><button type="button" className="op-order-link">Invoice</button></div>
-                      </div>
-                    </div>
-                    {order.items.map((item) => (
-                      <div key={item.id} className="op-order-item">
-                        <div className="op-item-image-wrap">{item.image ? <img src={item.image} alt={item.title} className="op-item-image" /> : <div className="op-item-placeholder-img" />}</div>
-                        <div className="op-item-center">
-                          <div className="op-item-title">{item.title}</div>
-                          {order.status === "Delivered" && <div className="op-status-pill op-status-delivered"><Check size={12} strokeWidth={3} /> Delivered {order.estimatedDelivery}</div>}
-                          {order.status === "In Transit" && <div className="op-status-pill op-status-transit">Arriving Tomorrow</div>}
-                        </div>
-                        <div className="op-item-right-actions">
-                          <button type="button" className="op-buy-again-btn">Buy it again</button>
-                          <Link href={`/orders/details?id=${order.id}`} className="op-ghost-btn">View Details</Link>
-                        </div>
-                      </div>
-                    ))}
-                  </div>
-                ))}
-              </div>
-
-              <div className="op-pagination">
-                <button type="button" className="op-page-btn op-page-arrow" disabled={currentPage === 1} onClick={() => setCurrentPage(p => Math.max(1, p-1))}>‹</button>
-                {[1,2,3].map((pg) => <button key={pg} type="button" className={`op-page-btn ${currentPage === pg ? "op-page-active" : ""}`} onClick={() => setCurrentPage(pg)}>{pg}</button>)}
-                <span className="op-page-ellipsis">…</span>
-                <button type="button" className="op-page-btn op-page-arrow" onClick={() => setCurrentPage(p => p+1)}>›</button>
-              </div>
-            </>
-          )}
-
-          {activeTab !== "orders" && (
+          {loading ? (
+            <div style={{ padding: "3rem 0", textAlign: "center", color: "var(--text-muted)" }}>
+              <p>Loading your orders...</p>
+            </div>
+          ) : filteredOrders.length === 0 ? (
             <div className="op-tab-empty">
               <PackageCheck size={40} className="op-empty-icon" />
               <div className="op-empty-title">
                 {activeTab === "buy_again" && "No items to buy again"}
                 {activeTab === "not_shipped" && "No orders waiting to ship"}
                 {activeTab === "cancelled" && "No cancelled orders"}
+                {activeTab === "orders" && (searchQuery ? "No orders matched your search" : "You haven't placed any orders yet")}
               </div>
+              {activeTab === "orders" && !searchQuery && (
+                <Link href="/" className="btn btn-primary" style={{ marginTop: "1rem" }}>
+                  Start Shopping
+                </Link>
+              )}
             </div>
+          ) : (
+            <>
+              <div className="op-orders-count">
+                <strong>{filteredOrders.length} {filteredOrders.length === 1 ? "order" : "orders"}</strong> found
+              </div>
+
+              <div className="op-orders-list">
+                {filteredOrders.map((order) => {
+                  const orderIdDisplay = order.order_number || String(order.id);
+                  const orderTotalNum = Number(order.total_amount || order.totalAmount) || 0;
+                  const placedDate = order.placed || order.date || (order.created_at ? new Date(order.created_at).toLocaleDateString("en-US", { month: "long", day: "numeric", year: "numeric" }) : "Recent");
+                  const recipient = order.shipping_address?.name || user?.name || "Recipient";
+                  const statusLower = (order.status || "").toLowerCase();
+
+                  return (
+                    <div key={order.id} className="op-order-card">
+                      <div className="op-order-card-header">
+                        <div className="op-order-meta-left">
+                          <div className="op-meta-block">
+                            <div className="op-meta-label">ORDER PLACED</div>
+                            <div className="op-meta-value">{placedDate}</div>
+                          </div>
+                          <div className="op-meta-block">
+                            <div className="op-meta-label">TOTAL</div>
+                            <div className="op-meta-value">${orderTotalNum.toFixed(2)}</div>
+                          </div>
+                          <div className="op-meta-block">
+                            <div className="op-meta-label">SHIP TO</div>
+                            <button type="button" className="op-ship-to-btn">
+                              {recipient} <ChevronRight size={12} />
+                            </button>
+                          </div>
+                        </div>
+
+                        <div className="op-order-meta-right">
+                          <div className="op-order-number">Order # {orderIdDisplay}</div>
+                          <div className="op-order-links">
+                            <Link href={`/orders/details?id=${order.id}`} className="op-order-link">
+                              View order details
+                            </Link>
+                            <span className="op-link-sep">|</span>
+                            <Link href={`/track-order?id=${order.id}`} className="op-order-link">
+                              Track package
+                            </Link>
+                          </div>
+                        </div>
+                      </div>
+
+                      {/* Items in order */}
+                      {order.items && order.items.length > 0 ? (
+                        order.items.map((item) => (
+                          <div key={item.id} className="op-order-item">
+                            <div className="op-item-image-wrap">
+                              {item.image || item.product_image_url ? (
+                                <img
+                                  src={item.image || item.product_image_url}
+                                  alt={item.title || item.product_name}
+                                  className="op-item-image"
+                                />
+                              ) : (
+                                <div className="op-item-placeholder-img" />
+                              )}
+                            </div>
+                            <div className="op-item-center">
+                              <div className="op-item-title">
+                                {item.title || item.product_name} {item.qty > 1 ? `(Qty: ${item.qty})` : ""}
+                              </div>
+                              {statusLower === "delivered" && (
+                                <div className="op-status-pill op-status-delivered">
+                                  <Check size={12} strokeWidth={3} /> Delivered
+                                </div>
+                              )}
+                              {["shipped", "in transit"].includes(statusLower) && (
+                                <div className="op-status-pill op-status-transit">
+                                  In Transit
+                                </div>
+                              )}
+                              {["pending", "processing", "confirmed"].includes(statusLower) && (
+                                <div className="op-status-pill op-status-transit" style={{ backgroundColor: "rgba(59, 130, 246, 0.1)", color: "#2563eb" }}>
+                                  <Clock size={12} /> {order.status_display || "Processing"}
+                                </div>
+                              )}
+                              {statusLower === "cancelled" && (
+                                <div className="op-status-pill op-status-transit" style={{ backgroundColor: "rgba(239, 68, 68, 0.1)", color: "#dc2626" }}>
+                                  Cancelled
+                                </div>
+                              )}
+                            </div>
+                            <div className="op-item-right-actions">
+                              <Link href={`/orders/details?id=${order.id}`} className="op-ghost-btn">
+                                View Details
+                              </Link>
+                              <Link href={`/track-order?id=${order.id}`} className="op-track-orange-btn">
+                                Track package
+                              </Link>
+                            </div>
+                          </div>
+                        ))
+                      ) : (
+                        <div className="op-order-item">
+                          <div className="op-item-image-wrap"><div className="op-item-placeholder-img" /></div>
+                          <div className="op-item-center">
+                            <div className="op-item-title">Order Total: ${orderTotalNum.toFixed(2)}</div>
+                            <div className="op-status-pill op-status-transit">
+                              {order.status_display || order.status}
+                            </div>
+                          </div>
+                          <div className="op-item-right-actions">
+                            <Link href={`/orders/details?id=${order.id}`} className="op-ghost-btn">
+                              View Details
+                            </Link>
+                          </div>
+                        </div>
+                      )}
+                    </div>
+                  );
+                })}
+              </div>
+            </>
           )}
         </main>
       </div>

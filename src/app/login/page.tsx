@@ -73,37 +73,47 @@ function LoginContent() {
     }, 700);
   };
 
-  const handlePasswordLogin = (e: FormEvent) => {
+  const handlePasswordLogin = async (e: FormEvent) => {
     e.preventDefault();
     setError("");
 
-    if (!inputVal.trim() || !password) {
+    const trimmedInput = inputVal.trim();
+    if (!trimmedInput || !password) {
       setError("Please fill out all credentials.");
       return;
     }
 
+    // Django authentication uses email
+    if (!trimmedInput.includes("@")) {
+      setError("Login requires your registered email address. Please enter a valid email.");
+      return;
+    }
+
     setIsLoading(true);
-    setTimeout(() => {
-      const success = login(inputVal, password);
-      setIsLoading(false);
+    try {
+      const success = await login(trimmedInput, password);
       if (success) {
-        router.push(getRedirectTarget(inputVal.toLowerCase().includes("admin")));
-      } else {
-        setError("Invalid login credentials. Try demo logins below.");
+        router.push(getRedirectTarget(trimmedInput.toLowerCase().includes("admin")));
       }
-    }, 700);
+    } catch (err: any) {
+      const msg =
+        err?.data?.detail ||
+        err?.message ||
+        "Invalid email or password. Please check your credentials and try again.";
+      setError(msg);
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   const handleDemoUser = () => {
-    setInputVal("alexander.vance@example.com");
-    setPassword("password123");
-    login("alexander.vance@example.com", "password123");
-    router.push(getRedirectTarget(false));
+    setInputVal("testuser@example.com");
+    setPassword("TestPassword123!");
   };
 
   const handleDemoAdmin = () => {
-    loginAsAdmin();
-    router.push("/admin");
+    setInputVal("admin@al-umaima.com");
+    setPassword("AdminPassword123!");
   };
 
   return (

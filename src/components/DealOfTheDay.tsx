@@ -4,7 +4,8 @@ import { useState, useEffect } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { Clock, ShieldCheck, ShoppingCart, Check } from "lucide-react";
-import { products } from "@/data/products";
+import { products as fallbackProducts, Product } from "@/data/products";
+import { getDeals } from "@/lib/products";
 import { useCart } from "@/context/CartContext";
 import { useToast } from "@/context/ToastContext";
 import "@/styles/deal-of-the-day.css";
@@ -39,7 +40,27 @@ export default function DealOfTheDay() {
 
   const formatDigit = (num: number) => num.toString().padStart(2, "0");
 
-  const dealProduct = products.find((p) => p.id === "aura-pro-headphones") || products[0];
+  const [dealProduct, setDealProduct] = useState<Product>(
+    () => fallbackProducts.find((p) => p.id === "aura-pro-headphones") || fallbackProducts[0]
+  );
+
+  useEffect(() => {
+    let isMounted = true;
+    async function loadDeals() {
+      try {
+        const deals = await getDeals();
+        if (isMounted && deals.length > 0) {
+          setDealProduct(deals[0]);
+        }
+      } catch (err) {
+        console.error("Failed to load deals from Django API:", err);
+      }
+    }
+    loadDeals();
+    return () => {
+      isMounted = false;
+    };
+  }, []);
 
   const handleAddToCart = () => {
     addToCart(

@@ -1,5 +1,6 @@
 "use client";
 
+import { useEffect, useState } from "react";
 import Link from "next/link";
 import { 
   Smartphone, 
@@ -10,10 +11,31 @@ import {
   Headphones,
   Watch
 } from "lucide-react";
-import { categories, Category } from "@/data/products";
+import { categories as fallbackCategories, Category } from "@/data/products";
+import { getCategories } from "@/lib/categories";
 import "@/styles/categories.css";
 
 export default function Categories() {
+  const [categoryList, setCategoryList] = useState<Category[]>(fallbackCategories);
+
+  useEffect(() => {
+    let isMounted = true;
+    async function loadCategories() {
+      try {
+        const items = await getCategories();
+        if (isMounted && items.length > 0) {
+          setCategoryList(items);
+        }
+      } catch (err) {
+        console.error("Failed to load categories from Django API:", err);
+      }
+    }
+    loadCategories();
+    return () => {
+      isMounted = false;
+    };
+  }, []);
+
   const getCategoryIcon = (iconName: string) => {
     switch (iconName) {
       case "Smartphone":
@@ -46,7 +68,7 @@ export default function Categories() {
         {/* Category Icons Row */}
         <div className="al-cat-strip-container">
           <div className="al-cat-grid">
-            {categories.map((cat: Category) => {
+            {categoryList.map((cat: Category) => {
               return (
                 <Link 
                   key={cat.id} 

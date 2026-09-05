@@ -27,36 +27,66 @@ function RegisterContent() {
   const [error, setError] = useState<string>("");
   const [isLoading, setIsLoading] = useState<boolean>(false);
 
-  const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setError("");
 
-    if (!name.trim()) {
+    const trimmedName = name.trim();
+    const trimmedEmail = email.trim();
+    const trimmedPhone = phone.trim();
+
+    if (!trimmedName) {
       setError("Please enter your Full Name.");
       return;
     }
 
-    if (!email.trim() && !phone.trim()) {
-      setError("Please enter either Mobile number or Email address.");
+    if (!trimmedEmail) {
+      setError("Please enter a valid Email address.");
       return;
     }
 
-    if (!password || password.length < 6) {
-      setError("Password must be at least 6 characters.");
+    if (!password || password.length < 8) {
+      setError("Password must be at least 8 characters.");
       return;
     }
 
     setIsLoading(true);
 
-    setTimeout(() => {
-      const success = register(name, email, phone, password);
-      setIsLoading(false);
+    try {
+      const success = await register(trimmedName, trimmedEmail, trimmedPhone, password);
       if (success) {
         router.push(redirectUrl);
-      } else {
-        setError("Failed to create account. Please try again.");
       }
-    }, 700);
+    } catch (err: any) {
+      let msg = "Failed to create account. Please try again.";
+      if (err?.data) {
+        if (typeof err.data === "string") {
+          msg = err.data;
+        } else if (err.data.email) {
+          const emailErr = Array.isArray(err.data.email) ? err.data.email[0] : err.data.email;
+          if (typeof emailErr === "string" && emailErr.toLowerCase().includes("already exists")) {
+            msg = "An account with this email already exists.";
+          } else {
+            msg = `Email: ${emailErr}`;
+          }
+        } else if (err.data.password) {
+          const pwdErr = Array.isArray(err.data.password) ? err.data.password[0] : err.data.password;
+          msg = `Password: ${pwdErr}`;
+        } else if (err.data.name) {
+          const nameErr = Array.isArray(err.data.name) ? err.data.name[0] : err.data.name;
+          msg = `Name: ${nameErr}`;
+        } else if (err.data.detail) {
+          msg = err.data.detail;
+        } else if (err.message) {
+          msg = err.message;
+        }
+      } else if (err?.message) {
+        msg = err.message;
+      }
+      setError(msg);
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   return (
@@ -119,7 +149,7 @@ function RegisterContent() {
             </div>
 
             <div className="al-umaima-input-group">
-              <label htmlFor="reg-email-input" className="al-umaima-label">Email Address (Optional)</label>
+              <label htmlFor="reg-email-input" className="al-umaima-label">Email Address</label>
               <input
                 id="reg-email-input"
                 name="email"
@@ -129,6 +159,7 @@ function RegisterContent() {
                 placeholder="name@example.com"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
+                required
               />
             </div>
 
@@ -141,10 +172,10 @@ function RegisterContent() {
                   type={showPassword ? "text" : "password"}
                   autoComplete="new-password"
                   className="al-umaima-input"
-                  placeholder="At least 6 characters"
+                  placeholder="At least 8 characters"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
-                  minLength={6}
+                  minLength={8}
                   required
                 />
                 <button

@@ -4,7 +4,9 @@ import { useState, useMemo, useEffect, Suspense } from "react";
 import { useSearchParams } from "next/navigation";
 import Link from "next/link";
 import { ChevronUp, ChevronDown, ChevronLeft, ChevronRight, Clock, Sparkles, SlidersHorizontal, X, RotateCcw } from "lucide-react";
-import { products, categories, Product, Category } from "@/data/products";
+import { Product, Category, products as fallbackProducts, categories as fallbackCategories } from "@/data/products";
+import { getProducts } from "@/lib/products";
+import { getCategories } from "@/lib/categories";
 import ProductCard from "@/components/ProductCard";
 import "@/styles/category-page.css";
 
@@ -48,6 +50,38 @@ function ProductsContent() {
   const [selectedRatings, setSelectedRatings] = useState<number[]>([]);
   const [selectedDiscounts, setSelectedDiscounts] = useState<number[]>([]);
   const [sortBy, setSortBy] = useState<string>("featured");
+  const [productList, setProductList] = useState<Product[]>(fallbackProducts);
+  const [categoryList, setCategoryList] = useState<Category[]>(fallbackCategories);
+  const [isLoading, setIsLoading] = useState<boolean>(false);
+
+  useEffect(() => {
+    let isMounted = true;
+    async function fetchCatalog() {
+      setIsLoading(true);
+      try {
+        const [pRes, cRes] = await Promise.all([
+          getProducts(),
+          getCategories(),
+        ]);
+        if (isMounted) {
+          if (pRes && pRes.results && pRes.results.length > 0) {
+            setProductList(pRes.results);
+          }
+          if (cRes && cRes.length > 0) {
+            setCategoryList(cRes);
+          }
+        }
+      } catch (err) {
+        console.error("Failed to load catalog from Django API:", err);
+      } finally {
+        if (isMounted) setIsLoading(false);
+      }
+    }
+    fetchCatalog();
+    return () => {
+      isMounted = false;
+    };
+  }, []);
 
   const toggleSection = (sectionKey: keyof typeof openSections) => {
     setOpenSections((prev) => ({ ...prev, [sectionKey]: !prev[sectionKey] }));
@@ -81,7 +115,7 @@ function ProductsContent() {
   };
 
   const filteredProducts = useMemo<Product[]>(() => {
-    return products
+    return productList
       .filter((p: Product) => {
         if (isFeaturedQuery && !p.isFeatured && !p.isBestSeller && !p.isDealOfTheDay && (!p.discountPercentage || p.discountPercentage <= 0) && p.badge !== "SALE") {
           return false;
@@ -125,18 +159,18 @@ function ProductsContent() {
         if (sortBy === "discount") return (b.discountPercentage || 0) - (a.discountPercentage || 0);
         return 0;
       });
-  }, [isFeaturedQuery, selectedCategory, initialQuery, selectedBrands, selectedPriceRange, selectedRatings, selectedDiscounts, sortBy]);
+  }, [productList, isFeaturedQuery, selectedCategory, initialQuery, selectedBrands, selectedPriceRange, selectedRatings, selectedDiscounts, sortBy]);
 
   const availableBrands = useMemo(() => {
     const brandMap = new Map<string, number>();
-    products.forEach((p) => {
+    productList.forEach((p) => {
       const b = p.brand || "Al-Umaima";
       brandMap.set(b, (brandMap.get(b) || 0) + 1);
     });
     return Array.from(brandMap.entries()).map(([name, count]) => ({ name, count }));
   }, []);
 
-  const currentCategoryObj = categories.find((c) => c.slug === selectedCategory);
+  const currentCategoryObj = categoryList.find((c) => c.slug === selectedCategory);
   const pageHeading = isFeaturedQuery 
     ? "Featured Deals & Flash Offers"
     : selectedCategory === "all" 
@@ -257,7 +291,7 @@ function ProductsContent() {
                     />
                     <span>All Categories</span>
                   </label>
-                  {categories.map((cat: Category) => (
+                  {categoryList.map((cat: Category) => (
                     <label key={cat.id} className="al-radio-label">
                       <input
                         type="radio"
@@ -489,7 +523,7 @@ function ProductsContent() {
                     />
                     <span>All Categories</span>
                   </label>
-                  {categories.map((c) => (
+                  {categoryList.map((c) => (
                     <label key={c.id} className="al-radio-label">
                       <input
                         type="radio"

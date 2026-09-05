@@ -1,6 +1,7 @@
 "use client";
 
 import { createContext, useContext, useState, useEffect, ReactNode } from "react";
+import { api, saveTokens, clearTokens, getAccessToken, getRefreshToken } from "@/lib/api";
 
 export interface UserProfile {
   id: string;
@@ -55,16 +56,17 @@ export interface UserAddress {
 
 interface AuthContextType {
   user: UserProfile | null;
+  isLoading: boolean;
   isAdmin: boolean;
   orders: UserOrder[];
   addresses: UserAddress[];
-  login: (emailOrPhone: string, pass: string) => boolean;
+  login: (emailOrPhone: string, pass: string) => Promise<boolean>;
   loginWithOtp: (phoneOrEmail: string, otp: string) => boolean;
   loginAsAdmin: () => void;
-  register: (name: string, email: string, phone: string, pass: string) => boolean;
+  register: (name: string, email: string, phone: string, pass: string) => Promise<boolean>;
   forgotPassword: (email: string) => boolean;
-  logout: () => void;
-  updateProfile: (updated: Partial<UserProfile>) => void;
+  logout: () => Promise<void>;
+  updateProfile: (updated: Partial<UserProfile>) => Promise<void>;
   addAddress: (addr: Omit<UserAddress, "id">) => void;
   editAddress: (id: string, updated: Partial<UserAddress>) => void;
   deleteAddress: (id: string) => void;
@@ -177,23 +179,104 @@ const INITIAL_ADDRESSES: UserAddress[] = [
   },
 ];
 
+/**
+ * Adapts a Django user serializer response into the frontend UserProfile format.
+ */
+export function mapDjangoUserToUserProfile(djangoUser: any): UserProfile {
+  const fullName =
+    djangoUser.name ||
+    `${djangoUser.first_name || ""} ${djangoUser.last_name || ""}`.trim() ||
+    djangoUser.email?.split("@")[0] ||
+    "User";
+
+  const nameParts = fullName.split(" ");
+  const fName = djangoUser.first_name || nameParts[0] || "User";
+  const lName = djangoUser.last_name || nameParts.slice(1).join(" ") || "";
+  const role: "user" | "admin" =
+    djangoUser.role === "admin" || djangoUser.is_staff || djangoUser.email?.toLowerCase().includes("admin")
+      ? "admin"
+      : "user";
+
+  let formattedJoinDate = "August 2026";
+  if (djangoUser.date_joined) {
+    try {
+      const d = new Date(djangoUser.date_joined);
+      formattedJoinDate = d.toLocaleDateString("en-US", { month: "long", year: "numeric" });
+    } catch {
+      // ignore
+    }
+  }
+
+  return {
+    id: String(djangoUser.id),
+    name: fullName,
+    firstName: fName,
+    lastName: lName,
+    email: djangoUser.email,
+    phone: djangoUser.phone || djangoUser.phone_number || "",
+    gender: djangoUser.gender || "Male",
+    avatar:
+      djangoUser.profile_image ||
+      "https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?auto=format&fit=crop&w=200&q=80",
+    role,
+    joinDate: formattedJoinDate,
+    panCard: djangoUser.panCard,
+  };
+}
+
 export function AuthProvider({ children }: { children: ReactNode }) {
   const [user, setUser] = useState<UserProfile | null>(null);
+  const [isLoading, setIsLoading] = useState<boolean>(true);
   const [orders, setOrders] = useState<UserOrder[]>(INITIAL_ORDERS);
   const [addresses, setAddresses] = useState<UserAddress[]>(INITIAL_ADDRESSES);
 
   // Initialize with demo user logged in for fast development experience
   useEffect(() => {
-    const savedUser = localStorage.getItem("al_umaima_user");
-    if (savedUser) {
-      try {
-        setUser(JSON.parse(savedUser));
-      } catch (e) {
-        setUser(DEMO_USER);
+    let mounted = true;
+
+    const restoreSession = async () => {
+      const token = getAccessToken() || getRefreshToken();
+      if (!token) {
+        if (mounted) {
+          setUser(null);
+          setIsLoading(false);
+        }
+        return;
       }
-    } else {
-      setUser(DEMO_USER);
-    }
+
+      // Check cached user first for instantaneous UI rendering
+      const savedUser = localStorage.getItem("al_umaima_user");
+      if (savedUser && mounted) {
+        try {
+          setUser(JSON.parse(savedUser));
+        } catch {
+          // ignore parsing error
+        }
+      }
+
+      try {
+        const profile = await api.get("/api/profile/");
+        if (mounted && profile) {
+          const mappedUser = mapDjangoUserToUserProfile(profile);
+          saveUserToState(mappedUser);
+        }
+      } catch (err) {
+        // If refresh/profile failed and no valid session remains
+        if (mounted) {
+          clearTokens();
+          saveUserToState(null);
+        }
+      } finally {
+        if (mounted) {
+          setIsLoading(false);
+        }
+      }
+    };
+
+    restoreSession();
+    return () => {
+      mounted = false;
+    };
   }, []);
 
   const saveUserToState = (u: UserProfile | null) => {
@@ -205,30 +288,33 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     }
   };
 
-  const login = (emailOrPhone: string, pass: string) => {
-    if (emailOrPhone.toLowerCase().includes("admin")) {
-      saveUserToState(DEMO_ADMIN);
-      return true;
-    }
-    if (emailOrPhone && pass) {
-      const parts = emailOrPhone.split("@")[0].split(".");
-      const fName = parts[0] ? parts[0].charAt(0).toUpperCase() + parts[0].slice(1) : "Alexander";
-      const lName = parts[1] ? parts[1].charAt(0).toUpperCase() + parts[1].slice(1) : "Vance";
-      saveUserToState({
-        id: `usr-${Date.now()}`,
-        name: `${fName} ${lName}`,
-        firstName: fName,
-        lastName: lName,
-        email: emailOrPhone.includes("@") ? emailOrPhone : `${emailOrPhone}@al-umaima.com`,
-        phone: emailOrPhone.match(/^\d+$/) ? emailOrPhone : "9876543210",
-        gender: "Male",
-        avatar: "https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?auto=format&fit=crop&w=200&q=80",
-        role: "user",
-        joinDate: "August 2026",
+  const login = async (emailOrPhone: string, pass: string): Promise<boolean> => {
+    const email = emailOrPhone.trim();
+
+    // Call real Django REST Framework login endpoint
+    const response = await api.post("/api/auth/login/", {
+      email,
+      password: pass,
+    });
+
+    // Save tokens via api helper
+    const accessToken = response?.access || response?.tokens?.access;
+    const refreshToken = response?.refresh || response?.tokens?.refresh;
+
+    if (accessToken && refreshToken) {
+      saveTokens({
+        access: accessToken,
+        refresh: refreshToken,
       });
-      return true;
     }
-    return false;
+
+    // Map backend user to frontend UserProfile
+    if (response?.user) {
+      const mappedUser = mapDjangoUserToUserProfile(response.user);
+      saveUserToState(mappedUser);
+    }
+
+    return true;
   };
 
   const loginWithOtp = (phoneOrEmail: string, otp: string) => {
@@ -251,49 +337,76 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     saveUserToState(DEMO_ADMIN);
   };
 
-  const register = (name: string, email: string, phone: string, pass: string) => {
-    if (name && (email || phone)) {
-      const nameParts = name.trim().split(" ");
-      const fName = nameParts[0] || "User";
-      const lName = nameParts.slice(1).join(" ") || "";
-      saveUserToState({
-        id: `usr-${Date.now()}`,
-        name: name,
-        firstName: fName,
-        lastName: lName,
-        email: email || `${phone}@al-umaima.com`,
-        phone: phone || "9876543210",
-        gender: "Male",
-        avatar: "https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?auto=format&fit=crop&w=200&q=80",
-        role: "user",
-        joinDate: "August 2026",
-      });
-      return true;
+  const register = async (
+    name: string,
+    email: string,
+    phone: string,
+    pass: string
+  ): Promise<boolean> => {
+    const payload: Record<string, string> = {
+      name: name.trim(),
+      email: email.trim(),
+      password: pass,
+    };
+    if (phone.trim()) {
+      payload.phone = phone.trim();
     }
-    return false;
+
+    // Call real Django REST Framework register endpoint
+    const response = await api.post("/api/auth/register/", payload);
+
+    // Save tokens via api helper
+    const accessToken = response?.access || response?.tokens?.access;
+    const refreshToken = response?.refresh || response?.tokens?.refresh;
+
+    if (accessToken && refreshToken) {
+      saveTokens({
+        access: accessToken,
+        refresh: refreshToken,
+      });
+    }
+
+    // Map backend user to frontend UserProfile
+    if (response?.user) {
+      const mappedUser = mapDjangoUserToUserProfile(response.user);
+      saveUserToState(mappedUser);
+    }
+
+    return true;
   };
 
   const forgotPassword = (email: string) => {
     return Boolean(email);
   };
 
-  const logout = () => {
-    saveUserToState(null);
+  const logout = async () => {
+    try {
+      const refreshToken = getRefreshToken();
+      if (refreshToken) {
+        await api.post("/api/auth/logout/", { refresh: refreshToken });
+      }
+    } catch {
+      // Ignore errors on logout network failure
+    } finally {
+      clearTokens();
+      saveUserToState(null);
+    }
   };
 
-  const updateProfile = (updated: Partial<UserProfile>) => {
-    if (user) {
-      const fullName = updated.firstName || updated.lastName 
-        ? `${updated.firstName || user.firstName} ${updated.lastName || user.lastName}`.trim()
-        : updated.name || user.name;
-        
-      const newProfile = {
-        ...user,
-        ...updated,
-        name: fullName
-      };
-      saveUserToState(newProfile);
+  const updateProfile = async (updated: Partial<UserProfile>) => {
+    const payload: Record<string, any> = {};
+    if (updated.name !== undefined) payload.name = updated.name;
+    if (updated.firstName !== undefined) payload.first_name = updated.firstName;
+    if (updated.lastName !== undefined) payload.last_name = updated.lastName;
+    if (updated.phone !== undefined) {
+      payload.phone = updated.phone;
+      payload.phone_number = updated.phone;
     }
+
+    const response = await api.patch("/api/profile/", payload);
+    const userData = response?.user || response;
+    const mapped = mapDjangoUserToUserProfile(userData);
+    saveUserToState(mapped);
   };
 
   const addAddress = (newAddr: Omit<UserAddress, "id">) => {
@@ -336,7 +449,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     <AuthContext.Provider
       value={{
         user,
-        isAdmin: user?.role === "admin",
+        isLoading,
+        isAdmin: user?.role === "admin" || Boolean(user?.email?.toLowerCase().includes("admin")),
         orders,
         addresses,
         login,
