@@ -9,6 +9,8 @@ import { useWishlist } from "@/context/WishlistContext";
 import { useCart } from "@/context/CartContext";
 import { useToast } from "@/context/ToastContext";
 import "@/styles/electronics-page.css";
+import Image from "next/image";
+
 
 interface ElectronicsViewProps {
   products: Product[];
@@ -176,7 +178,7 @@ export default function ElectronicsView({ products }: ElectronicsViewProps) {
     <div className="al-electronics-page-wrapper">
       {/* 1. HERO BANNER */}
       <section className="al-electronics-hero">
-        <img
+        <Image width={500} height={500}
           src="https://images.unsplash.com/photo-1505740420928-5e560c06d30e?auto=format&fit=crop&w=1200&q=80"
           alt="Aura Pro Max ANC Headphones"
           className="al-electronics-hero-bg-img"

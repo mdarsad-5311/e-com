@@ -30,6 +30,8 @@ import { useAuth } from "@/context/AuthContext";
 import { useWishlist } from "@/context/WishlistContext";
 import { useToast } from "@/context/ToastContext";
 import "@/styles/profile.css";
+import Image from "next/image";
+
 
 export default function ProfilePage() {
   const router = useRouter();
@@ -173,7 +175,7 @@ export default function ProfilePage() {
         <div className="container al-profile-header-content">
           <div className="al-profile-user-row">
             <div className="al-avatar-container">
-              <img
+              <Image width={500} height={500}
                 src={user?.avatar || "https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?auto=format&fit=crop&w=200&q=80"}
                 alt={userName}
                 className="al-user-avatar-img"

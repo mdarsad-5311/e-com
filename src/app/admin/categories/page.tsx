@@ -20,6 +20,8 @@ import {
 } from "lucide-react";
 import { categories as initialCategories, Category } from "@/data/products";
 import "@/styles/admin.css";
+import Image from "next/image";
+
 
 export default function AdminCategoriesPage() {
   const [categoryList, setCategoryList] = useState<Category[]>([]);
@@ -144,7 +146,7 @@ export default function AdminCategoriesPage() {
             {filteredCategories.map((cat) => (
               <div key={cat.id} className="card admin-cat-card">
                 <div className="cat-card-img-wrap">
-                  <img src={cat.image} alt={cat.name} className="cat-card-img" />
+                  <Image width={500} height={500} src={cat.image || "data:image/gif;base64,R0lGODlhAQABAAD/ACwAAAAAAQABAAACADs="} alt={cat.name} className="cat-card-img" />
                   <span className="cat-item-count">{cat.itemCount} Items</span>
                 </div>
 

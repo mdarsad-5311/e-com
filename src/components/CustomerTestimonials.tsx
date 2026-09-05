@@ -2,6 +2,8 @@
 
 import { Star, CheckCircle, Quote, Sparkles } from "lucide-react";
 import "@/styles/customer-testimonials.css";
+import Image from "next/image";
+
 
 interface Testimonial {
   id: string;
@@ -84,7 +86,7 @@ export default function CustomerTestimonials() {
               </div>
 
               <div className="user-profile-row">
-                <img src={item.avatar} alt={item.name} className="user-avatar" />
+                <Image width={500} height={500} src={item.avatar} alt={item.name} className="user-avatar" />
                 <div>
                   <h4 className="user-name">{item.name}</h4>
                   <p className="user-role">{item.role}</p>

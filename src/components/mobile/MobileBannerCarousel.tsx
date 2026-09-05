@@ -136,7 +136,7 @@ export default function MobileBannerCarousel({
                 >
                   {/* Banner Image with smooth blend */}
                   <div className="al-mobile-banner-img-wrap">
-                    <img
+                    <Image width={500} height={500}
                       src={slide.imageUrl}
                       alt={slide.heading}
                       className="al-mobile-banner-img"

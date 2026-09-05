@@ -6,6 +6,8 @@ import { Headphones, Shirt, Home, Watch, Smartphone, Sparkles, Flame, ChevronLef
 import { categories as fallbackCategories, Category } from "@/data/products";
 import { getCategories } from "@/lib/categories";
 import "@/styles/category-quick-strip.css";
+import Image from "next/image";
+
 
 export default function CategoryQuickStrip() {
   const scrollRef = useRef<HTMLDivElement>(null);
@@ -133,7 +135,7 @@ export default function CategoryQuickStrip() {
               >
                 <div className="avatar-ring-wrapper">
                   <div className="avatar-circle">
-                    <img src={item.image} alt={item.title} className="avatar-img" />
+                    <Image width={500} height={500} src={item.image || "data:image/gif;base64,R0lGODlhAQABAAD/ACwAAAAAAQABAAACADs="} alt={item.title || "Category image"} className="avatar-img" />
                     <div className="icon-overlay">
                       <IconComp size={14} />
                     </div>

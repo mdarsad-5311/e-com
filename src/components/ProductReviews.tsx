@@ -4,6 +4,8 @@ import { useState, FormEvent } from "react";
 import { Star, CheckCircle, ThumbsUp, MessageSquarePlus, X } from "lucide-react";
 import { Review } from "@/data/products";
 import "@/styles/product-reviews.css";
+import Image from "next/image";
+
 
 interface ProductReviewsProps {
   reviews?: Review[];
@@ -102,7 +104,7 @@ export default function ProductReviews({ reviews: initialReviews = [], rating, r
             <div key={rev.id} className="review-card glass-card">
               <div className="review-header">
                 <div className="author-info">
-                  <img
+                  <Image width={500} height={500}
                     src={rev.avatar || "https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?auto=format&fit=crop&w=120&q=80"}
                     alt={rev.author}
                     className="author-avatar"

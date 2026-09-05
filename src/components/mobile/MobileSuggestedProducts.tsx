@@ -15,6 +15,8 @@ import { products, Product } from "@/data/products";
 import { useCart } from "@/context/CartContext";
 import { useWishlist } from "@/context/WishlistContext";
 import { useToast } from "@/context/ToastContext";
+import Image from "next/image";
+
 
 interface MobileSuggestedProductsProps {
   selectedCategoryId?: string;
@@ -99,7 +101,7 @@ export default function MobileSuggestedProducts({
                   href={`/products/${product.slug || product.id}`}
                   className="al-mobile-card-img-link"
                 >
-                  <img
+                  <Image width={500} height={500}
                     src={product.image}
                     alt={product.title}
                     className="al-mobile-card-img"

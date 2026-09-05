@@ -14,6 +14,8 @@ import ProductCard from "@/components/ProductCard";
 import { useWishlist } from "@/context/WishlistContext";
 import { useCart } from "@/context/CartContext";
 import "@/styles/fashion-page.css";
+import Image from "next/image";
+
 
 interface FashionViewProps {
   products: Product[];
@@ -178,7 +180,7 @@ export default function FashionView({ products }: FashionViewProps) {
     <div className="al-fashion-page-wrapper">
       {/* 1. HERO BANNER — Full-width background image with aligned content */}
       <section className="al-fashion-hero al-fashion-hero--mobile">
-        <img
+        <Image width={500} height={500}
           src="https://images.unsplash.com/photo-1551028719-00167b16eac5?auto=format&fit=crop&w=1200&q=80"
           alt="Leather Jacket Fashion"
           className="al-fashion-hero-bg-img"
@@ -241,7 +243,7 @@ export default function FashionView({ products }: FashionViewProps) {
             <div className="al-fashion-featured-card">
               <div className="al-fashion-featured-img-wrap">
                 <Link href={`/products/${featuredProduct.slug || featuredProduct.id}`}>
-                  <img
+                  <Image width={500} height={500}
                     src={featuredProduct.image}
                     alt={featuredProduct.title}
                     className="al-fashion-featured-img"
@@ -304,7 +306,7 @@ export default function FashionView({ products }: FashionViewProps) {
           </div>
           <div className="al-bento-grid">
             <Link href="/products?category=fashion" className="al-bento-left-card">
-              <img
+              <Image width={500} height={500}
                 src="https://images.unsplash.com/photo-1441986300917-64674bd600d8?auto=format&fit=crop&w=1200&q=80"
                 alt="Urban Utility Fashion Store"
                 className="al-bento-bg-img"
@@ -318,7 +320,7 @@ export default function FashionView({ products }: FashionViewProps) {
             </Link>
             <div className="al-bento-right-col">
               <Link href="/products?category=fashion" className="al-bento-mini-card">
-                <img
+                <Image width={500} height={500}
                   src="https://images.unsplash.com/photo-1490481651871-ab68de25d43d?auto=format&fit=crop&w=800&q=80"
                   alt="Minimalist Classics"
                   className="al-bento-bg-img"
@@ -330,7 +332,7 @@ export default function FashionView({ products }: FashionViewProps) {
                 </div>
               </Link>
               <Link href="/products/oversized-cashmere-turtleneck" className="al-bento-mini-card">
-                <img
+                <Image width={500} height={500}
                   src="https://images.unsplash.com/photo-1576566588028-4147f3842f27?auto=format&fit=crop&w=800&q=80"
                   alt="Eco-Knitwear"
                   className="al-bento-bg-img"

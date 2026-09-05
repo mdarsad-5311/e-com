@@ -168,7 +168,7 @@ function ProductsContent() {
       brandMap.set(b, (brandMap.get(b) || 0) + 1);
     });
     return Array.from(brandMap.entries()).map(([name, count]) => ({ name, count }));
-  }, []);
+  }, [productList]);
 
   const currentCategoryObj = categoryList.find((c) => c.slug === selectedCategory);
   const pageHeading = isFeaturedQuery 

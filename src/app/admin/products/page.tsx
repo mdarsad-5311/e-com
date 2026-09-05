@@ -16,6 +16,8 @@ import {
 } from "lucide-react";
 import { products, categories, Product } from "@/data/products";
 import "@/styles/admin.css";
+import Image from "next/image";
+
 
 export default function AdminProductsPage() {
   const [productList, setProductList] = useState<Product[]>([]);
@@ -219,7 +221,7 @@ export default function AdminProductsPage() {
                     <tr key={p.id}>
                       <td>
                         <div className="product-table-item">
-                          <img src={p.image} alt={p.title} className="table-item-img" />
+                          <Image width={500} height={500} src={p.image} alt={p.title} className="table-item-img" />
                           <div>
                             <div className="item-title font-bold">{p.title}</div>
                             <div className="item-id text-muted">{p.id}</div>

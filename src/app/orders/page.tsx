@@ -23,6 +23,8 @@ import { useAuth } from "@/context/AuthContext";
 import { api } from "@/lib/api";
 import { OrderResponse } from "@/types/api";
 import "@/styles/orders-page.css";
+import Image from "next/image";
+
 
 type OrderTab = "orders" | "buy_again" | "not_shipped" | "cancelled";
 type TimeFilter = "3months" | "2023" | "2022";
@@ -289,8 +291,8 @@ export default function OrdersPage() {
                           <div key={item.id} className="op-order-item">
                             <div className="op-item-image-wrap">
                               {item.image || item.product_image_url ? (
-                                <img
-                                  src={item.image || item.product_image_url}
+                                <Image width={500} height={500}
+                                  src={item.image || item.product_image_url || "data:image/gif;base64,R0lGODlhAQABAAD/ACwAAAAAAQABAAACADs="}
                                   alt={item.title || item.product_name}
                                   className="op-item-image"
                                 />

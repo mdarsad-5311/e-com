@@ -25,6 +25,8 @@ import { api } from "@/lib/api";
 import { OrderResponse } from "@/types/api";
 import "@/styles/orders-page.css";
 import "@/styles/order-detail.css";
+import Image from "next/image";
+
 
 function OrderDetailContent() {
   const router = useRouter();
@@ -299,7 +301,7 @@ function OrderDetailContent() {
                       <div key={item.id} className={`od-item-row ${idx < order.items.length - 1 ? "od-item-divider" : ""}`}>
                         <div className="od-item-img-wrap">
                           {item.image || item.product_image_url ? (
-                            <img src={item.image || item.product_image_url} alt={item.title || item.product_name} className="od-item-img" style={{ width: "100%", height: "100%", objectFit: "cover", borderRadius: "6px" }} />
+                            <Image width={500} height={500} src={item.image || item.product_image_url || "data:image/gif;base64,R0lGODlhAQABAAD/ACwAAAAAAQABAAACADs="} alt={item.title || item.product_name || "Product image"} className="od-item-img" style={{ width: "100%", height: "100%", objectFit: "cover", borderRadius: "6px" }} />
                           ) : (
                             <div className="od-item-img-placeholder" />
                           )}

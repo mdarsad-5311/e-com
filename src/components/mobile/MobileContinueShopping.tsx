@@ -6,6 +6,8 @@ import { ArrowRight, Sparkles } from "lucide-react";
 import { products, Product } from "@/data/products";
 import { useRecentlyViewed } from "@/context/RecentlyViewedContext";
 import { useAuth } from "@/context/AuthContext";
+import Image from "next/image";
+
 
 export default function MobileContinueShopping() {
   const { recent } = useRecentlyViewed();
@@ -52,7 +54,7 @@ export default function MobileContinueShopping() {
                   className="al-mobile-continue-item-link"
                 >
                   <div className="al-mobile-continue-img-box">
-                    <img
+                    <Image width={500} height={500}
                       src={product.image}
                       alt={product.title}
                       className="al-mobile-continue-img"

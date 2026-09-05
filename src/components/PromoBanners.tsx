@@ -3,6 +3,8 @@
 import Link from "next/link";
 import { ArrowRight, Zap, Flame } from "lucide-react";
 import "@/styles/promo-banners.css";
+import Image from "next/image";
+
 
 export default function PromoBanners() {
   return (
@@ -26,7 +28,7 @@ export default function PromoBanners() {
             </div>
           </div>
           <div className="promo-image-box">
-            <img
+            <Image width={500} height={500}
               src="https://images.unsplash.com/photo-1546435770-a3e426bf472b?auto=format&fit=crop&w=700&q=80"
               alt="Tech & Audio Drop"
               className="promo-img"
@@ -52,7 +54,7 @@ export default function PromoBanners() {
             </div>
           </div>
           <div className="promo-image-box">
-            <img
+            <Image width={500} height={500}
               src="https://images.unsplash.com/photo-1551028719-00167b16eac5?auto=format&fit=crop&w=700&q=80"
               alt="Urban Fashion Drop"
               className="promo-img"

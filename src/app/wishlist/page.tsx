@@ -8,6 +8,8 @@ import { useToast } from "@/context/ToastContext";
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import "@/styles/wishlist.css";
+import Image from "next/image";
+
 
 export default function WishlistPage() {
   const { wishlist, removeFromWishlist, moveToCart } = useWishlist();
@@ -64,7 +66,7 @@ export default function WishlistPage() {
                 </button>
 
                 <div className="wishlist-img-frame">
-                  <img src={product.image} alt={product.title} className="wishlist-img" />
+                  <Image width={500} height={500} src={product.image} alt={product.title} className="wishlist-img" />
                 </div>
 
                 <div className="wishlist-card-content">
