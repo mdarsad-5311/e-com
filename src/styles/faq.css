@@ -1,4 +1,4 @@
-/* Support / FAQ Page Styles - Matching Attachment 4 with Patterned Dark Shader Banner */
+/* Support & FAQ styles */
 
 .al-support-page-wrapper {
   background-color: #F8FAFC;
@@ -21,7 +21,7 @@
   overflow: hidden;
 }
 
-/* Subtle scalloped wave shader pattern overlay matching Attachment 4 */
+/* Decorative background pattern */
 .al-support-hero::before {
   content: "";
   position: absolute;
@@ -55,7 +55,7 @@
   font-weight: 400;
 }
 
-/* Search Bar (Attachment 4 Floating White Pill) */
+/* FAQ search input */
 .al-support-search-wrap {
   position: relative;
   max-width: 580px;
@@ -99,7 +99,7 @@
 }
 
 /* ==========================================================================
-   2. 4 QUICK ACTION SUPPORT CARDS (Attachment 4)
+   Quick action support cards
    ========================================================================== */
 .al-support-cards-section {
   position: relative;

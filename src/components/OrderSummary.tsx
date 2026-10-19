@@ -121,7 +121,7 @@ export default function OrderSummary() {
         </button>
       )}
 
-      {/* Trust & Guarantee Badges Matching Attachment */}
+      {/* Trust & guarantee badges */}
       <div className="al-summary-trust-badges">
         {/* Secure Checkout */}
         <div className="al-trust-badge al-trust-secure">

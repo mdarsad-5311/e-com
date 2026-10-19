@@ -52,7 +52,7 @@ export default function MobileHomeHeader() {
 
         {/* Right Side Icons: Coins / Loyalty & Notifications / Orders */}
         <div className="al-mobile-header-actions">
-          {/* Member Rewards / SuperCoins badge reference */}
+          {/* Member rewards badge */}
           <Link href="/profile" className="al-mobile-coin-badge" title="Rewards Balance">
             <Coins size={14} className="al-mobile-coin-icon" />
             <span className="al-mobile-coin-val">250</span>
@@ -73,7 +73,7 @@ export default function MobileHomeHeader() {
         </div>
       </div>
 
-      {/* 2. Delivery Address Selector Strip (Flipkart Reference Style) */}
+      {/* Delivery address selector */}
       <div className="al-mobile-location-strip">
         <button
           type="button"

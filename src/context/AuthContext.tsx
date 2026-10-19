@@ -1,6 +1,6 @@
 "use client";
 
-import { createContext, useContext, useState, useEffect, ReactNode } from "react";
+import { createContext, useContext, useState, useEffect, useCallback, ReactNode } from "react";
 import { api, saveTokens, clearTokens, getAccessToken, getRefreshToken } from "@/lib/api";
 
 export interface UserProfile {
@@ -28,7 +28,7 @@ export interface OrderItem {
 export interface UserOrder {
   id: string;
   date: string;
-  status: "Delivered" | "In Transit" | "Processing" | "Cancelled";
+  status: "Delivered" | "In Transit" | "Processing" | "Cancelled" | string;
   totalAmount: number;
   itemsCount: number;
   trackingNumber: string;
@@ -40,17 +40,17 @@ export interface UserOrder {
 
 export interface UserAddress {
   id: string;
-  label: string;
+  label?: string;
   recipient: string;
   phone: string;
   pincode: string;
-  locality: string;
+  locality?: string;
   street: string;
   city: string;
   state: string;
   landmark?: string;
   alternatePhone?: string;
-  addressType: "HOME" | "WORK";
+  addressType?: "HOME" | "WORK" | string;
   isDefault: boolean;
 }
 
@@ -61,123 +61,20 @@ interface AuthContextType {
   orders: UserOrder[];
   addresses: UserAddress[];
   login: (emailOrPhone: string, pass: string) => Promise<boolean>;
-  loginWithOtp: (phoneOrEmail: string, otp: string) => boolean;
-  loginAsAdmin: () => void;
   register: (name: string, email: string, phone: string, pass: string) => Promise<boolean>;
   forgotPassword: (email: string) => boolean;
   logout: () => Promise<void>;
   updateProfile: (updated: Partial<UserProfile>) => Promise<void>;
-  addAddress: (addr: Omit<UserAddress, "id">) => void;
-  editAddress: (id: string, updated: Partial<UserAddress>) => void;
-  deleteAddress: (id: string) => void;
-  setDefaultAddress: (id: string) => void;
+  addAddress: (addr: Omit<UserAddress, "id">) => Promise<void>;
+  editAddress: (id: string, updated: Partial<UserAddress>) => Promise<void>;
+  deleteAddress: (id: string) => Promise<void>;
+  setDefaultAddress: (id: string) => Promise<void>;
   updateOrderStatus: (orderId: string, newStatus: "Delivered" | "In Transit" | "Processing" | "Cancelled") => void;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
-const DEMO_USER: UserProfile = {
-  id: "usr-al-umaima-101",
-  name: "Alexander Vance",
-  firstName: "Alexander",
-  lastName: "Vance",
-  email: "alexander.vance@example.com",
-  phone: "9876543210",
-  gender: "Male",
-  avatar: "https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?auto=format&fit=crop&w=200&q=80",
-  role: "user",
-  joinDate: "August 2026",
-  panCard: "ABCDE1234F"
-};
 
-const DEMO_ADMIN: UserProfile = {
-  id: "admin-al-umaima-999",
-  name: "Al-Umaima SuperAdmin",
-  firstName: "Super",
-  lastName: "Admin",
-  email: "admin@al-umaima.com",
-  phone: "9999988888",
-  gender: "Male",
-  avatar: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?auto=format&fit=crop&w=200&q=80",
-  role: "admin",
-  joinDate: "January 2024"
-};
-
-const INITIAL_ORDERS: UserOrder[] = [
-  {
-    id: "ORD-98214",
-    date: "2026-08-20",
-    status: "Delivered",
-    totalAmount: 189.98,
-    itemsCount: 2,
-    trackingNumber: "TRK-8819203",
-    estimatedDelivery: "2026-08-22",
-    items: [
-      { id: "1", title: "SonicPro Wireless Noise Cancelling Headphones", price: 149.99, quantity: 1, image: "https://images.unsplash.com/photo-1505740420928-5e560c06d30e?auto=format&fit=crop&w=400&q=80" },
-      { id: "4", title: "Minimalist Ergonomic Desk Lamp", price: 39.99, quantity: 1, image: "https://images.unsplash.com/photo-1507473885765-e6ed057f782c?auto=format&fit=crop&w=400&q=80" }
-    ],
-    shippingAddress: "124 Innovation Way, Tech District, Bengaluru 560001",
-    paymentMethod: "Credit Card ending in 4242"
-  },
-  {
-    id: "ORD-98105",
-    date: "2026-08-18",
-    status: "In Transit",
-    totalAmount: 89.50,
-    itemsCount: 1,
-    trackingNumber: "TRK-7712049",
-    estimatedDelivery: "2026-08-24",
-    items: [
-      { id: "2", title: "AuraFit Smart Fitness Watch Series 5", price: 89.50, quantity: 1, image: "https://images.unsplash.com/photo-1523275335684-37898b6baf30?auto=format&fit=crop&w=400&q=80" }
-    ],
-    shippingAddress: "45 Ocean Avenue, Bandra West, Mumbai 400050",
-    paymentMethod: "UPI (Google Pay)"
-  },
-  {
-    id: "ORD-97992",
-    date: "2026-08-15",
-    status: "Processing",
-    totalAmount: 129.99,
-    itemsCount: 1,
-    trackingNumber: "TRK-5510294",
-    estimatedDelivery: "2026-08-25",
-    items: [
-      { id: "3", title: "Over-Sized Vintage Denim Jacket", price: 129.99, quantity: 1, image: "https://images.unsplash.com/photo-1551028719-00167b16eac5?auto=format&fit=crop&w=400&q=80" }
-    ],
-    shippingAddress: "124 Innovation Way, Tech District, Bengaluru 560001",
-    paymentMethod: "Cash on Delivery"
-  }
-];
-
-const INITIAL_ADDRESSES: UserAddress[] = [
-  {
-    id: "addr-1",
-    label: "Home",
-    recipient: "Alexander Vance",
-    phone: "9876543210",
-    pincode: "560001",
-    locality: "Koramangala 4th Block",
-    street: "124 Innovation Way, Tech District",
-    city: "Bengaluru",
-    state: "Karnataka",
-    landmark: "Near Forum Mall",
-    addressType: "HOME",
-    isDefault: true,
-  },
-  {
-    id: "addr-2",
-    label: "Work",
-    recipient: "Alexander Vance (Office)",
-    phone: "9876543211",
-    pincode: "560103",
-    locality: "Outer Ring Road, Devarabeesanahalli",
-    street: "Embassy TechVillage, Tower 2",
-    city: "Bengaluru",
-    state: "Karnataka",
-    addressType: "WORK",
-    isDefault: false,
-  },
-];
 
 /**
  * Adapts a Django user serializer response into the frontend UserProfile format.
@@ -227,8 +124,72 @@ export function mapDjangoUserToUserProfile(djangoUser: any): UserProfile {
 export function AuthProvider({ children }: { children: ReactNode }) {
   const [user, setUser] = useState<UserProfile | null>(null);
   const [isLoading, setIsLoading] = useState<boolean>(true);
-  const [orders, setOrders] = useState<UserOrder[]>(INITIAL_ORDERS);
-  const [addresses, setAddresses] = useState<UserAddress[]>(INITIAL_ADDRESSES);
+  const [orders, setOrders] = useState<UserOrder[]>([]);
+  const [addresses, setAddresses] = useState<UserAddress[]>([]);
+
+  const fetchAddresses = useCallback(async () => {
+    try {
+      const data = await api.get("/api/addresses/");
+      if (Array.isArray(data)) {
+        const mapped = data.map((addr: any) => ({
+          id: String(addr.id),
+          label: addr.address_type === "home" ? "Home" : addr.address_type === "work" ? "Work" : "Other",
+          recipient: addr.full_name || addr.name || "Recipient",
+          phone: addr.phone_number || addr.phone || "",
+          pincode: addr.postal_code || addr.pincode || "",
+          locality: addr.locality || "",
+          street: addr.street_address || addr.address || "",
+          city: addr.city || "",
+          state: addr.state || "",
+          landmark: addr.landmark || "",
+          alternatePhone: addr.alternate_phone || "",
+          addressType: addr.address_type === "work" ? "WORK" : "HOME",
+          isDefault: Boolean(addr.is_default),
+        }));
+        setAddresses(mapped);
+      }
+    } catch (e) {
+      console.warn("Failed to fetch addresses:", e);
+    }
+  }, []);
+
+  const fetchOrders = useCallback(async () => {
+    try {
+      const data = await api.get("/api/orders/");
+      const ordersData = Array.isArray(data) ? data : (data?.results || []);
+      
+      const mapped = ordersData.map((ord: any) => ({
+        id: ord.order_number || String(ord.id),
+        date: ord.created_at || ord.date || "",
+        status: ord.status_display || ord.status || "Processing",
+        totalAmount: Number(ord.total_amount || ord.totalAmount || 0),
+        itemsCount: ord.items_count || ord.itemsCount || 0,
+        trackingNumber: ord.tracking_number || ord.trackingNumber || "",
+        estimatedDelivery: ord.estimated_delivery || ord.estimatedDelivery || "",
+        items: (ord.items || []).map((item: any) => ({
+          id: String(item.product_id || item.id),
+          title: item.product_name || item.title || "",
+          price: Number(item.unit_price || item.price || 0),
+          quantity: item.quantity || item.qty || 1,
+          image: item.product_image_url || item.image || "",
+        })),
+        shippingAddress: ord.shippingAddress || "N/A",
+        paymentMethod: ord.payment_method || ord.paymentMethod || "N/A",
+      }));
+      setOrders(mapped);
+    } catch (e) {
+      console.warn("Failed to fetch orders:", e);
+    }
+  }, []);
+
+  const loadUserData = useCallback(async () => {
+    if (getAccessToken()) {
+      await Promise.all([fetchAddresses(), fetchOrders()]);
+    } else {
+      setAddresses([]);
+      setOrders([]);
+    }
+  }, [fetchAddresses, fetchOrders]);
 
   // Initialize with demo user logged in for fast development experience
   useEffect(() => {
@@ -240,6 +201,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         if (mounted) {
           setUser(null);
           setIsLoading(false);
+          setAddresses([]);
+          setOrders([]);
         }
         return;
       }
@@ -259,6 +222,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         if (mounted && profile) {
           const mappedUser = mapDjangoUserToUserProfile(profile);
           saveUserToState(mappedUser);
+          await loadUserData();
         }
       } catch (err) {
         // If refresh/profile failed and no valid session remains
@@ -277,7 +241,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     return () => {
       mounted = false;
     };
-  }, []);
+  }, [loadUserData]);
 
   const saveUserToState = (u: UserProfile | null) => {
     setUser(u);
@@ -285,6 +249,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       localStorage.setItem("al_umaima_user", JSON.stringify(u));
     } else {
       localStorage.removeItem("al_umaima_user");
+      setAddresses([]);
+      setOrders([]);
     }
   };
 
@@ -312,30 +278,16 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     if (response?.user) {
       const mappedUser = mapDjangoUserToUserProfile(response.user);
       saveUserToState(mappedUser);
+      if (typeof window !== "undefined") {
+        window.dispatchEvent(new CustomEvent('aurastore_login_success'));
+      }
+      await loadUserData();
     }
 
     return true;
   };
 
-  const loginWithOtp = (phoneOrEmail: string, otp: string) => {
-    if (otp === "123456" || otp.length === 6) {
-      if (phoneOrEmail.includes("admin")) {
-        saveUserToState(DEMO_ADMIN);
-      } else {
-        saveUserToState({
-          ...DEMO_USER,
-          phone: phoneOrEmail.match(/^\d+$/) ? phoneOrEmail : DEMO_USER.phone,
-          email: phoneOrEmail.includes("@") ? phoneOrEmail : DEMO_USER.email,
-        });
-      }
-      return true;
-    }
-    return false;
-  };
 
-  const loginAsAdmin = () => {
-    saveUserToState(DEMO_ADMIN);
-  };
 
   const register = async (
     name: string,
@@ -370,6 +322,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     if (response?.user) {
       const mappedUser = mapDjangoUserToUserProfile(response.user);
       saveUserToState(mappedUser);
+      await loadUserData();
     }
 
     return true;
@@ -390,6 +343,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     } finally {
       clearTokens();
       saveUserToState(null);
+      setAddresses([]);
+      setOrders([]);
     }
   };
 
@@ -409,34 +364,60 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     saveUserToState(mapped);
   };
 
-  const addAddress = (newAddr: Omit<UserAddress, "id">) => {
-    const created: UserAddress = {
-      ...newAddr,
-      id: `addr-${Date.now()}`,
-    };
-    if (newAddr.isDefault) {
-      setAddresses((prev) =>
-        prev.map((a) => ({ ...a, isDefault: false })).concat(created)
-      );
-    } else {
-      setAddresses((prev) => [...prev, created]);
+  const addAddress = async (newAddr: Omit<UserAddress, "id">) => {
+    try {
+      const payload = {
+        full_name: newAddr.recipient,
+        phone_number: newAddr.phone,
+        street_address: newAddr.street,
+        city: newAddr.city,
+        state: newAddr.state,
+        postal_code: newAddr.pincode,
+        country: "India",
+        is_default: newAddr.isDefault,
+        address_type: newAddr.addressType === "WORK" ? "work" : "home",
+      };
+      await api.post("/api/addresses/", payload);
+      await fetchAddresses();
+    } catch (e) {
+      console.error("Failed to add address", e);
     }
   };
 
-  const editAddress = (id: string, updated: Partial<UserAddress>) => {
-    setAddresses((prev) =>
-      prev.map((a) => (a.id === id ? { ...a, ...updated } : a))
-    );
+  const editAddress = async (id: string, updated: Partial<UserAddress>) => {
+    try {
+      const payload: any = {};
+      if (updated.recipient !== undefined) payload.full_name = updated.recipient;
+      if (updated.phone !== undefined) payload.phone_number = updated.phone;
+      if (updated.street !== undefined) payload.street_address = updated.street;
+      if (updated.city !== undefined) payload.city = updated.city;
+      if (updated.state !== undefined) payload.state = updated.state;
+      if (updated.pincode !== undefined) payload.postal_code = updated.pincode;
+      if (updated.isDefault !== undefined) payload.is_default = updated.isDefault;
+      
+      await api.patch(`/api/addresses/${id}/`, payload);
+      await fetchAddresses();
+    } catch (e) {
+      console.error("Failed to edit address", e);
+    }
   };
 
-  const deleteAddress = (id: string) => {
-    setAddresses((prev) => prev.filter((a) => a.id !== id));
+  const deleteAddress = async (id: string) => {
+    try {
+      await api.delete(`/api/addresses/${id}/`);
+      await fetchAddresses();
+    } catch (e) {
+      console.error("Failed to delete address", e);
+    }
   };
 
-  const setDefaultAddress = (id: string) => {
-    setAddresses((prev) =>
-      prev.map((a) => ({ ...a, isDefault: a.id === id }))
-    );
+  const setDefaultAddress = async (id: string) => {
+    try {
+      await api.post(`/api/addresses/${id}/set-default/`, {});
+      await fetchAddresses();
+    } catch (e) {
+      console.error("Failed to set default address", e);
+    }
   };
 
   const updateOrderStatus = (orderId: string, newStatus: "Delivered" | "In Transit" | "Processing" | "Cancelled") => {
@@ -454,8 +435,6 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         orders,
         addresses,
         login,
-        loginWithOtp,
-        loginAsAdmin,
         register,
         forgotPassword,
         logout,
@@ -479,3 +458,4 @@ export function useAuth() {
   }
   return context;
 }
+

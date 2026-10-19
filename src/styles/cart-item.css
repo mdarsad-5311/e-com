@@ -1,4 +1,4 @@
-/* Al-Umaima Cart Item Styles - Exact Match to Attachment 3 */
+/* Cart item styles */
 
 .al-cart-card {
   background: #ffffff;
@@ -74,7 +74,7 @@
   color: #FF8C00;
 }
 
-/* Top Right Trash Button (Attachment 3) */
+/* Remove item button */
 .al-cart-trash-btn {
   background: none;
   border: none;
@@ -93,14 +93,14 @@
   background-color: #fee2e2;
 }
 
-/* Orange Price (Attachment 3) */
+/* Highlighted item price */
 .al-cart-item-price-orange {
   font-size: 0.95rem;
   font-weight: 800;
   color: #FF8C00;
 }
 
-/* Stepper Control (Attachment 3) */
+/* Quantity stepper control */
 .al-cart-bottom-row {
   display: flex;
   align-items: center;

@@ -1,19 +1,20 @@
 "use client";
 
-import { useState, FormEvent } from "react";
+import { useState, FormEvent, useEffect } from "react";
 import { Star, CheckCircle, ThumbsUp, MessageSquarePlus, X } from "lucide-react";
 import { Review } from "@/data/products";
 import "@/styles/product-reviews.css";
 import Image from "next/image";
-
+import { api, getAccessToken } from "@/lib/api";
 
 interface ProductReviewsProps {
+  productId?: string;
   reviews?: Review[];
   rating: number;
   reviewsCount: number;
 }
 
-export default function ProductReviews({ reviews: initialReviews = [], rating, reviewsCount }: ProductReviewsProps) {
+export default function ProductReviews({ productId, reviews: initialReviews = [], rating, reviewsCount }: ProductReviewsProps) {
   const [reviewsList, setReviewsList] = useState<Review[]>(initialReviews);
   const [isFormOpen, setIsFormOpen] = useState<boolean>(false);
   const [newRating, setNewRating] = useState<number>(5);
@@ -21,7 +22,26 @@ export default function ProductReviews({ reviews: initialReviews = [], rating, r
   const [newComment, setNewComment] = useState<string>("");
   const [newAuthor, setNewAuthor] = useState<string>("");
 
-  const handleAddReview = (e: FormEvent<HTMLFormElement>) => {
+  useEffect(() => {
+    if (!productId) return;
+    api.get(`/api/products/${productId}/reviews/`).then((res: any) => {
+      if (res && res.results) {
+        const formattedReviews: Review[] = res.results.map((r: any) => ({
+          id: r.id ? String(r.id) : `rev-${Date.now()}-${Math.random()}`,
+          author: r.user_name || r.author || "User",
+          avatar: "https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?auto=format&fit=crop&w=120&q=80",
+          rating: r.rating,
+          date: r.created_at ? new Date(r.created_at).toLocaleDateString("en-US", { month: "long", day: "numeric", year: "numeric" }) : "Recent",
+          title: r.title || "Review",
+          comment: r.comment,
+          verified: r.is_verified_purchase !== false,
+        }));
+        setReviewsList(formattedReviews);
+      }
+    }).catch((e) => console.error("Failed to fetch reviews", e));
+  }, [productId]);
+
+  const handleAddReview = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     if (!newTitle.trim() || !newComment.trim() || !newAuthor.trim()) return;
 
@@ -35,6 +55,21 @@ export default function ProductReviews({ reviews: initialReviews = [], rating, r
       comment: newComment,
       verified: true,
     };
+
+    const token = getAccessToken();
+    if (token && productId) {
+      try {
+        await api.post(`/api/products/${productId}/reviews/`, {
+          rating: newRating,
+          title: newTitle,
+          comment: newComment,
+        });
+      } catch (err) {
+        console.error("Failed to submit review", err);
+        alert("Failed to submit review. You must have purchased this product.");
+        return;
+      }
+    }
 
     setReviewsList([createdReview, ...reviewsList]);
     setIsFormOpen(false);

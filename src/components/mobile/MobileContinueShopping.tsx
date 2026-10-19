@@ -79,7 +79,7 @@ export default function MobileContinueShopping() {
                       )}
                     </div>
 
-                    {/* CTA button matching reference screenshot "View Store" / "Deals for you" */}
+                    {/* Deals call to action button */}
                     <div className="al-mobile-continue-cta-tag">
                       <span>View Deals</span>
                       <ArrowRight size={11} />

@@ -98,7 +98,7 @@ export default function FAQPage() {
               Search our knowledge base or browse categories below.
             </p>
 
-            {/* Floating Search Bar matching Attachment 4 */}
+            {/* Help center search */}
             <div className="al-support-search-wrap">
               <div className="al-support-search-bar">
                 <Search size={18} className="al-support-search-icon" />
@@ -116,7 +116,7 @@ export default function FAQPage() {
         </div>
       </section>
 
-      {/* 2. 4 QUICK ACTION SUPPORT CARDS (Attachment 4) */}
+      {/* Quick action support cards */}
       <section className="al-support-cards-section">
         <div className="header-container">
           <div className="al-support-cards-grid">

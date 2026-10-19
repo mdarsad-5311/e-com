@@ -17,7 +17,7 @@ export default function CartItem({ item, isSavedItem = false }: CartItemProps) {
 
   return (
     <div className="al-cart-card">
-      {/* Product Image on Left (Attachment 3) */}
+      {/* Product thumbnail */}
       <Link href={`/products/${product.slug || product.id}`} className="al-cart-img-box">
         <SafeImage
           src={product.image}
@@ -28,7 +28,7 @@ export default function CartItem({ item, isSavedItem = false }: CartItemProps) {
 
       {/* Product Info & Controls */}
       <div className="al-cart-content-box">
-        {/* Top Row: Title on Left, Trash Button on Top Right (Attachment 3) */}
+        {/* Item header and remove button */}
         <div className="al-cart-top-row">
           <Link href={`/products/${product.slug || product.id}`} className="al-cart-title-link">
             <h3 className="al-cart-item-heading">{product.title}</h3>
@@ -48,7 +48,7 @@ export default function CartItem({ item, isSavedItem = false }: CartItemProps) {
         {/* Orange Price */}
         <span className="al-cart-item-price-orange">${product.price.toFixed(2)}</span>
 
-        {/* Bottom Row: Stepper Control (Attachment 3) */}
+        {/* Quantity stepper control */}
         <div className="al-cart-bottom-row">
           {!isSavedItem ? (
             <div className="al-cart-stepper-box">

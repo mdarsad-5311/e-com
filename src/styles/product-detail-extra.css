@@ -1,4 +1,4 @@
-/* Product Detail Enhancements - Matching Attachments 1 & 2 */
+/* Product detail layout enhancements */
 
 /* Thumbnail Strip */
 .al-gallery-thumb-strip {
@@ -264,7 +264,7 @@
   color: #64748b;
 }
 
-/* Mobile add-to-cart: full-width orange button (attachment 1 style) */
+/* Mobile add to cart button */
 .al-mobile-sticky-action-bar--single {
   display: none;
   position: fixed;

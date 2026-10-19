@@ -1,4 +1,4 @@
-/* Shopping Cart Page Styles - Matching Attachment 2 */
+/* Shopping cart page styles */
 
 .al-cart-page-wrapper {
   background-color: #F8FAFC;
@@ -214,7 +214,7 @@
   background-color: #07172B;
 }
 
-/* Mobile Sticky Subtotal & Proceed to Checkout (Attachment 5) */
+/* Mobile sticky subtotal bar */
 .al-mobile-cart-sticky-bar {
   display: none;
   position: fixed;

@@ -61,7 +61,7 @@ export default function MobileSuggestedProducts({
 
   return (
     <section className="al-mobile-suggested-section" aria-label="Suggested products">
-      {/* Header with Title and Arrow Link matching Flipkart reference */}
+      {/* Section header with direct category link */}
       <div className="al-mobile-suggested-header">
         <div className="al-mobile-suggested-title-wrap">
           <h2 className="al-mobile-suggested-title">Suggested For You</h2>

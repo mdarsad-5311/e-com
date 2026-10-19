@@ -177,6 +177,7 @@ export default async function ProductDetailPage({ params }: ProductDetailPagePro
 
         {/* Verified Customer Reviews */}
         <ProductReviews
+          productId={product.id}
           reviews={product.reviews || []}
           rating={product.rating || 4.8}
           reviewsCount={product.reviewsCount || 312}

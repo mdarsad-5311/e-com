@@ -38,9 +38,7 @@ export class ApiError extends Error {
   }
 }
 
-// ---------------------------------------------------------------------------
 // Token Storage Helpers
-// ---------------------------------------------------------------------------
 
 const ACCESS_TOKEN_KEY = "ecommerce_access_token";
 const REFRESH_TOKEN_KEY = "ecommerce_refresh_token";
@@ -96,9 +94,7 @@ export function clearTokens(): void {
   }
 }
 
-// ---------------------------------------------------------------------------
 // URL Builder
-// ---------------------------------------------------------------------------
 
 export function getBaseApiUrl(): string {
   const envUrl = process.env.NEXT_PUBLIC_API_URL;
@@ -122,9 +118,7 @@ export function formatDjangoEndpoint(endpoint: string): string {
   return queryPart !== undefined ? `${baseUrl}${finalPath}?${queryPart}` : `${baseUrl}${finalPath}`;
 }
 
-// ---------------------------------------------------------------------------
 // Error Message Extraction
-// ---------------------------------------------------------------------------
 
 function extractErrorMessage(status: number, data: any): string {
   if (!data) {
@@ -157,9 +151,7 @@ function extractErrorMessage(status: number, data: any): string {
   return `Request failed with status ${status}`;
 }
 
-// ---------------------------------------------------------------------------
 // Request Interceptor & Token Refresh
-// ---------------------------------------------------------------------------
 
 let isRefreshing = false;
 let refreshPromise: Promise<string | null> | null = null;
@@ -215,9 +207,7 @@ async function requestTokenRefresh(): Promise<string | null> {
   return refreshPromise;
 }
 
-// ---------------------------------------------------------------------------
 // Core HTTP Request Handler
-// ---------------------------------------------------------------------------
 
 export interface RequestOptions extends Omit<RequestInit, "body"> {
   body?: any;
@@ -334,9 +324,7 @@ export async function request<T = any>(
   return data as T;
 }
 
-// ---------------------------------------------------------------------------
 // Convenient API Methods
-// ---------------------------------------------------------------------------
 
 export const api = {
   get<T = any>(endpoint: string, options?: Omit<RequestOptions, "method" | "body">): Promise<T> {

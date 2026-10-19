@@ -38,7 +38,7 @@ export default function MobileCategoryScroller({
     return LayoutGrid;
   };
 
-  // Build items list with "For You" as the first personalized tab (Flipkart UX reference)
+  // Build navigation list with "For You" as first tab
   const categoryItems = [
     {
       id: "for-you",
@@ -85,7 +85,7 @@ export default function MobileCategoryScroller({
                 </div>
               </div>
               <span className="al-mobile-cat-title">{cat.name}</span>
-              {/* Active Indicator Underline (Matches reference screenshot blue tab indicator) */}
+              {/* Active tab underline indicator */}
               {isActive && <span className="al-mobile-cat-active-bar" />}
             </button>
           );

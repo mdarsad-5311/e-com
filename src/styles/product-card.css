@@ -1,4 +1,4 @@
-/* Product Card Styles - Matching Exact Attachment Design & Production Enhancements */
+/* Product card component styles */
 
 .al-card-item {
   position: relative;
@@ -244,7 +244,7 @@
   font-weight: 500;
 }
 
-/* Rectangular Light Cart Button (Matching Attachment) */
+/* Quick add cart button */
 .al-cart-btn-rect {
   width: 38px;
   height: 36px;

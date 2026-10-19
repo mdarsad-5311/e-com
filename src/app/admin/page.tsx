@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import Link from "next/link";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
 import { 
@@ -21,9 +22,9 @@ import "@/styles/admin.css";
 
 export default function AdminDashboardPage() {
   const router = useRouter();
-  const { user, isAdmin, isLoading, loginAsAdmin, orders, updateOrderStatus } = useAuth();
+  const { user, isAdmin, isLoading, orders, updateOrderStatus } = useAuth();
 
-  // Protected Route Guard (STEP 6G)
+  // Protected route check
   useEffect(() => {
     if (!isLoading && !user) {
       router.push("/login?redirect=" + encodeURIComponent("/admin"));
@@ -109,14 +110,13 @@ export default function AdminDashboardPage() {
               You are currently logged in as a standard user. Log in with an Admin account to manage store inventory, customer orders, and product catalog.
             </p>
 
-            <button 
-              type="button"
-              onClick={loginAsAdmin}
+            <Link 
+              href="/login"
               className="al-umaima-btn-orange"
-              style={{ marginTop: "1.75rem", display: "inline-flex", alignItems: "center", justifyContent: "center", gap: "0.5rem" }}
+              style={{ marginTop: "1.75rem", display: "inline-flex", alignItems: "center", justifyContent: "center", gap: "0.5rem", textDecoration: "none" }}
             >
-              <Shield size={18} aria-hidden="true" /> LOG IN AS AL-UMAIMA SUPERADMIN
-            </button>
+              <Shield size={18} aria-hidden="true" /> LOG IN WITH ADMIN ACCOUNT
+            </Link>
           </div>
         </div>
       </div>

@@ -32,7 +32,7 @@ export default function BottomNav() {
         <span className="al-bottom-label">Home</span>
       </Link>
 
-      {/* 2. Offers / Deals Tab (Matching Reference Tab 2) */}
+      {/* Offers and deals tab */}
       <Link 
         href="/products?featured=true" 
         className={`al-bottom-tab ${isOffers ? "active" : ""}`} 
@@ -42,7 +42,7 @@ export default function BottomNav() {
         <span className="al-bottom-label">Offers</span>
       </Link>
 
-      {/* 3. Categories Tab (Matching Reference Tab 3 Grid Icon) */}
+      {/* Categories tab */}
       <Link 
         href="/category/electronics" 
         className={`al-bottom-tab ${isCategories ? "active" : ""}`} 
@@ -52,7 +52,7 @@ export default function BottomNav() {
         <span className="al-bottom-label">Categories</span>
       </Link>
 
-      {/* 4. Account Tab (Matching Reference Tab 4 User Icon) */}
+      {/* Account tab */}
       <Link 
         href="/profile" 
         className={`al-bottom-tab ${isAccount ? "active" : ""}`} 
@@ -62,7 +62,7 @@ export default function BottomNav() {
         <span className="al-bottom-label">Account</span>
       </Link>
 
-      {/* 5. Cart Tab (Matching Reference Tab 5 Cart with Red Badge) */}
+      {/* Shopping cart tab */}
       <Link 
         href="/cart" 
         className={`al-bottom-tab ${isCart ? "active" : ""}`} 

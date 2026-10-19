@@ -1,7 +1,9 @@
 "use client";
 
-import { createContext, useContext, useState, useEffect, ReactNode } from "react";
+import { createContext, useContext, useState, useEffect, useCallback, ReactNode } from "react";
 import { Product, products } from "@/data/products";
+import { api, getAccessToken } from "@/lib/api";
+import { mapDjangoProductToFrontendProduct } from "@/lib/products";
 
 export interface CartItem {
   product: Product;
@@ -11,17 +13,18 @@ export interface CartItem {
 interface CartContextType {
   cart: CartItem[];
   savedForLater: CartItem[];
-  addToCart: (product: Product, quantity?: number) => void;
-  removeFromCart: (productId: string) => void;
-  updateQuantity: (productId: string, quantity: number) => void;
+  addToCart: (product: Product, quantity?: number) => Promise<void>;
+  removeFromCart: (productId: string) => Promise<void>;
+  updateQuantity: (productId: string, quantity: number) => Promise<void>;
   saveForLater: (productId: string) => void;
   moveToCart: (productId: string) => void;
   removeFromSaved: (productId: string) => void;
-  clearCart: () => void;
+  clearCart: () => Promise<void>;
   totalItemsCount: number;
   subtotal: number;
   totalOriginalPrice: number;
   totalSavings: number;
+  refreshCart: () => Promise<void>;
 }
 
 const STORAGE_KEY = "aurastore_cart";
@@ -44,20 +47,56 @@ function hydrateCart(raw: string): CartItem[] {
 }
 
 export function CartProvider({ children }: { children: ReactNode }) {
-  // Pre-seed with matching sample products from reference attachment
-  const [cart, setCart] = useState<CartItem[]>([
-    { product: products[0], quantity: 1 },
-    { product: products[1], quantity: 2 }
-  ]);
+  const [cart, setCart] = useState<CartItem[]>([]);
   const [savedForLater, setSavedForLater] = useState<CartItem[]>([]);
   const [hydrated, setHydrated] = useState(false);
 
-  useEffect(() => {
-    try {
-      const raw = localStorage.getItem(STORAGE_KEY);
-      if (raw !== null) {
-        setCart(hydrateCart(raw));
+  // 1. Fetch Cart from Django REST API
+  const refreshCart = useCallback(async () => {
+    const token = getAccessToken();
+    if (!token) {
+      // Unauthenticated fallback: read from localStorage
+      try {
+        const raw = localStorage.getItem(STORAGE_KEY);
+        if (raw !== null) {
+          setCart(hydrateCart(raw));
+        } else {
+          setCart([
+            { product: products[0], quantity: 1 },
+            { product: products[1], quantity: 2 }
+          ]);
+        }
+      } catch {
+        /* ignore */
       }
+      return;
+    }
+
+    try {
+      const data = await api.get("/api/cart/");
+      if (data && data.items) {
+        const mappedCart = data.items.map((item: any) => ({
+          product: mapDjangoProductToFrontendProduct(item.product || item),
+          quantity: item.quantity || item.qty || 1,
+        }));
+        setCart(mappedCart);
+      } else if (Array.isArray(data)) {
+        const mappedCart = data.map((item: any) => ({
+          product: mapDjangoProductToFrontendProduct(item.product || item),
+          quantity: item.quantity || item.qty || 1,
+        }));
+        setCart(mappedCart);
+      }
+    } catch (err: any) {
+      console.warn("Failed to fetch cart from backend:", err);
+    }
+  }, []);
+
+  // Fetch on mount and listen to storage/token events
+  useEffect(() => {
+    refreshCart();
+    
+    try {
       const rawSaved = localStorage.getItem(SAVED_STORAGE_KEY);
       if (rawSaved !== null) {
         setSavedForLater(hydrateCart(rawSaved));
@@ -65,16 +104,55 @@ export function CartProvider({ children }: { children: ReactNode }) {
     } catch {
       /* ignore */
     }
+    
     setHydrated(true);
-  }, []);
+
+    const handleStorage = (e: StorageEvent) => {
+      if (e.key === "ecommerce_access_token" || e.key === "ecommerce_refresh_token") {
+        refreshCart();
+      }
+    };
+    
+    const handleLoginSuccess = async () => {
+      const raw = localStorage.getItem(STORAGE_KEY);
+      if (raw) {
+        try {
+          const parsed: { productId: string; quantity: number }[] = JSON.parse(raw);
+          if (Array.isArray(parsed) && parsed.length > 0) {
+            for (const item of parsed) {
+              await api.post("/api/cart/add/", {
+                product_id: item.productId,
+                quantity: item.quantity
+              });
+            }
+          }
+          localStorage.removeItem(STORAGE_KEY);
+        } catch (e) {
+          console.error("Cart migration failed", e);
+        }
+      }
+      await refreshCart();
+    };
+
+    window.addEventListener("storage", handleStorage);
+    window.addEventListener("aurastore_login_success", handleLoginSuccess);
+    
+    return () => {
+      window.removeEventListener("storage", handleStorage);
+      window.removeEventListener("aurastore_login_success", handleLoginSuccess);
+    };
+  }, [refreshCart]);
 
   useEffect(() => {
     if (!hydrated) return;
-    const payload = cart.map((item) => ({
-      productId: item.product.id,
-      quantity: item.quantity,
-    }));
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(payload));
+    const token = getAccessToken();
+    if (!token) {
+      const payload = cart.map((item) => ({
+        productId: item.product.id,
+        quantity: item.quantity,
+      }));
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(payload));
+    }
   }, [cart, hydrated]);
 
   useEffect(() => {
@@ -86,7 +164,10 @@ export function CartProvider({ children }: { children: ReactNode }) {
     localStorage.setItem(SAVED_STORAGE_KEY, JSON.stringify(payload));
   }, [savedForLater, hydrated]);
 
-  const addToCart = (product: Product, quantity: number = 1) => {
+  const addToCart = async (product: Product, quantity: number = 1) => {
+    const token = getAccessToken();
+    
+    // Optimistic Update
     setCart((prevCart) => {
       const existingIndex = prevCart.findIndex((item) => item.product.id === product.id);
       if (existingIndex > -1) {
@@ -97,17 +178,43 @@ export function CartProvider({ children }: { children: ReactNode }) {
       }
       return [...prevCart, { product, quantity: Math.min(quantity, product.stock || 99) }];
     });
+
+    if (token) {
+      try {
+        await api.post("/api/cart/add/", { product_id: product.id, quantity });
+        await refreshCart(); // Refresh to sync backend exact state
+      } catch (err) {
+        console.error("Error adding to backend cart:", err);
+        await refreshCart(); // Revert to backend state on error
+      }
+    }
   };
 
-  const removeFromCart = (productId: string) => {
+  const removeFromCart = async (productId: string) => {
+    const token = getAccessToken();
+    
+    // Optimistic Update
     setCart((prevCart) => prevCart.filter((item) => item.product.id !== productId));
+
+    if (token) {
+      try {
+        await api.delete(`/api/cart/remove/${productId}/`);
+      } catch (err) {
+        console.error("Error removing from backend cart:", err);
+        await refreshCart(); // Revert to backend state on error
+      }
+    }
   };
 
-  const updateQuantity = (productId: string, quantity: number) => {
+  const updateQuantity = async (productId: string, quantity: number) => {
     if (quantity <= 0) {
-      removeFromCart(productId);
+      await removeFromCart(productId);
       return;
     }
+    
+    const token = getAccessToken();
+    
+    // Optimistic Update
     setCart((prevCart) =>
       prevCart.map((item) =>
         item.product.id === productId
@@ -115,6 +222,29 @@ export function CartProvider({ children }: { children: ReactNode }) {
           : item
       )
     );
+
+    if (token) {
+      try {
+        await api.patch(`/api/cart/update/${productId}/`, { quantity });
+      } catch (err) {
+        console.error("Error updating backend cart quantity:", err);
+        await refreshCart(); // Revert to backend state on error
+      }
+    }
+  };
+
+  const clearCart = async () => {
+    const token = getAccessToken();
+    setCart([]);
+    
+    if (token) {
+      try {
+        await api.post("/api/cart/clear/");
+      } catch (err) {
+        console.error("Error clearing backend cart:", err);
+        await refreshCart(); // Revert to backend state on error
+      }
+    }
   };
 
   const saveForLater = (productId: string) => {
@@ -141,10 +271,6 @@ export function CartProvider({ children }: { children: ReactNode }) {
     setSavedForLater((prev) => prev.filter((it) => it.product.id !== productId));
   };
 
-  const clearCart = () => {
-    setCart([]);
-  };
-
   const totalItemsCount = cart.reduce((sum, item) => sum + item.quantity, 0);
   const subtotal = cart.reduce((sum, item) => sum + item.product.price * item.quantity, 0);
   const totalOriginalPrice = cart.reduce(
@@ -169,6 +295,7 @@ export function CartProvider({ children }: { children: ReactNode }) {
         subtotal,
         totalOriginalPrice,
         totalSavings,
+        refreshCart,
       }}
     >
       {children}
@@ -183,3 +310,4 @@ export function useCart() {
   }
   return context;
 }
+

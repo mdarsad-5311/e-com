@@ -372,7 +372,7 @@ export async function getTrendingProducts(categoryFilter?: string): Promise<Prod
     console.warn("[getTrendingProducts] API request failed, using catalog fallback:", error);
   }
 
-  // Fallback to mock catalog
+  // Local catalog fallback
   let filtered = products;
   if (categoryFilter === "Electronics") {
     filtered = products.filter((p) => p.category === "electronics");

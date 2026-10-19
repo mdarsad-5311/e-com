@@ -1,7 +1,7 @@
 /* ==========================================================================
    AL-UMAIMA MOBILE SHOPPING-APP HOME PAGE STYLES
    Scoped strictly to Mobile screens (max-width: 768px)
-   Referenced from modern shopping-app UX (Flipkart layout architecture)
+   Mobile storefront layout
    ========================================================================== */
 
 /* By default on Desktop & Tablet, mobile home view is hidden */
@@ -155,7 +155,7 @@
     border: 1.5px solid #FFFFFF;
   }
 
-  /* Address / Location Strip (Flipkart Reference Style) */
+  /* Delivery location strip */
   .al-mobile-location-strip {
     margin-bottom: 0.65rem;
   }
@@ -360,7 +360,7 @@
     font-weight: 700;
   }
 
-  /* Active Indicator Line (Matches reference screenshot blue underline) */
+  /* Active tab indicator underline */
   .al-mobile-cat-active-bar {
     position: absolute;
     bottom: 0;
@@ -529,7 +529,7 @@
 
   /* ------------------------------------------------------------------------
      5. PERSONALIZED / RECENTLY VIEWED SECTION ("Still Looking For These?")
-     Matching reference screenshot rounded card container & layout
+     Rounded card layout
      ------------------------------------------------------------------------ */
   .al-mobile-continue-shopping-section {
     padding: 0 0.85rem;

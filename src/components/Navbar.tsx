@@ -130,7 +130,7 @@ export default function Navbar() {
           })}
         </nav>
 
-        {/* Search Bar matching Reference Screenshot */}
+        {/* Global search bar */}
         <div className="al-search-col">
           <form className="al-search-form" onSubmit={handleSearchSubmit}>
             <input 
@@ -226,7 +226,7 @@ export default function Navbar() {
         </div>
       </div>
 
-      {/* Flipkart-Style Full-Width Mobile Search Bar */}
+      {/* Mobile full-width search input */}
       <div className="al-mobile-search-bar-wrap">
         <div className="header-container">
           <form className="al-mobile-search-form" onSubmit={handleSearchSubmit}>

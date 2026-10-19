@@ -39,7 +39,7 @@ export default function ProfilePage() {
   const { wishlistCount } = useWishlist();
   const { showToast } = useToast();
 
-  // Protected Route Guard (STEP 6G)
+  // Protected route check
   useEffect(() => {
     if (!isLoading && !user) {
       router.push("/login?redirect=" + encodeURIComponent("/profile"));
@@ -205,7 +205,7 @@ export default function ProfilePage() {
           </div>
         </div>
 
-        {/* Complete Account Menu List (Matching Requirement 3) */}
+        {/* Account navigation list */}
         <div className="al-profile-menu-list">
           {/* 1. My Profile */}
           <button
@@ -399,7 +399,7 @@ export default function ProfilePage() {
         </div>
       )}
 
-      {/* MODAL 2: Settings (Requirement 3: Settings with Tree of Options) */}
+      {/* Settings modal */}
       {activeModal === "settings" && (
         <div className="al-modal-backdrop" onClick={() => setActiveModal(null)}>
           <div className="al-profile-modal-card al-settings-modal" onClick={(e) => e.stopPropagation()}>

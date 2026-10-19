@@ -35,7 +35,7 @@
   --offwhite-card: #FFFFFF;
   --offwhite-border: #E2E8F0;
 
-  /* Brand / Primary: Deep Midnight Navy #001A33 (Attachment 1) */
+  /* Primary brand color */
   --primary: #001A33;
   --on-primary: #FFFFFF;
   --primary-container: #0F325C;
@@ -45,7 +45,7 @@
   --primary-light: rgba(0, 26, 51, 0.06);
   --primary-glow: rgba(0, 26, 51, 0.18);
 
-  /* Secondary: Vibrant Success Orange #FF8C00 (Attachment 1) */
+  /* Secondary accent color */
   --secondary: #FF8C00;
   --on-secondary: #FFFFFF;
   --secondary-container: #FFF7ED;
@@ -53,7 +53,7 @@
   --secondary-hover: #E07800;
   --secondary-light: rgba(255, 140, 0, 0.08);
 
-  /* Tertiary: Deep Warm Espresso Brown #2F1002 (Attachment 1) */
+  /* Warm neutral color */
   --tertiary: #2F1002;
   --on-tertiary: #FFFFFF;
   --tertiary-container: #4A1A03;

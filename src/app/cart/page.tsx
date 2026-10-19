@@ -103,7 +103,7 @@ export default function CartPage() {
               <OrderSummary />
             </div>
 
-            {/* Mobile Sticky Subtotal & Proceed to Checkout (Attachment 5) */}
+            {/* Mobile sticky subtotal bar */}
             {cart.length > 0 && (
               <div className="al-mobile-cart-sticky-bar">
                 <div className="al-mobile-cart-subtotal-row">

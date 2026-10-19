@@ -173,7 +173,7 @@ export default function MobileBannerCarousel({
         </div>
       </div>
 
-      {/* Pagination indicators (Pill & Dots, matches Flipkart reference ---) */}
+      {/* Carousel pagination indicators */}
       <div className="al-mobile-carousel-pagination" aria-hidden="true">
         {slides.map((_, i) => (
           <button

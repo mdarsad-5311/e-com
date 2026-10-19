@@ -1,4 +1,4 @@
-/* Al-Umaima Hero Banner Styles - Exact Match to Attachments 2 & 3 */
+/* Hero banner styles */
 
 .al-hero-section {
   width: 100%;
@@ -7,7 +7,7 @@
 }
 
 /* ==========================================================================
-   1. DESKTOP HERO (Attachment 2)
+   Desktop hero
    ========================================================================== */
 .al-hero-desktop-view {
   display: flex;
@@ -109,7 +109,7 @@
 }
 
 /* ==========================================================================
-   2. MOBILE HERO (Attachment 3)
+   Mobile hero
    ========================================================================== */
 .al-hero-mobile-view {
   display: none;

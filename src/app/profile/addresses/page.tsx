@@ -28,7 +28,7 @@ interface SavedAddress {
 export default function SavedAddressesPage() {
   const router = useRouter();
 
-  // Initial list exactly from Attachment 2
+  // Default saved addresses
   const [addresses, setAddresses] = useState<SavedAddress[]>([
     {
       id: "addr-home",

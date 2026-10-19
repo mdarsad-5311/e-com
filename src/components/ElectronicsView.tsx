@@ -48,7 +48,7 @@ export default function ElectronicsView({ products }: ElectronicsViewProps) {
     setTimeout(() => setAddedId(null), 1500);
   };
 
-  // Trending electronics products - Attachment 1 exact showcase
+  // Featured electronics showcase
   const defaultElectronics: Product[] = useMemo(() => [
     {
       id: "nexus-chrono-series-5",
@@ -164,7 +164,7 @@ export default function ElectronicsView({ products }: ElectronicsViewProps) {
       return products.filter(p => p.subCategory?.toLowerCase().includes("keyboard") || p.title.toLowerCase().includes("keyboard"));
     }
 
-    // Default "All Audio" or initial: show default curated 4 from Attachment 1, followed by other electronics
+    // Default view: curated audio and electronics
     const combined = [...defaultElectronics];
     products.forEach(p => {
       if (!combined.some(existing => existing.id === p.id)) {

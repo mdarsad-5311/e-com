@@ -32,7 +32,7 @@ interface SavedUPI {
 export default function PaymentMethodsPage() {
   const router = useRouter();
 
-  // Cards exactly from Attachment 3
+  // Default saved credit and debit cards
   const [cards, setCards] = useState<SavedCard[]>([
     {
       id: "card-1",
@@ -48,7 +48,7 @@ export default function PaymentMethodsPage() {
     },
   ]);
 
-  // UPI exactly from Attachment 3
+  // Saved UPI payment IDs
   const [upis, setUpis] = useState<SavedUPI[]>([
     {
       id: "upi-1",

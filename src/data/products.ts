@@ -106,7 +106,7 @@ export const categories: Category[] = [
 ];
 
 export const products: Product[] = [
-  // --- Quantum Pro Noise Cancelling Headphones (Attachment 4 Match) ---
+  // --- Quantum Pro Noise Cancelling Headphones ---
   {
     id: "quantum-pro-headphones",
     title: "Quantum Pro Noise Cancelling Headphones",
@@ -132,7 +132,7 @@ export const products: Product[] = [
     specifications: ["Dual Noise Sensors", "40mm Titanium Drivers", "40h Battery Life"],
     reviews: []
   },
-  // --- Aura Smart Home Speaker (Attachment 4 Match) ---
+  // --- Aura Smart Home Speaker ---
   {
     id: "aura-smart-home-speaker",
     title: "Aura Smart Home Speaker",
@@ -158,7 +158,7 @@ export const products: Product[] = [
     specifications: ["360° Omnidirectional Audio", "Voice Assistant Built-in", "Bluetooth 5.3 + Wi-Fi"],
     reviews: []
   },
-  // --- Acoustic Pro Headphones ANC (Attachment 3 Match) ---
+  // --- Acoustic Pro Headphones ANC ---
   {
     id: "acoustic-pro-headphones-anc",
     title: "Acoustic Pro Headphones ANC",
@@ -184,7 +184,7 @@ export const products: Product[] = [
     specifications: ["Hybrid ANC", "42mm Drivers", "35h Battery"],
     reviews: []
   },
-  // --- Artisan Ceramic Mug Set (Attachment 3 Match) ---
+  // --- Artisan Ceramic Mug Set ---
   {
     id: "artisan-ceramic-mug-set",
     title: "Artisan Ceramic Mug Set",
@@ -210,7 +210,7 @@ export const products: Product[] = [
     specifications: ["Handmade Stoneware", "Microwave & Dishwasher Safe", "Set of 2 (350ml each)"],
     reviews: []
   },
-  // --- Sony WH-1000XM5 (Attachment 5 Match) ---
+  // --- Sony WH-1000XM5 ---
   {
     id: "sony-wh-1000xm5",
     title: "Sony WH-1000XM5 Wireless Noise Canceling...",
@@ -236,7 +236,7 @@ export const products: Product[] = [
     specifications: ["Dual Processor V1", "Auto NC Optimizer", "30h Battery with Quick Charge"],
     reviews: []
   },
-  // --- Garmin Venu 2 Plus (Attachment 5 Match) ---
+  // --- Garmin Venu 2 Plus ---
   {
     id: "garmin-venu-2-plus",
     title: "Garmin Venu 2 Plus Smartwatch - Silver/Black",
@@ -297,7 +297,7 @@ export const products: Product[] = [
     ],
     reviews: []
   },
-  // --- Nexus Home Hub V2 (Matching Cart Attachment) ---
+  // --- Nexus Home Hub V2 ---
   {
     id: "nexus-home-hub-v2",
     title: "Nexus Home Hub V2",
@@ -330,7 +330,7 @@ export const products: Product[] = [
     ],
     reviews: []
   },
-  // --- 1. Aura Pro Noise-Cancelling Wireless Headphones (Exact Match to Reference Screenshot) ---
+  // --- Aura Pro Noise-Cancelling Wireless Headphones ---
   {
     id: "aura-pro-headphones",
     title: "Aura Pro Noise-Cancelling Wireless Headphones",
@@ -365,7 +365,7 @@ export const products: Product[] = [
     ],
     reviews: []
   },
-  // --- 1. Nexus Chrono Series 5 (Attachment 1 Match) ---
+  // --- Nexus Chrono Series 5 ---
   {
     id: "nexus-chrono-series-5",
     title: "Nexus Chrono Series 5",
@@ -399,7 +399,7 @@ export const products: Product[] = [
     ],
     reviews: []
   },
-  // --- 2. TypeMaster Pro Mechanical (Attachment 1 Match) ---
+  // --- TypeMaster Pro Mechanical ---
   {
     id: "typemaster-pro-mechanical",
     title: "TypeMaster Pro Mechanical",
@@ -432,7 +432,7 @@ export const products: Product[] = [
     ],
     reviews: []
   },
-  // --- 3. Acoustic Cylinder Home Hub (Attachment 1 Match) ---
+  // --- Acoustic Cylinder Home Hub ---
   {
     id: "acoustic-cylinder-home-hub",
     title: "Acoustic Cylinder Home Hub",
@@ -464,7 +464,7 @@ export const products: Product[] = [
     ],
     reviews: []
   },
-  // --- 4. Aura Pods Essential (Attachment 1 Match) ---
+  // --- Aura Pods Essential ---
   {
     id: "aura-pods-essential",
     title: "Aura Pods Essential",
@@ -566,7 +566,7 @@ export const products: Product[] = [
     ],
     reviews: []
   },
-  // --- 4. Aura Buds ANC True Wireless (Exact Match to Reference Screenshot) ---
+  // --- Aura Buds ANC True Wireless ---
   {
     id: "aura-buds-anc",
     title: "Aura Buds ANC True Wireless",
@@ -649,7 +649,7 @@ export const products: Product[] = [
     specifications: ["6.7-inch Super AMOLED 120Hz", "108MP Studio Sensor", "5000 mAh Battery with 65W SuperCharge"],
     reviews: []
   },
-  // --- 2. JBL Charge 5 (Matching Reference Screenshot) ---
+  // --- JBL Charge 5 ---
   {
     id: "jbl-charge-5",
     title: "JBL Charge 5 Portable Waterproof Bluetooth Speaker",
@@ -682,7 +682,7 @@ export const products: Product[] = [
     ],
     reviews: []
   },
-  // --- 3. Keychron Q1 Pro (Matching Reference Screenshot) ---
+  // --- Keychron Q1 Pro ---
   {
     id: "keychron-q1-pro",
     title: "Keychron Q1 Pro Custom Wireless Mechanical Keyboard",
@@ -713,7 +713,7 @@ export const products: Product[] = [
     ],
     reviews: []
   },
-  // --- 4. Apple AirPods Pro (2nd Gen) (Matching Reference Screenshot) ---
+  // --- Apple AirPods Pro (2nd Gen) ---
   {
     id: "apple-airpods-pro-2",
     title: "Apple AirPods Pro (2nd Gen) with MagSafe Case",
@@ -882,7 +882,7 @@ export const products: Product[] = [
     reviews: []
   },
 
-  // --- Featured for You (Matching Attachment 2x2 Grid) ---
+  // --- Featured Products ---
   {
     id: "feat-1",
     title: "LG 34\" Curved UltraWide QHD Monitor",
@@ -1478,7 +1478,7 @@ export const products: Product[] = [
     ],
     reviews: []
   },
-  // --- Fashion Collection (Matching Attachment) ---
+  // --- Fashion Collection ---
   {
     id: "urban-utility-jacket",
     title: "Urban Utility Jacket",

@@ -19,13 +19,10 @@ function LoginContent() {
   const searchParams = useSearchParams();
   const rawRedirectUrl = searchParams.get("redirect") || searchParams.get("callbackUrl");
   const redirectUrl = sanitizeRedirect(rawRedirectUrl);
-  const { login, loginWithOtp, loginAsAdmin } = useAuth();
+  const { login } = useAuth();
 
-  const [authMode, setAuthMode] = useState<"otp" | "password">("otp");
-  const [step, setStep] = useState<"input" | "verify_otp">("input");
-  const [inputVal, setInputVal] = useState<string>("9876543210");
-  const [password, setPassword] = useState<string>("password123");
-  const [otpDigits, setOtpDigits] = useState<string[]>(["1", "2", "3", "4", "5", "6"]);
+  const [inputVal, setInputVal] = useState<string>("");
+  const [password, setPassword] = useState<string>("");
   const [showPassword, setShowPassword] = useState<boolean>(false);
   const [error, setError] = useState<string>("");
   const [isLoading, setIsLoading] = useState<boolean>(false);
@@ -33,44 +30,6 @@ function LoginContent() {
   const getRedirectTarget = (isAdmin: boolean) => {
     if (isAdmin) return "/admin";
     return redirectUrl;
-  };
-
-  const handleRequestOtp = (e: FormEvent) => {
-    e.preventDefault();
-    setError("");
-
-    if (!inputVal.trim()) {
-      setError("Please enter a valid Mobile number or Email address.");
-      return;
-    }
-
-    setIsLoading(true);
-    setTimeout(() => {
-      setIsLoading(false);
-      setStep("verify_otp");
-    }, 600);
-  };
-
-  const handleVerifyOtp = (e: FormEvent) => {
-    e.preventDefault();
-    setError("");
-    const code = otpDigits.join("");
-
-    if (code.length < 6) {
-      setError("Please enter complete 6-digit OTP code.");
-      return;
-    }
-
-    setIsLoading(true);
-    setTimeout(() => {
-      const success = loginWithOtp(inputVal, code);
-      setIsLoading(false);
-      if (success) {
-        router.push(getRedirectTarget(inputVal.includes("admin")));
-      } else {
-        setError("Invalid OTP entered. (Use 123456)");
-      }
-    }, 700);
   };
 
   const handlePasswordLogin = async (e: FormEvent) => {
@@ -106,16 +65,6 @@ function LoginContent() {
     }
   };
 
-  const handleDemoUser = () => {
-    setInputVal("testuser@example.com");
-    setPassword("TestPassword123!");
-  };
-
-  const handleDemoAdmin = () => {
-    setInputVal("admin@al-umaima.com");
-    setPassword("AdminPassword123!");
-  };
-
   return (
     <div className="auth-page-wrapper">
       <div className="al-umaima-auth-card">
@@ -144,166 +93,60 @@ function LoginContent() {
             </div>
           )}
 
-          {/* Mode Switch: OTP vs Password */}
-          {step === "input" && (
-            <form 
-              onSubmit={authMode === "otp" ? handleRequestOtp : handlePasswordLogin}
-              className="al-umaima-auth-form"
-            >
-              <div className="al-umaima-input-group">
-                <label htmlFor="login-identity-input" className="al-umaima-label">Enter Email / Mobile number</label>
+          <form 
+            onSubmit={handlePasswordLogin}
+            className="al-umaima-auth-form"
+          >
+            <div className="al-umaima-input-group">
+              <label htmlFor="login-identity-input" className="al-umaima-label">Enter Email address</label>
+              <input
+                id="login-identity-input"
+                name="identifier"
+                type="email"
+                autoComplete="username"
+                className="al-umaima-input"
+                placeholder="e.g. user@example.com"
+                value={inputVal}
+                onChange={(e) => setInputVal(e.target.value)}
+                required
+              />
+            </div>
+
+            <div className="al-umaima-input-group" style={{ marginTop: "0.5rem" }}>
+              <label htmlFor="login-password-input" className="al-umaima-label">Enter Password</label>
+              <div style={{ position: "relative" }}>
                 <input
-                  id="login-identity-input"
-                  name="identifier"
-                  type="text"
-                  autoComplete="username"
+                  id="login-password-input"
+                  name="password"
+                  type={showPassword ? "text" : "password"}
+                  autoComplete="current-password"
                   className="al-umaima-input"
-                  placeholder="e.g. 9876543210 or user@example.com"
-                  value={inputVal}
-                  onChange={(e) => setInputVal(e.target.value)}
+                  placeholder="••••••••"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
                   required
                 />
-              </div>
-
-              {authMode === "password" && (
-                <div className="al-umaima-input-group" style={{ marginTop: "0.5rem" }}>
-                  <label htmlFor="login-password-input" className="al-umaima-label">Enter Password</label>
-                  <div style={{ position: "relative" }}>
-                    <input
-                      id="login-password-input"
-                      name="password"
-                      type={showPassword ? "text" : "password"}
-                      autoComplete="current-password"
-                      className="al-umaima-input"
-                      placeholder="••••••••"
-                      value={password}
-                      onChange={(e) => setPassword(e.target.value)}
-                      required
-                    />
-                    <button
-                      type="button"
-                      aria-label={showPassword ? "Hide password" : "Show password"}
-                      onClick={() => setShowPassword(!showPassword)}
-                      style={{ position: "absolute", right: 8, top: 10, color: "var(--text-muted)", background: "transparent", border: "none", cursor: "pointer" }}
-                    >
-                      {showPassword ? <EyeOff size={16} /> : <Eye size={16} />}
-                    </button>
-                  </div>
-                </div>
-              )}
-
-              <p className="al-umaima-terms-text">
-                By continuing, you agree to Al-Umaima&apos;s{" "}
-                <Link href="/faq">Terms of Use</Link> and{" "}
-                <Link href="/faq">Privacy Policy</Link>.
-              </p>
-
-              {authMode === "otp" ? (
-                <button type="submit" className="al-umaima-btn-orange" disabled={isLoading}>
-                  {isLoading ? "REQUESTING OTP..." : "REQUEST OTP"}
-                </button>
-              ) : (
-                <button type="submit" className="al-umaima-btn-orange" disabled={isLoading}>
-                  {isLoading ? "LOGGING IN..." : "LOGIN"}
-                </button>
-              )}
-
-              {authMode === "otp" ? (
                 <button
                   type="button"
-                  className="al-umaima-btn-blue-outline"
-                  onClick={() => setAuthMode("password")}
+                  aria-label={showPassword ? "Hide password" : "Show password"}
+                  onClick={() => setShowPassword(!showPassword)}
+                  style={{ position: "absolute", right: 8, top: 10, color: "var(--text-muted)", background: "transparent", border: "none", cursor: "pointer" }}
                 >
-                  LOGIN WITH PASSWORD
+                  {showPassword ? <EyeOff size={16} /> : <Eye size={16} />}
                 </button>
-              ) : (
-                <button
-                  type="button"
-                  className="al-umaima-btn-blue-outline"
-                  onClick={() => setAuthMode("otp")}
-                >
-                  REQUEST OTP INSTEAD
-                </button>
-              )}
-            </form>
-          )}
-
-          {/* OTP Verification Step */}
-          {step === "verify_otp" && (
-            <form onSubmit={handleVerifyOtp} className="al-umaima-auth-form">
-              <div>
-                <h3 style={{ fontSize: "1.1rem", fontWeight: 700, color: "var(--text)" }}>
-                  Please enter the OTP sent to
-                </h3>
-                <div style={{ fontSize: "0.9rem", color: "var(--primary)", fontWeight: 700, marginTop: "0.2rem" }}>
-                  {inputVal}{" "}
-                  <button
-                    type="button"
-                    onClick={() => setStep("input")}
-                    style={{ fontSize: "0.75rem", color: "var(--text-muted)", textDecoration: "underline", marginLeft: "0.5rem", background: "none", border: "none", cursor: "pointer" }}
-                  >
-                    Change
-                  </button>
-                </div>
               </div>
-
-              <div className="otp-box-group" role="group" aria-label="6-digit verification code">
-                {otpDigits.map((digit, idx) => (
-                  <input
-                    key={idx}
-                    id={`otp-field-${idx}`}
-                    name={`otp-digit-${idx}`}
-                    aria-label={`Digit ${idx + 1} of 6`}
-                    type="text"
-                    inputMode="numeric"
-                    pattern="[0-9]*"
-                    maxLength={1}
-                    className="otp-digit-input"
-                    value={digit}
-                    onChange={(e) => {
-                      const val = e.target.value;
-                      const updated = [...otpDigits];
-                      updated[idx] = val;
-                      setOtpDigits(updated);
-                      if (val && idx < 5) {
-                        const nextField = document.getElementById(`otp-field-${idx + 1}`);
-                        nextField?.focus();
-                      }
-                    }}
-                  />
-                ))}
-              </div>
-
-              <p className="otp-timer-text">Demo OTP auto-filled: <strong>123456</strong></p>
-
-              <button type="submit" className="al-umaima-btn-orange" disabled={isLoading}>
-                {isLoading ? "VERIFYING..." : "VERIFY & LOGIN"}
-              </button>
-
-              <button
-                type="button"
-                className="al-umaima-btn-blue-outline"
-                onClick={() => setStep("input")}
-              >
-                BACK TO LOGIN
-              </button>
-            </form>
-          )}
-
-          {/* Quick Demo Login Presets */}
-          <div style={{ marginTop: "1.25rem", paddingTop: "1rem", borderTop: "1px solid var(--borders)" }}>
-            <div style={{ fontSize: "0.75rem", color: "var(--text-muted)", fontWeight: 700, marginBottom: "0.5rem" }}>
-              QUICK DEMO ACCESS:
             </div>
-            <div className="al-umaima-quick-logins">
-              <button type="button" onClick={handleDemoUser} className="al-umaima-quick-btn">
-                <UserCheck size={14} /> Demo Customer Login
-              </button>
-              <button type="button" onClick={handleDemoAdmin} className="al-umaima-quick-btn" style={{ color: "var(--secondary)" }}>
-                <Shield size={14} /> Demo Admin Panel Login
-              </button>
-            </div>
-          </div>
+
+            <p className="al-umaima-terms-text">
+              By continuing, you agree to Al-Umaima&apos;s{" "}
+              <Link href="/faq">Terms of Use</Link> and{" "}
+              <Link href="/faq">Privacy Policy</Link>.
+            </p>
+
+            <button type="submit" className="al-umaima-btn-orange" disabled={isLoading}>
+              {isLoading ? "LOGGING IN..." : "LOGIN"}
+            </button>
+          </form>
 
           {/* Footer Register Link */}
           <div className="al-umaima-create-account-footer">
